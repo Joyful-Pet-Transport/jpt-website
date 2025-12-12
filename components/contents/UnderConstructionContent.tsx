@@ -184,7 +184,7 @@ const UnderConstructionContent: React.FC = () => {
           className="text-xl md:text-2xl text-white/90 mb-12 text-center font-medium"
           style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)" }}
         >
-          Transporting Pets Has Never Been This Easy
+          TRANSPORTING PETS HAS NEVER BEEN THIS EASY
         </p>
 
         {/* Coming soon box */}
@@ -216,12 +216,12 @@ const UnderConstructionContent: React.FC = () => {
             >
               🐱
             </div>
-            <div
+            {/* <div
               className="text-5xl animate-bounce"
               style={{ animationDelay: "0.6s", animationDuration: "2s" }}
             >
               🐰
-            </div>
+            </div> */}
           </div>
         </div>
 
