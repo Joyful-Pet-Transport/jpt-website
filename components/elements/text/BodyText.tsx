@@ -1,0 +1,62 @@
+import { FC, PropsWithChildren } from "react";
+import { text } from "stream/consumers";
+
+type BodyTextProps = PropsWithChildren<{
+  className?: string;
+  weight?: "thin" | "normal" | "semibold" | "bold";
+  size?: "small" | "normal" | "medium" | "large";
+  textColor?: string;
+  white?: boolean;
+  onPress?: () => void;
+}>;
+
+const BodyText: FC<BodyTextProps> = ({
+  children,
+  className,
+  weight,
+  size,
+  textColor,
+  white = false,
+  onPress,
+}) => {
+  const weightClasses = {
+    thin: "font-thin",
+    normal: "font-normal",
+    semibold: "font-semibold",
+    bold: "font-bold",
+  };
+
+  const sizeClasses = {
+    small: "text-base",
+    normal: "text-lg",
+    medium: "text-xl",
+    large: "text-5xl",
+  };
+
+  const colorClasses = textColor
+    ? textColor
+    : white
+    ? "text-neutral-50"
+    : "text-neutral-950";
+
+  return (
+    <h1
+      className={`${className} ${weightClasses[weight || "normal"]} ${
+        sizeClasses[size || "normal"]
+      } ${colorClasses} ${
+        onPress
+          ? textColor
+            ? "cursor-pointer"
+            : white
+            ? "cursor-pointer hover:text-neutral-300"
+            : "cursor-pointer hover:text-neutral-800"
+          : ""
+      }`}
+      onClick={onPress}
+    >
+      {children}
+    </h1>
+  );
+};
+
+export default BodyText;

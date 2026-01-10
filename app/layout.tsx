@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { FC, PropsWithChildren } from "react";
 import LoaderProvider from "@/utils/providers/LoaderProvider";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const outfitFont = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en">
-      <body className={`${geistMono.variable} antialiased`}>
+      <body className={`${outfitFont.className} antialiased`}>
         <LoaderProvider>{children}</LoaderProvider>
       </body>
     </html>
