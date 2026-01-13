@@ -8,12 +8,11 @@ const BoxedContainer: FC<BoxedContainerProps> = ({ children, className }) => {
   return (
     <div
       className={`${className} w-full px-4
-					sm:px-8
-					md:max-w-3xl md:px-8
-					lg:max-w-[1200px] lg:px-12
-					xl:max-w-[1400px] xl:px-16
-					2xl:max-w-[1800px] 2xl:px-20
-					3xl:max-w-[2200px] 3xl:px-24
+					sm:px-6
+					md:max-w-3xl md:px-6
+					lg:max-w-5xl lg:px-8
+					xl:max-w-6xl xl:px-12
+					2xl:max-w-7xl 2xl:px-16
 					mx-auto`}
     >
       {children}
