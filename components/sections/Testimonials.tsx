@@ -1,5 +1,6 @@
 import { FC } from "react";
 import Heading from "../elements/text/Heading";
+import TestimonialContents from "../contents/TestimonialContents";
 
 const TestimonialSection: FC = () => {
   return (
@@ -7,6 +8,7 @@ const TestimonialSection: FC = () => {
       <Heading className="flex self-center" weight="semibold" size="medium">
         TESTIMONIALS
       </Heading>
+      <TestimonialContents />
     </div>
   );
 };

@@ -25,8 +25,12 @@ const BookingProcessContent: FC = () => {
 
   return (
     <div className="w-full flex flex-col gap-12">
-      {ProcessData.map((data) => (
-        <BookingProcessCardContainer step={data.step} title={data.title} />
+      {ProcessData.map((data, key) => (
+        <BookingProcessCardContainer
+          key={key}
+          step={data.step}
+          title={data.title}
+        />
       ))}
       <div className="w-1/3 self-center">
         <DynamicButton>Book your pet's journey now</DynamicButton>

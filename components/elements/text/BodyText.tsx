@@ -27,7 +27,7 @@ const BodyText: FC<BodyTextProps> = ({
   };
 
   const sizeClasses = {
-    small: "text-base",
+    small: "text-sm",
     normal: "text-lg",
     medium: "text-xl",
     large: "text-2xl",
