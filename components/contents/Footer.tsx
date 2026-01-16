@@ -10,7 +10,7 @@ const Footer: FC = () => {
         <div className="flex flex-row justify-center gap-24 py-8">
           {/* brand */}
           <div className="flex flex-col gap-2 justify-center items-center w-48">
-            <BodyText size="medium" weight="semibold">
+            <BodyText className="text-center" size="medium" weight="semibold">
               Joyful Pet Transport
             </BodyText>
             <Image
