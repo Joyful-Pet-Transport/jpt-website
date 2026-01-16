@@ -6,6 +6,8 @@ import BodyText from "@/components/elements/text/BodyText";
 import BookingProcessSection from "@/components/sections/BookingProcess";
 import HeroSection from "@/components/sections/HeroSection";
 import OurServices from "@/components/sections/OurServices";
+import ProofOfLegitimacy from "@/components/sections/ProofOfLegitimacy";
+import TestimonialSection from "@/components/sections/Testimonials";
 
 const Home = () => {
   const maintenanceMode = false;
@@ -19,6 +21,8 @@ const Home = () => {
       <HeroSection />
       <OurServices />
       <BookingProcessSection />
+      <ProofOfLegitimacy />
+      <TestimonialSection />
     </PageWrapperContainer>
   );
 };
