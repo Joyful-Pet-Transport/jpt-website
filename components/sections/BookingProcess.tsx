@@ -1,19 +1,19 @@
 import { FC } from "react";
 import BoxedContainer from "../containers/BoxedContainer";
 import Heading from "../elements/text/Heading";
-import OurServiceContents from "../contents/OurServiceContents";
+import BookingProcessContent from "../contents/BookingProcessContent";
 
-const OurServicesSection: FC = () => {
+const BookingProcessSection: FC = () => {
   return (
     <BoxedContainer className="py-12">
       <div className="flex flex-col items-center justify-center w-full gap-10">
         <Heading weight="semibold" size="medium">
-          OUR SERVICES
+          BOOKING PROCESS
         </Heading>
-        <OurServiceContents />
+        <BookingProcessContent />
       </div>
     </BoxedContainer>
   );
 };
 
-export default OurServicesSection;
+export default BookingProcessSection;

@@ -3,6 +3,7 @@
 import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import UnderConstructionContent from "@/components/contents/UnderConstructionContent";
 import BodyText from "@/components/elements/text/BodyText";
+import BookingProcessSection from "@/components/sections/BookingProcess";
 import HeroSection from "@/components/sections/HeroSection";
 import OurServices from "@/components/sections/OurServices";
 
@@ -17,6 +18,7 @@ const Home = () => {
     <PageWrapperContainer className="flex flex-col gap-12">
       <HeroSection />
       <OurServices />
+      <BookingProcessSection />
     </PageWrapperContainer>
   );
 };

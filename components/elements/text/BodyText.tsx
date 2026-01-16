@@ -30,7 +30,7 @@ const BodyText: FC<BodyTextProps> = ({
     small: "text-base",
     normal: "text-lg",
     medium: "text-xl",
-    large: "text-5xl",
+    large: "text-2xl",
   };
 
   const colorClasses = textColor

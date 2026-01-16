@@ -19,7 +19,7 @@ const HeroSection: FC = () => {
               nisi ut aliquip ex ea commodo consequat.
             </BodyText>
             <div className="flex flex-row gap-6">
-              <DynamicButton type="default">BOOK NOW</DynamicButton>
+              <DynamicButton>BOOK NOW</DynamicButton>
               <DynamicButton type="outline">LEARN MORE</DynamicButton>
             </div>
           </div>
@@ -43,7 +43,7 @@ const HeroSection: FC = () => {
                 nisi ut aliquip ex ea commodo consequat.
               </BodyText>
               <div className="flex flex-row gap-6">
-                <DynamicButton type="default">BOOK NOW</DynamicButton>
+                <DynamicButton>BOOK NOW</DynamicButton>
                 <DynamicButton type="outline">LEARN MORE</DynamicButton>
               </div>
             </div>

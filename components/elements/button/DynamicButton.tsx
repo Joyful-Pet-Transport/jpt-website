@@ -9,7 +9,7 @@ type DynamicButtonProps = PropsWithChildren<{
 
 const DynamicButton: FC<DynamicButtonProps> = ({
   children,
-  type,
+  type = "default",
   onPress,
   className,
 }) => {
@@ -26,7 +26,7 @@ const DynamicButton: FC<DynamicButtonProps> = ({
         type === "default"
           ? "text-neutral-300 hover:text-neutral-800"
           : "text-neutral-800 hover:text-neutral-300"
-      } text-center text-lg font-semibold`}
+      } text-center uppercase text-lg font-semibold`}
       onClick={onPress}
     >
       {children}
