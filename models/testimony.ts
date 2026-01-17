@@ -2,7 +2,7 @@ import { Rating } from "./rating";
 import { User } from "./user";
 
 export interface Testimony {
-  user: User;
+  user?: User;
   rating: Rating;
   date?: string;
   attachment?: string[];

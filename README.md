@@ -1,36 +1,165 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Joyful Pet Transport Website
 
-## Getting Started
+A modern web application built with Next.js and Convex for Joyful Pet Transport services.
 
-First, run the development server:
+## 🚀 Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **Backend**: Convex
+- **Styling**: Tailwind CSS
+- **Animation**: GSAP
+- **Icons**: Lucide React, React Icons
+- **UI Components**: Class Variance Authority, clsx, tailwind-merge
+
+## 📋 Prerequisites
+
+- Node.js (version 18 or higher)
+- npm or yarn
+- Convex account (for backend deployment)
+
+## 🛠️ Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Joyful-Pet-Transport/jpt-website.git
+cd jpt-website
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.local.example .env.local
+# Edit .env.local with your Convex deployment URL and other secrets
+```
+
+4. Initialize Convex (if not already done):
+
+```bash
+npx convex dev --once
+```
+
+## 🚀 Development
+
+### Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Start Convex development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npx convex dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Run both servers simultaneously:
 
-## Learn More
+```bash
+# Terminal 1 - Start Next.js dev server
+npm run dev
 
-To learn more about Next.js, take a look at the following resources:
+# Terminal 2 - Start Convex dev server
+npx convex dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📜 Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - Start Next.js development server
+- `npm run build` - Build the application for production
+- `npm run start` - Start the production server
+- `npm run lint` - Run ESLint for code linting
 
-## Deploy on Vercel
+## 🔧 Convex Commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `npx convex dev` - Start Convex development server
+- `npx convex deploy` - Deploy Convex functions to production
+- `npx convex dashboard` - Open Convex dashboard in browser
+- `npx convex logs` - View Convex function logs
+- `npx convex import --table <table-name> <file-path>` - Import data from JSONL file to a table
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Data Import Examples
+
+```bash
+# Import services data
+npx convex import --table services initialData/ServiceData.jsonl
+# Import booking process data
+npx convex import --table booking_process initialData/BookingProcess.jsonl
+
+
+```
+
+## 📁 Project Structure
+
+```
+├── app/                    # Next.js app directory
+├── components/             # Reusable React components
+│   ├── containers/         # Layout containers
+│   ├── contents/           # Page content components
+│   ├── elements/           # Basic UI elements
+│   └── ui/                 # UI components
+├── convex/                 # Convex backend functions
+├── contexts/               # React contexts
+├── lib/                    # Utility libraries
+├── public/                 # Static assets
+├── utils/                  # Helper functions
+└── hooks/                  # Custom React hooks
+```
+
+## 🎨 Styling
+
+This project uses Tailwind CSS with custom design tokens. Key styling features:
+
+- Responsive design with mobile-first approach
+- Custom color palette
+- Component-based styling with class-variance-authority
+- GSAP animations for enhanced user experience
+
+## 🔐 Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```env
+# Convex
+CONVEX_DEPLOYMENT=
+NEXT_PUBLIC_CONVEX_URL=
+
+# Add other environment variables as needed
+```
+
+## 🚀 Deployment
+
+### Frontend (Vercel)
+
+```bash
+npm run build
+npm run start
+```
+
+### Backend (Convex)
+
+```bash
+npx convex deploy
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Open a pull request
+
+## 📝 License
+
+This project is private and proprietary to Joyful Pet Transport.
+
+## 📞 Support
+
+For support or questions, please contact the development team.

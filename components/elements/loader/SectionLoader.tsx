@@ -4,7 +4,7 @@ import { FC } from "react";
 
 type SectionLoaderProps = {
   // using text color classes from tailwindcss
-  loaderColor: string | "text-black" | "text-white" | undefined;
+  loaderColor?: string | "text-black" | "text-white" | undefined;
 };
 
 const SectionLoader: FC<SectionLoaderProps> = (props) => {

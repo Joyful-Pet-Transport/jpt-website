@@ -1,5 +1,6 @@
 import { FC } from "react";
 import PageLoader from "./PageLoader";
+import { Spinner } from "@/components/ui/spinner";
 
 /* READ ME
  * Type:
@@ -18,7 +19,11 @@ const Loader: FC<LoaderProps> = ({ type = "section", loaderColor }) => {
   }
 
   if (type === "section") {
-    return <PageLoader loaderColor={loaderColor} />;
+    return (
+      <div className="w-full h-80 flex items-center justify-center">
+        <Spinner className={`size-12 ${loaderColor ?? "text-neutral-950"}`} />
+      </div>
+    );
   }
 };
 

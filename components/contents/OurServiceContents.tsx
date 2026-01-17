@@ -1,36 +1,26 @@
+"use client";
+
 import { FC } from "react";
 import ServiceCardContainer from "../containers/ServiceCardContainer";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import Loader from "../elements/loader/Loader";
 
 const OurServiceContents: FC = () => {
-  // this array variable is pansamantala, would change after convex setup
-  const ServiceData = [
-    {
-      title: "International Pet Relocation",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      image: "/images/logo/logo.png",
-    },
-    {
-      title: "domestic Pet Relocation (PHILIPPINES)",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      image: "/images/logo/logo.png",
-    },
-    {
-      title: "RABIES SEROLOGY TEST",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      image: "/images/logo/logo.png",
-    },
-  ];
+  const services = useQuery(api.tables.services.get);
+
+  if (services === undefined) {
+    return <Loader />;
+  }
+
   return (
     <div className="w-full flex gap-8">
-      {ServiceData.map((data, key) => (
+      {services?.map(({ _id, title, description, image }) => (
         <ServiceCardContainer
-          key={key}
-          title={data.title}
-          description={data.description}
-          image={data.image}
+          key={_id}
+          title={title}
+          description={description}
+          image={image}
         />
       ))}
     </div>

@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { FC, PropsWithChildren } from "react";
 import LoaderProvider from "@/utils/providers/LoaderProvider";
+import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
 
 const outfitFont = Outfit({
   variable: "--font-outfit",
@@ -18,7 +19,9 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en">
       <body className={`${outfitFont.className} antialiased`}>
-        <LoaderProvider>{children}</LoaderProvider>
+        <ConvexClientProvider>
+          <LoaderProvider>{children}</LoaderProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );
