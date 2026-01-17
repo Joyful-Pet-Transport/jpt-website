@@ -6,4 +6,5 @@ export interface Testimony {
   rating: Rating;
   date?: string;
   attachment?: string[];
+  testimony: string;
 }

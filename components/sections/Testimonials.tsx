@@ -4,7 +4,7 @@ import TestimonialContents from "../contents/TestimonialContents";
 
 const TestimonialSection: FC = () => {
   return (
-    <div className="py-12 flex flex-col">
+    <div className="py-12 flex flex-col gap-10">
       <Heading className="flex self-center" weight="semibold" size="medium">
         TESTIMONIALS
       </Heading>
