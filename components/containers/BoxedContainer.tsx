@@ -2,13 +2,31 @@ import { FC, PropsWithChildren } from "react";
 
 type BoxedContainerProps = PropsWithChildren<{
   className?: string;
+  medium?: boolean;
 }>;
 
-const BoxedContainer: FC<BoxedContainerProps> = ({ children, className }) => {
+const BoxedContainer: FC<BoxedContainerProps> = ({
+  children,
+  className,
+  medium = false,
+}) => {
+  if (medium) {
+    return (
+      <div
+        className={`${className} w-full px-4
+          md:max-w-5xl 
+          lg:max-w-6xl 
+          xl:max-w-7xl 
+          2xl:max-w-360
+          mx-auto`}
+      >
+        {children}
+      </div>
+    );
+  }
   return (
     <div
       className={`${className} w-full px-4
-					sm:px-6
 					md:max-w-3xl 
 					lg:max-w-5xl 
 					xl:max-w-6xl 

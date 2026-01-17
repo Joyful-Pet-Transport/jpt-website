@@ -5,7 +5,7 @@ import Heading from "../elements/text/Heading";
 
 const ProofOfLegitimacy: FC = () => {
   return (
-    <BoxedContainer className="py-12">
+    <BoxedContainer medium className="py-12">
       <div className="flex flex-col gap-10">
         <div className="w-full flex flex-col items-center">
           <Heading weight="semibold" size="medium">

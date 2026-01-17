@@ -1,3 +1,10 @@
+"use client";
+
+import {
+  Marquee,
+  MarqueeContent,
+  MarqueeItem,
+} from "@/components/ui/shadcn-io/marquee";
 import { Testimony } from "@/models/testimony";
 import { FC } from "react";
 import TestimonyCard from "../containers/TestimonyCard";
@@ -10,7 +17,7 @@ const TestimonialContents: FC = () => {
       date: "2025-12-12",
       attachment: ["mema", "mema"],
       testimony:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
     },
     {
       user: { name: "charl", avatar: "/images/logo/logo.png", email: "email" },
@@ -36,13 +43,44 @@ const TestimonialContents: FC = () => {
       testimony:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
     },
+    {
+      user: { name: "charl", avatar: "/images/logo/logo.png", email: "email" },
+      rating: 5,
+      date: "2025-12-12",
+      attachment: ["mema", "mema"],
+      testimony:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    },
+    {
+      user: { name: "charl", avatar: "/images/logo/logo.png", email: "email" },
+      rating: 5,
+      date: "2025-12-12",
+      attachment: ["mema", "mema"],
+      testimony:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    },
   ];
 
   return (
-    <div className="flex gap-6">
-      {TestimonialData.map((data, key) => (
-        <TestimonyCard testimony={data} key={key} />
-      ))}
+    <div className="flex flex-col gap-4">
+      <Marquee>
+        <MarqueeContent>
+          {TestimonialData.map((data, key) => (
+            <MarqueeItem key={key}>
+              <TestimonyCard testimony={data} />
+            </MarqueeItem>
+          ))}
+        </MarqueeContent>
+      </Marquee>
+      <Marquee>
+        <MarqueeContent direction="right">
+          {TestimonialData.map((data, key) => (
+            <MarqueeItem key={key}>
+              <TestimonyCard testimony={data} />
+            </MarqueeItem>
+          ))}
+        </MarqueeContent>
+      </Marquee>
     </div>
   );
 };

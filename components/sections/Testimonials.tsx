@@ -1,6 +1,7 @@
 import { FC } from "react";
 import Heading from "../elements/text/Heading";
 import TestimonialContents from "../contents/TestimonialContents";
+import BodyText from "../elements/text/BodyText";
 
 const TestimonialSection: FC = () => {
   return (
@@ -9,6 +10,11 @@ const TestimonialSection: FC = () => {
         TESTIMONIALS
       </Heading>
       <TestimonialContents />
+      <div className="w-full flex justify-center">
+        <BodyText onPress={() => {}} size="large">
+          View Reviews →
+        </BodyText>
+      </div>
     </div>
   );
 };
