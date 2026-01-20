@@ -36,13 +36,16 @@ const Header: FC = () => {
             >
               Our Services
             </BodyText>
-            <BodyText onPress={() => {}} weight="semibold">
+            <BodyText onPress={() => router.push("/AboutUs")} weight="semibold">
               About Us
             </BodyText>
-            <BodyText onPress={() => {}} weight="semibold">
+            <BodyText onPress={() => router.push("/Faq")} weight="semibold">
               FAQs
             </BodyText>
-            <BodyText onPress={() => {}} weight="semibold">
+            <BodyText
+              onPress={() => router.push("/ContactUs")}
+              weight="semibold"
+            >
               Contact Us
             </BodyText>
           </div>

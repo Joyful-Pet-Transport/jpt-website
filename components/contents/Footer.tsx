@@ -4,8 +4,11 @@ import { FC } from "react";
 import BodyText from "../elements/text/BodyText";
 import BoxedContainer from "../containers/BoxedContainer";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Footer: FC = () => {
+  const router = useRouter();
+
   return (
     <div>
       <BoxedContainer>
@@ -15,13 +18,15 @@ const Footer: FC = () => {
             <BodyText className="text-center" size="medium" weight="semibold">
               Joyful Pet Transport
             </BodyText>
-            <Image
-              src="/images/logo/logo.png"
-              width={75}
-              height={75}
-              alt="Logo"
-              priority
-            />
+            <div onClick={() => router.push("/")}>
+              <Image
+                src="/images/logo/logo.png"
+                width={75}
+                height={75}
+                alt="Logo"
+                priority
+              />
+            </div>
             <BodyText className="text-center">
               Copyright © 2025 Doneyt. All rights reserved.
             </BodyText>
@@ -33,9 +38,13 @@ const Footer: FC = () => {
                 Pages
               </BodyText>
               <div className="flex flex-col gap-2">
-                <BodyText onPress={() => {}}>Our Services</BodyText>
-                <BodyText onPress={() => {}}>About Us</BodyText>
-                <BodyText onPress={() => {}}>FAQs</BodyText>
+                <BodyText onPress={() => router.push("/OurServices")}>
+                  Our Services
+                </BodyText>
+                <BodyText onPress={() => router.push("/AboutUs")}>
+                  About Us
+                </BodyText>
+                <BodyText onPress={() => router.push("/Faq")}>FAQs</BodyText>
               </div>
             </div>
 
