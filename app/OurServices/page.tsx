@@ -6,7 +6,7 @@ import Heading from "@/components/elements/text/Heading";
 const OurServicesScreen = () => {
   return (
     <PageWrapperContainer className="items-center">
-      <BoxedContainer>
+      <BoxedContainer medium>
         <div className="flex flex-col justify-center items-center">
           <Heading className="text-center">Our Services</Heading>
           <BodyText className="text-center">
