@@ -10,6 +10,7 @@ type TestimonyCardProps = {
 
 const TestimonyCard: FC<TestimonyCardProps> = (props) => {
   const MAX_CHARS = 123;
+
   const truncateText = (text: string, max: number) => {
     if (!text) return "";
     return text.length > max ? text.slice(0, max).trimEnd() + "..." : text;
@@ -22,14 +23,16 @@ const TestimonyCard: FC<TestimonyCardProps> = (props) => {
         <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E]">
           <Image
             priority
-            src={props.testimony.user.avatar}
-            alt={props.testimony.user.avatar}
+            src={props.testimony.user?.avatar ?? ""}
+            alt={props.testimony.user?.avatar ?? ""}
             height={50}
             width={50}
           />
         </div>
         <div className="flex flex-1 flex-col">
-          <BodyText weight="semibold">{props.testimony.user.name}</BodyText>
+          <BodyText weight="semibold">
+            {props.testimony.user?.name ?? "Anonymous"}
+          </BodyText>
           <div className="flex gap-1 text-yellow-400">
             {Array.from({ length: props.testimony.rating }).map((_, i) => (
               <FaStar key={i} />

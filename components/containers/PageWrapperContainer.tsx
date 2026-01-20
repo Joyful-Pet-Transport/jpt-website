@@ -16,14 +16,16 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
 }) => {
   return (
     <div
-      className={className}
+      className="flex flex-col gap-12 overflow-hidden w-full"
       style={{
         backgroundImage:
           "linear-gradient(to bottom, #789ECD, #F2C995, #FF985B)",
       }}
     >
       {header && <Header />}
-      <div className="min-h-[150vh] py-4">{children}</div>
+      <div className={`min-h-screen py-4 flex flex-col ${className}`}>
+        {children}
+      </div>
       {footer && <Footer />}
     </div>
   );

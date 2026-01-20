@@ -1,5 +1,6 @@
+"use client";
+
 import { FC, PropsWithChildren } from "react";
-import { text } from "stream/consumers";
 
 type BodyTextProps = PropsWithChildren<{
   className?: string;

@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren } from "react";
-import BodyText from "../text/BodyText";
 
 type DynamicButtonProps = PropsWithChildren<{
-  type?: "default" | "outline";
+  type?: "default" | "outline" | "orange";
+  size?: "default" | "medium";
   onPress?: () => void;
   className?: string;
 }>;
@@ -10,23 +10,28 @@ type DynamicButtonProps = PropsWithChildren<{
 const DynamicButton: FC<DynamicButtonProps> = ({
   children,
   type = "default",
+  size = "default",
   onPress,
   className,
 }) => {
   const ButtonType = {
-    default: "bg-[#17528A] hover:bg-transparent border-2 border-[#17528A]",
-    outline: "border-2 border-[#17528A] hover:bg-[#17528A]",
+    default:
+      "bg-[#17528A] hover:bg-transparent border-2 border-[#17528A] text-neutral-300 hover:text-neutral-800",
+    outline:
+      "border-2 border-[#17528A] hover:bg-[#17528A] text-neutral-800 hover:text-neutral-300",
+    orange: "border-2 bg-[#F37E48] border-[#F37E48] text-white",
+  };
+
+  const ButtonSize = {
+    default: "py-4 text-lg",
+    medium: "py-2 text-base",
   };
 
   return (
     <div
-      className={`${className} min-w-44 justify-center items-center111111 py-4 rounded-lg ${
+      className={`${className} min-w-44 justify-center items-center rounded-lg ${
         ButtonType[type || "default"]
-      } ${
-        type === "default"
-          ? "text-neutral-300 hover:text-neutral-800"
-          : "text-neutral-800 hover:text-neutral-300"
-      } text-center uppercase text-lg font-semibold`}
+      } ${ButtonSize[size || "default"]} text-center uppercase font-semibold`}
       onClick={onPress}
     >
       {children}

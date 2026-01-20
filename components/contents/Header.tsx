@@ -1,9 +1,14 @@
+"use client";
+
 import { FC } from "react";
 import BoxedContainer from "../containers/BoxedContainer";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
+import { useRouter } from "next/navigation";
 
 const Header: FC = () => {
+  const router = useRouter();
+
   return (
     <div className="h-36 relative">
       <div
@@ -12,15 +17,23 @@ const Header: FC = () => {
       />
       <BoxedContainer className="h-full w-full justify-center flex items-center relative z-10">
         <div className="w-full flex justify-between items-center">
-          <Image
-            src="/images/logo/logo.png"
-            width={75}
-            height={75}
-            alt="Logo"
-            priority
-          />
+          <div onClick={() => router.push("/")}>
+            <Image
+              src="/images/logo/logo.png"
+              width={75}
+              height={75}
+              alt="Logo"
+              priority
+            />
+          </div>
           <div className="flex gap-8">
-            <BodyText onPress={() => {}} weight="semibold">
+            <BodyText onPress={() => router.push("/")} weight="semibold">
+              Home
+            </BodyText>
+            <BodyText
+              onPress={() => router.push("/OurServices")}
+              weight="semibold"
+            >
               Our Services
             </BodyText>
             <BodyText onPress={() => {}} weight="semibold">

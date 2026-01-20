@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import BodyText from "../elements/text/BodyText";
 import BoxedContainer from "../containers/BoxedContainer";
