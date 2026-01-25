@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { FC, PropsWithChildren } from "react";
-import LoaderProvider from "@/utils/providers/LoaderProvider";
-import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
+import Providers from "@/components/providers/Providers";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 const outfitFont = Outfit({
   variable: "--font-outfit",
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <html lang="en">
-      <body className={`${outfitFont.className} antialiased`}>
-        <ConvexClientProvider>
-          <LoaderProvider>{children}</LoaderProvider>
-        </ConvexClientProvider>
-      </body>
-    </html>
+    <ConvexAuthNextjsServerProvider>
+      <html lang="en">
+        <body className={`${outfitFont.className} antialiased`}>
+          <Providers>{children}</Providers>
+        </body>
+      </html>
+    </ConvexAuthNextjsServerProvider>
   );
 };
 

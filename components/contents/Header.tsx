@@ -5,6 +5,7 @@ import BoxedContainer from "../containers/BoxedContainer";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { useRouter } from "next/navigation";
+import { SignInButton, SignOutButton } from "./AuthButtons";
 
 const Header: FC = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Header: FC = () => {
               priority
             />
           </div>
-          <div className="flex gap-8">
+          <div className="flex gap-8 items-center">
             <BodyText onPress={() => router.push("/")} weight="semibold">
               Home
             </BodyText>
@@ -48,6 +49,8 @@ const Header: FC = () => {
             >
               Contact Us
             </BodyText>
+            {/* <SignInButton />
+            <SignOutButton /> */}
           </div>
         </div>
       </BoxedContainer>

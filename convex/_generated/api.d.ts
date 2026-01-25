@@ -8,6 +8,8 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
+import type * as http from "../http.js";
 import type * as tables_booking_process from "../tables/booking_process.js";
 import type * as tables_services from "../tables/services.js";
 
@@ -18,6 +20,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
+  http: typeof http;
   "tables/booking_process": typeof tables_booking_process;
   "tables/services": typeof tables_services;
 }>;
