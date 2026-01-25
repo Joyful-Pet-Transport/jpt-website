@@ -10,7 +10,7 @@ const HeroSection: FC = () => {
     <div className="flex flex-col gap-24">
       {/* section 1 */}
       <div className="relative h-[70vh] flex w-full">
-        <div className="absolute -top-32 -right-[110px]">
+        <div className="absolute -top-28 -right-[110px]">
           <Image
             src={"/images/element/hero1.png"}
             alt="Pet transportation hero image"

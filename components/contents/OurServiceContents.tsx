@@ -14,7 +14,7 @@ const OurServiceContents: FC = () => {
   }
 
   return (
-    <div className="w-full flex gap-8">
+    <div className="w-full flex gap-4">
       {services?.map(({ _id, title, description, image }) => (
         <ServiceCardContainer
           key={_id}

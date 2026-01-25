@@ -19,7 +19,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
       className="flex flex-col gap-12 overflow-hidden w-full"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom, #789ECD, #F2C995, #FF985B)",
+          "linear-gradient(to bottom, #41B2F6, #FBF2B3, #FF985B)",
       }}
     >
       {header && <Header />}

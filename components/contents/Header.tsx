@@ -1,15 +1,81 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import BoxedContainer from "../containers/BoxedContainer";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
-import { useRouter } from "next/navigation";
-import { SignInButton, SignOutButton } from "./AuthButtons";
+import { usePathname, useRouter } from "next/navigation";
+import SocialButton from "../elements/button/SocialButton";
 
 const Header: FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
+  const navItems = [
+    { label: "Home", path: "/" },
+    { label: "About Us", path: "/AboutUs" },
+    { label: "Our Services", path: "/OurServices" },
+    { label: "Testimonials", path: "/Testimonials" },
+    { label: "FAQs", path: "/Faq" },
+    { label: "Contact Us", path: "/ContactUs" },
+  ];
+
+  useEffect(() => {}, []);
+
+  return (
+    <div className="h-28 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center">
+      <div className="w-full h-full px-10 flex justify-between items-center">
+        {/* Logo */}
+        <div
+          className="rounded-full overflow-hidden cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <Image
+            src="/images/logo/logo.png"
+            width={75}
+            height={75}
+            alt="Logo"
+            priority
+          />
+        </div>
+
+        {/* Navigation */}
+        <div className="flex gap-8 items-center">
+          {navItems.map((item) => (
+            <BodyText
+              key={item.path}
+              onPress={() => router.push(item.path)}
+              className={pathname === item.path ? "text-blue-500!" : ""}
+            >
+              {item.label}
+            </BodyText>
+          ))}
+        </div>
+
+        {/* Social Buttons */}
+        <div className="flex flex-row gap-4 items-center h-full">
+          <SocialButton
+            icon="/images/icons/colored/messenger.svg"
+            onPress={() => {}}
+          />
+          <SocialButton
+            icon="/images/icons/colored/facebook.svg"
+            onPress={() => {}}
+          />
+          <SocialButton
+            icon="/images/icons/colored/instagram.svg"
+            onPress={() => {}}
+          />
+          <SocialButton
+            icon="/images/icons/colored/tiktok.svg"
+            onPress={() => {}}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  // old
   return (
     <div className="h-36 relative">
       <div
@@ -49,8 +115,6 @@ const Header: FC = () => {
             >
               Contact Us
             </BodyText>
-            {/* <SignInButton />
-            <SignOutButton /> */}
           </div>
         </div>
       </BoxedContainer>
