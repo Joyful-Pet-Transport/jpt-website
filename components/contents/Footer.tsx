@@ -4,102 +4,164 @@ import { FC } from "react";
 import BodyText from "../elements/text/BodyText";
 import BoxedContainer from "../containers/BoxedContainer";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import DynamicButton from "../elements/button/DynamicButton";
+import SocialButton from "../elements/button/SocialButton";
+import SocialButtons from "./SocialButtons";
+import { navItems } from "@/utils/config/navItems";
 
 const Footer: FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
-  return (
-    <div>
-      <BoxedContainer>
-        <div className="flex flex-row justify-center gap-24 py-8">
-          {/* brand */}
-          <div className="flex flex-col gap-2 justify-center items-center w-48">
-            <BodyText className="text-center" size="medium" weight="semibold">
-              Joyful Pet Transport
-            </BodyText>
-            <div onClick={() => router.push("/")}>
-              <Image
-                src="/images/logo/logo.png"
-                width={75}
-                height={75}
-                alt="Logo"
-                priority
-              />
-            </div>
+  const Brand = () => {
+    return (
+      <div className="flex flex-col items-center gap-6">
+        <div onClick={() => router.push("/")}>
+          <Image
+            src="/images/logo/logo.png"
+            width={128}
+            height={128}
+            alt="Logo"
+            priority
+          />
+        </div>
+        <div className="px-12 flex flex-col gap-6">
+          <div>
+            <BodyText className="text-center">Welcome!</BodyText>
             <BodyText className="text-center">
-              Copyright © 2025 Doneyt. All rights reserved.
+              We offer safe, reliable, and seamless pet transport services,
+              ensuring your companions travel with comfort and care—locally and
+              internationally.
             </BodyText>
           </div>
-          {/* navigation */}
-          <div className="flex flex-row gap-24">
-            <div className="flex flex-col gap-8">
-              <BodyText size="medium" weight="semibold">
-                Pages
-              </BodyText>
-              <div className="flex flex-col gap-2">
-                <BodyText onPress={() => router.push("/OurServices")}>
-                  Our Services
-                </BodyText>
-                <BodyText onPress={() => router.push("/AboutUs")}>
-                  About Us
-                </BodyText>
-                <BodyText onPress={() => router.push("/Faq")}>FAQs</BodyText>
-              </div>
-            </div>
+          <BodyText className="text-center" weight="semibold">
+            Get in touch with us today to begin your pet’s journey.
+          </BodyText>
+        </div>
+        <DynamicButton rounded size="medium">
+          contact us
+        </DynamicButton>
+      </div>
+    );
+  };
 
-            <div className="flex flex-col gap-8">
-              <BodyText size="medium" weight="semibold">
-                Our Socials
-              </BodyText>
-              <div className="flex flex-col gap-2">
-                <BodyText onPress={() => {}}>Facebook</BodyText>
-                <BodyText onPress={() => {}}>Instagram</BodyText>
-                <BodyText onPress={() => {}}>Tiktok</BodyText>
-              </div>
-            </div>
+  const Navigation = () => {
+    return (
+      <div className="flex flex-col gap-4 w-full">
+        <BodyText weight="semibold">NAVIGATION</BodyText>
+        <div className="flex flex-col">
+          {navItems.map((item) => (
+            <BodyText
+              key={item.path}
+              onPress={() => router.push(item.path)}
+              className={pathname === item.path ? "text-blue-500!" : ""}
+              weight="thin"
+            >
+              {item.label}
+            </BodyText>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
-            <div className="flex flex-col gap-8">
-              <BodyText size="medium" weight="semibold">
-                Contact Us
-              </BodyText>
-              <div className="flex flex-col gap-2">
-                <BodyText onPress={() => {}}>Messenger</BodyText>
-                <BodyText onPress={() => {}}>WhatsApp</BodyText>
-                <BodyText onPress={() => {}}>Telegram</BodyText>
-                <BodyText onPress={() => {}}>Viber</BodyText>
-              </div>
-            </div>
+  const Services = () => {
+    return (
+      <div className="flex flex-col gap-4 w-full">
+        <BodyText weight="semibold">OUR SERVICES</BodyText>
+        <div>
+          <BodyText weight="thin">International Pet Relocation</BodyText>
+          <div className="flex flex-col pl-8">
+            <BodyText weight="thin">Import to Philippines</BodyText>
+            <BodyText weight="thin">Export from Philippines</BodyText>
+          </div>
+          <BodyText weight="thin">Domestic Pet Relocation</BodyText>
+          <div className="flex flex-col pl-8">
+            <BodyText weight="thin">Land & Sea Travel</BodyText>
+            <BodyText weight="thin">Air Travel</BodyText>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
-            <div className="flex flex-col gap-4">
-              <div>
-                <BodyText size="medium" weight="semibold">
-                  Location
-                </BodyText>
-                <BodyText>1234 Street Name, City, Country</BodyText>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div>
-                  <BodyText>Email</BodyText>
-                  <BodyText onPress={() => {}}>
-                    joyfulpettransportreservations@gmail.com
-                  </BodyText>
-                </div>
-                <div>
-                  <BodyText>Phone Number</BodyText>
-                  <BodyText onPress={() => {}}>+639933707300</BodyText>
-                </div>
-              </div>
+  const ContactUs = () => {
+    return (
+      <div className="flex flex-col gap-10 w-full">
+        <div className="flex flex-col gap-4 w-full">
+          <BodyText weight="semibold">CONTACT US NOW!</BodyText>
+          <div>
+            <BodyText weight="thin">Email Address:</BodyText>
+            <div className="flex flex-col pl-8">
+              <BodyText weight="thin">
+                joyfulpettransportreservations@gmail.com
+              </BodyText>
             </div>
           </div>
         </div>
-      </BoxedContainer>
-      <div
-        style={{
-          backgroundImage: "linear-gradient(to right, #6EB2BC, #6DCA9E)",
-        }}
-        className="h-2.5 w-full"
-      />
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-row gap-4">
+            <div>
+              <BodyText weight="semibold">WANT TO TALK?</BodyText>
+              <BodyText weight="semibold">PLEASE CALL US</BodyText>
+            </div>
+            <Image
+              src="/images/icons/call-2.svg"
+              width={42}
+              height={42}
+              alt="Logo"
+              priority
+            />
+          </div>
+          <div className="flex flex-row gap-4">
+            <div>
+              <BodyText weight="thin">GOMO:</BodyText>
+              <BodyText weight="thin">DITO:</BodyText>
+              <BodyText weight="thin">SMART:</BodyText>
+              <BodyText weight="thin">GLOBE:</BodyText>
+            </div>
+            <div>
+              <BodyText weight="thin">+63 976 630 8124</BodyText>
+              <BodyText weight="thin">+63 993 370 3770</BodyText>
+              <BodyText weight="thin">N/A</BodyText>
+              <BodyText weight="thin">
+                +63 956 810 1871 / +63 966 940 6263
+              </BodyText>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col justify-center mb-2 gap-2">
+      <div className="bg-[#EAEAEA] rounded-4xl mx-8 p-8 flex flex-col flex-1">
+        <div className="flex flex-row gap-6">
+          <div className="w-1/4">
+            <Brand />
+          </div>
+          <div className="flex p-8 flex-row flex-1 gap-4">
+            <div className="flex flex-row gap-4 w-full">
+              <Navigation />
+              <Services />
+            </div>
+            <ContactUs />
+          </div>
+        </div>
+        <div className="flex w-full justify-center flex-col gap-2">
+          <BodyText className="text-center">
+            Trusted by Hundreds of Furparents
+          </BodyText>
+          <div className="flex flex-1 justify-center flex-row gap-4 items-center">
+            <SocialButtons />
+          </div>
+        </div>
+      </div>
+      <BodyText className="text-center" textColor="text-neutral-600">
+        © 2026 Joyful Pet Transport | All rights reserved.
+      </BodyText>
     </div>
   );
 };

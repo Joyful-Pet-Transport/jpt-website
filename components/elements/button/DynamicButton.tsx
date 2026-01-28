@@ -5,6 +5,7 @@ type DynamicButtonProps = PropsWithChildren<{
   size?: "default" | "medium";
   onPress?: () => void;
   className?: string;
+  rounded?: boolean;
 }>;
 
 const DynamicButton: FC<DynamicButtonProps> = ({
@@ -13,6 +14,7 @@ const DynamicButton: FC<DynamicButtonProps> = ({
   size = "default",
   onPress,
   className,
+  rounded,
 }) => {
   const ButtonType = {
     default:
@@ -29,7 +31,7 @@ const DynamicButton: FC<DynamicButtonProps> = ({
 
   return (
     <div
-      className={`${className} min-w-44 justify-center items-center rounded-lg ${
+      className={`${className} min-w-44 justify-center items-center ${rounded ? "rounded-full" : "rounded-lg"} ${
         ButtonType[type || "default"]
       } ${ButtonSize[size || "default"]} text-center uppercase font-semibold`}
       onClick={onPress}

@@ -21,7 +21,7 @@ const BodyText: FC<BodyTextProps> = ({
   onPress,
 }) => {
   const weightClasses = {
-    thin: "font-thin",
+    thin: "font-[300]",
     normal: "font-normal",
     semibold: "font-semibold",
     bold: "font-bold",
