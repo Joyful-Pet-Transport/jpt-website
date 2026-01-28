@@ -9,8 +9,7 @@ type TestimonyCardProps = {
 };
 
 const TestimonyCard: FC<TestimonyCardProps> = (props) => {
-  const MAX_CHARS = 123;
-
+  const MAX_CHARS = 115;
   const truncateText = (text: string, max: number) => {
     if (!text) return "";
     return text.length > max ? text.slice(0, max).trimEnd() + "..." : text;
