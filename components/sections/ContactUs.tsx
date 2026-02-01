@@ -6,6 +6,8 @@ import BodyText from "../elements/text/BodyText";
 import InfoItemContainer from "../containers/InfoItemContainer";
 import IconContainer from "../containers/IconContainer";
 import DynamicButton from "../elements/button/DynamicButton";
+import InputBase from "../elements/input/TextInput/InputBase";
+import SelectBase from "../elements/input/SelectInput/SelectBase";
 
 const ContactUsSection: FC = () => {
   const ContactUs: FC = () => {
@@ -74,9 +76,22 @@ const ContactUsSection: FC = () => {
           <div className="flex flex-1 flex-col gap-6">
             <BodyText white>QUICK INQUIRY </BodyText>
             <div className="flex flex-col gap-4 h-full">
-              <div className="bg-[#FEF5EE] rounded-xl flex-col flex flex-1">
-                custom input to be continued
-              </div>
+              <InputBase
+                keyboardType="paragraph"
+                whiteLabel
+                label="Kupal"
+                placeholder="boboboobobo"
+              />
+              <SelectBase
+                options={[
+                  { label: "Food", value: "food" },
+                  { label: "Transport", value: "transport" },
+                ]}
+                selectType="multi"
+                whiteLabel
+                label="Kupal"
+                placeholder="boboboobobo"
+              />
               <DynamicButton size="medium" type="orange">
                 SEND
               </DynamicButton>
