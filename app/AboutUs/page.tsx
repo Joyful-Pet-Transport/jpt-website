@@ -4,6 +4,7 @@ import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
 import Mission from "@/components/contents/Mission";
+import WhatMakesUsDiff from "@/components/sections/WhatMakesUsDiff";
 
 const AboutUsScreen = () => {
   return (
@@ -19,6 +20,7 @@ const AboutUsScreen = () => {
           </BodyText>
           <WhoWeAre/>
           <Mission />
+          <WhatMakesUsDiff />
       
         </div>
       </BoxedContainer>
