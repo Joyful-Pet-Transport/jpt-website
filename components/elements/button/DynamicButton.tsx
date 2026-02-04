@@ -25,8 +25,8 @@ const DynamicButton: FC<DynamicButtonProps> = ({
   };
 
   const ButtonSize = {
-    default: "py-4 text-lg",
-    medium: "py-2 text-base",
+    default: "py-2 text-base",
+    medium: "py-2 text-sm",
   };
 
   return (

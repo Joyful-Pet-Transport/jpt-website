@@ -6,29 +6,47 @@ import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
 import MoreQuestions from "@/components/sections/MoreQuestions";
 import React from "react";
+import Image from "next/image";
 
 const FrequentlyAskedQuestionsScreen = () => {
-    const [openIndex, setOpenIndex] = React.useState<number | null>(null)
-    const faqsData = [
+    const [openIndex, setOpenIndex] = React.useState<number | null>(null);
+
+    const toggleFAQ = (index: number) => {
+        setOpenIndex(openIndex === index ? null : index);
+    }
+
+    const faqs = [
         {
-            question: 'Lightning-Fast Performance',
-            answer: 'Built with speed — minimal load times and optimized rendering.'
+            question: "What is included in the Starter plan?",
+            answer: "The Starter plan includes access to all basic features, 5GB of storage, and email support. It's perfect for individuals and small projects."
         },
         {
-            question: 'Fully Customizable Components',
-            answer: 'Easily adjust styles, structure, and behavior to match your project needs.'
+            question: "Do you offer a free trial?",
+            answer: "Yes, we offer a 14-day free trial for all our plans. No credit card is required to start."
         },
         {
-            question: 'Responsive by Default',
-            answer: 'Every component are responsive by default — no extra CSS required.'
+            question: "Can I switch plans later?",
+            answer: "Absolutely! You can upgrade or downgrade your plan at any time from your account settings."
         },
         {
-            question: 'Tailwind CSS Powered',
-            answer: 'Built using Tailwind utility classes — no extra CSS or frameworks required.'
+            question: "What payment methods do you accept?",
+            answer: "We accept all major credit cards (Visa, MasterCard, American Express) and PayPal."
         },
         {
-            question: 'Dark Mode Support',
-            answer: 'All components come ready with light and dark theme support out of the box.'
+            question: "How secure is my data?",
+            answer: "We use industry-standard encryption and security protocols to ensure your data is safe and protected at all times."
+        },
+        {
+            question: "How does the 2% donation work?",
+            answer: "We pledge to donate 2% of our annual revenue to environmental causes and non-profit organizations."
+        },
+        {
+            question: "Can I integrate this platform with other tools?",
+            answer: "Yes, we offer seamless integration with popular tools like Slack, Trello, and Google Workspace."
+        },
+        {
+            question: "What makes your platform different?",
+            answer: "Our platform is built with a focus on user experience, speed, and reliability, ensuring you get the best results with minimal effort."
         }
     ]
   return (
@@ -39,19 +57,39 @@ const FrequentlyAskedQuestionsScreen = () => {
           <BodyText className="text-center pt-4">
             Find answers to common questions about our pet transportation services.
           </BodyText>
-          <div className='max-w-xl w-full mt-6 flex flex-col gap-4 items-start text-left'>
-                    {faqsData.map((faq, index) => (
-                        <div key={index} className='flex flex-col items-start w-full'>
-                            <div className='flex items-center justify-between w-full cursor-pointer bg-[#0D436D] p-4 rounded' onClick={() => setOpenIndex(openIndex === index ? null : (index as unknown as number))}>
-                                <BodyText weight="normal" white size="small">{faq.question}</BodyText>
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${openIndex === index ? "rotate-180" : ""} transition-all duration-500 ease-in-out`}>
-                                    <path d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+          <div className='grid grid-cols-2 gap-x-8 gap-y-4 mt-12'>
+                        {faqs.map((faq, index) => (
+                            <div key={index} onClick={() => toggleFAQ(index)} className={`bg-slate-50 p-3.5 rounded-lg cursor-pointer transition-all duration-300 border border-slate-200 hover:bg-slate-100 ${openIndex === index ? 'row-span-2' : ''}`}>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-neutral-800'>{faq.question}</span>
+                                    <div className={`text-slate-400 p-1 rounded transition-colors ${openIndex === index ? 'bg-slate-200 text-slate-500' : 'hover:bg-slate-300 hover:text-slate-500'}`}>
+                                        {openIndex === index ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus"><path d="M5 12h14"/></svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={`grid transition-all duration-300 ease-in-out ${openIndex === index ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'}`}>
+                                    <div className='overflow-hidden'>
+                                        <hr className="pb-2" />
+                                        <p className='text-sm text-neutral-600 leading-relaxed'>
+                                            {faq.answer}
+                                        </p>
+
+                                        {/* <div className="flex flex-row-reverse">
+                                        <Image
+            src={"/images/element/ourteam.png"}
+            alt="Our Team"
+            width={50}
+            height={50}
+          />
+                                        </div> */}
+                                    </div>
+                                </div>
                             </div>
-                            <BodyText weight="normal" size="small" className={`px-4 transition-all duration-500 ease-in-out ${openIndex === index ? "opacity-100 max-h-[300px] translate-y-0 pt-4" : "opacity-0 max-h-0 -translate-y-2"}`} > {faq.answer}</BodyText>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
         </div>
         <MoreQuestions />
 

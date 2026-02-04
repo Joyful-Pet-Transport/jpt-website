@@ -5,6 +5,7 @@ import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
 import Mission from "@/components/contents/Mission";
 import WhatMakesUsDiff from "@/components/sections/WhatMakesUsDiff";
+import Vision from "@/components/contents/Vision";
 
 const AboutUsScreen = () => {
   return (
@@ -19,7 +20,11 @@ const AboutUsScreen = () => {
           Trusted by Hundreds of Furparents
           </BodyText>
           <WhoWeAre/>
+          <div className="flex flex-col-2 gap-12">
           <Mission />
+          <Vision />
+          </div>
+          
           <WhatMakesUsDiff />
       
         </div>
