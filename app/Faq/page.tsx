@@ -57,7 +57,7 @@ const FrequentlyAskedQuestionsScreen = () => {
           <BodyText className="text-center pt-4">
             Find answers to common questions about our pet transportation services.
           </BodyText>
-          <div className='grid grid-cols-2 gap-x-8 gap-y-4 mt-12'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-12'>
                         {faqs.map((faq, index) => (
                             <div key={index} onClick={() => toggleFAQ(index)} className={`bg-slate-50 p-3.5 rounded-lg cursor-pointer transition-all duration-300 border border-slate-200 hover:bg-slate-100 ${openIndex === index ? 'row-span-2' : ''}`}>
                                 <div className='flex items-center justify-between'>
