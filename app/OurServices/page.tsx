@@ -21,13 +21,14 @@ const OurServicesScreen = () => {
           </BodyText>
         </div>
 
-        <div className="w-full flex gap-4 justify-center items-center mt-10">
+        <div className="w-full flex gap-4 items-center mt-10">
           {services?.map(({ _id, title, description, image }) => (
             <ServicePageImageContainer
               key={_id}
               title={title}
               description={description}
               image={image}
+              onPress={() => {}}
             />
           ))}
         </div>
