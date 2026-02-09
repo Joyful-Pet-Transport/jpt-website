@@ -22,9 +22,9 @@ const Header: FC = () => {
             onClick={() => router.push("/")}
           >
             <Image
-              src="/images/logo/logo.png"
-              width={75}
-              height={75}
+              src="/images/logo/logo-new.png"
+              width={100}
+              height={100}
               alt="Logo"
               priority
             />
