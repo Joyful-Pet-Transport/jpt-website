@@ -12,7 +12,7 @@ const OurServicesScreen = () => {
   const services = useQuery(api.tables.services.get);
   return (
     <PageWrapperContainer className="items-center">
-      <BoxedContainer medium>
+      <BoxedContainer medium className="flex flex-col gap-4">
         <div className="flex flex-col justify-center items-center max-w-2xl mx-auto">
           <Heading className="text-center">Our Services</Heading>
           <BodyText className="text-center">
@@ -21,7 +21,7 @@ const OurServicesScreen = () => {
           </BodyText>
         </div>
 
-        <div className="w-full flex gap-4 items-center mt-10">
+        <div className="w-full flex flex-row flex-wrap gap-6 justify-between">
           {services?.map(({ _id, title, description, image }) => (
             <ServicePageImageContainer
               key={_id}
