@@ -17,7 +17,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ items }) => {
   const router = useRouter();
 
   return (
-    <div className="flex items-center justify-center gap-2 bg-white px-8 py-4 rounded-t-2xl mx-120 -mt-14 z-100">
+    <div className="flex items-center justify-center gap-2 bg-white px-8 py-4 rounded-t-2xl mx-120 -mt-20 z-100">
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
           {item.path ? (
