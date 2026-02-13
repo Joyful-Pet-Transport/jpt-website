@@ -19,7 +19,7 @@ const Footer: FC = () => {
       <div className="flex flex-col items-center gap-6">
         <div onClick={() => router.push("/")}>
           <Image
-            src="/images/logo/logo.png"
+            src="/images/logo/logo-new.png"
             width={128}
             height={128}
             alt="Logo"
