@@ -58,6 +58,7 @@ const FrequentlyAskedQuestionsScreen = () => {
         "Our platform is built with a focus on user experience, speed, and reliability, ensuring you get the best results with minimal effort.",
     },
   ];
+
   return (
     <PageWrapperContainer>
       <BoxedContainer medium>

@@ -136,7 +136,7 @@ const Footer: FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center mb-2 gap-2">
+    <div className="flex flex-col justify-center mb-2 gap-2 mt-8">
       <div className="bg-[#EAEAEA] rounded-4xl mx-8 p-8 flex flex-col flex-1">
         <div className="flex flex-row gap-6">
           <div className="w-1/4">

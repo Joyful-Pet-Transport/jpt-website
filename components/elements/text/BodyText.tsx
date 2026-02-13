@@ -5,7 +5,8 @@ import { FC, PropsWithChildren } from "react";
 type BodyTextProps = PropsWithChildren<{
   className?: string;
   weight?: "thin" | "normal" | "semibold" | "bold";
-  size?: "xsmall" | "small" | "normal" | "medium" | "large";
+  size?: "xsmall" | "small" | "normal" | "medium" | "large" | "xlarge";
+  font?: "poppins" | "fredoka" | "luckiestGuy" | "leagueSpartan";
   textColor?: string;
   white?: boolean;
   onPress?: () => void;
@@ -16,6 +17,7 @@ const BodyText: FC<BodyTextProps> = ({
   className,
   weight,
   size,
+  font,
   textColor,
   white = false,
   onPress,
@@ -33,6 +35,14 @@ const BodyText: FC<BodyTextProps> = ({
     normal: "text-lg",
     medium: "text-xl",
     large: "text-2xl",
+    xlarge: "text-3xl",
+  };
+
+  const fontClasses = {
+    poppins: "font-poppins",
+    fredoka: "font-fredoka",
+    luckiestGuy: "font-[luckiest_guy]",
+    leagueSpartan: "font-[league_spartan]",
   };
 
   const colorClasses = textColor
@@ -45,7 +55,7 @@ const BodyText: FC<BodyTextProps> = ({
     <h1
       className={`${className} ${weightClasses[weight || "normal"]} ${
         sizeClasses[size || "normal"]
-      } ${colorClasses} ${
+      } ${fontClasses[font || "poppins"]} ${colorClasses} ${
         onPress
           ? textColor
             ? "cursor-pointer"

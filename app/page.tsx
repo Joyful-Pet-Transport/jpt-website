@@ -18,7 +18,7 @@ const Home = () => {
   }
 
   return (
-    <PageWrapperContainer>
+    <PageWrapperContainer removeBg>
       <HeroSection />
       <OurServices />
       <BookingProcessSection />

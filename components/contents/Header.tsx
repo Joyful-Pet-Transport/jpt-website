@@ -1,35 +1,52 @@
 "use client";
 
 import { FC } from "react";
-import BoxedContainer from "../containers/BoxedContainer";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { usePathname, useRouter } from "next/navigation";
-import SocialButtons from "./SocialButtons";
 import { navItems } from "@/utils/config/navItems";
+import DynamicButton from "../elements/button/DynamicButton";
 
 const Header: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isNotHomePage = pathname !== "/";
 
-  return (
-    <>
-      <div className="h-28 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center z-10">
-        <div className="w-full h-full px-10 flex justify-between items-center">
+  const HeaderBar: FC = () => {
+    return (
+      <div className="h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center z-1">
+        <div className="w-full h-full px-8 flex justify-between items-center">
           {/* Logo */}
           <div className="flex flex-1">
             <div
-              className="rounded-full overflow-hidden cursor-pointer"
+              className="flex flex-row gap-2 cursor-pointer items-center"
               onClick={() => router.push("/")}
             >
               <Image
-                src="/images/logo/logo.png"
+                src="/images/logo/logo-new.png"
                 width={75}
                 height={75}
                 alt="Logo"
                 priority
               />
+              <div className="text-center">
+                <BodyText
+                  size="xlarge"
+                  weight="bold"
+                  font="luckiestGuy"
+                  textColor="000F3F"
+                >
+                  JOYFUL PET TRANSPORT
+                </BodyText>
+                <BodyText
+                  size="small"
+                  weight="semibold"
+                  font="leagueSpartan"
+                  textColor="000F3F"
+                >
+                  TRANSPORTING PETS HAS NEVER BEEN THIS EASY
+                </BodyText>
+              </div>
             </div>
           </div>
 
@@ -46,29 +63,33 @@ const Header: FC = () => {
             ))}
           </div>
 
-          {/* Social Buttons */}
+          {/* Book now Button */}
           <div className="flex flex-1 justify-end items-center h-full">
-            <SocialButtons />
+            <DynamicButton rounded>book now</DynamicButton>
           </div>
         </div>
       </div>
+    );
+  };
 
-      {/* bbbackground image */}
-      {isNotHomePage && (
-        <div className="relative flex h-64 md:h-80 lg:h-96 mx-4 -mt-45 z-0">
-          <div className="relative w-full h-full rounded-t-4xl overflow-hidden">
-            <Image
-              src="/images/element/ourserviceBackground.jpg"
-              alt="our services bbackground"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+  if (isNotHomePage) {
+    return (
+      <div className="relative flex flex-col h-96 bg-[#EAEAEA] mx-8 mt-8 rounded-t-4xl">
+        <HeaderBar />
+        <div className="absolute inset-0 w-full h-full rounded-t-4xl overflow-hidden">
+          <Image
+            src="/images/element/ourserviceBackground.jpg"
+            alt="background"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
-      )}
-    </>
-  );
+      </div>
+    );
+  }
+
+  return <HeaderBar />;
 };
 
 export default Header;

@@ -13,7 +13,7 @@ const OurServicesScreen = () => {
   const services = useQuery(api.tables.services.get);
 
   return (
-    <PageWrapperContainer className="items-center bg-[#EAEAEA] -mt-12 mx-4 rounded-b-4xl">
+    <PageWrapperContainer className="items-center mx-4 rounded-b-4xl">
       <BoxedContainer medium className="flex flex-col gap-12">
         <Breadcrumbs
           items={[{ label: "Home", path: "/" }, { label: "Our Services" }]}

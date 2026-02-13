@@ -6,6 +6,7 @@ type PageWrapperContainerProps = PropsWithChildren<{
   footer?: boolean;
   header?: boolean;
   className?: string;
+  removeBg?: boolean;
 }>;
 
 const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
@@ -13,17 +14,20 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
   footer = true,
   header = true,
   className,
+  removeBg,
 }) => {
   return (
     <div
-      className="flex flex-col gap-12 overflow-hidden w-full"
+      className="flex flex-col overflow-hidden w-full"
       style={{
         backgroundImage:
           "linear-gradient(to bottom, #41B2F6, #FBF2B3, #FF985B)",
       }}
     >
       {header && <Header />}
-      <div className={`min-h-screen py-4 flex flex-col ${className}`}>
+      <div
+        className={`min-h-screen pb-4 mx-8 flex flex-col ${!removeBg && "bg-white rounded-b-4xl"} ${className}`}
+      >
         {children}
       </div>
       {footer && <Footer />}

@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import {
+  Poppins,
+  Fredoka,
+  Luckiest_Guy,
+  League_Spartan,
+} from "next/font/google";
 import "./globals.css";
 import { FC, PropsWithChildren } from "react";
 import Providers from "@/components/providers/Providers";
@@ -8,7 +13,23 @@ import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 const poppinsFont = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300","400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const fredokaFont = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin"],
+});
+
+const luckiestGuyFont = Luckiest_Guy({
+  variable: "--font-luckiest_guy",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const leagueSpartanFont = League_Spartan({
+  variable: "--font-league_spartan",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -20,7 +41,16 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
-        <body className={`${poppinsFont.className} antialiased`}>
+        <body
+          className={`${poppinsFont.className} antialiased`}
+          style={
+            {
+              "--font-fredoka": fredokaFont.style.fontFamily,
+              "--font-luckiest_guy": luckiestGuyFont.style.fontFamily,
+              "--font-league_spartan": leagueSpartanFont.style.fontFamily,
+            } as React.CSSProperties
+          }
+        >
           <Providers>{children}</Providers>
         </body>
       </html>
