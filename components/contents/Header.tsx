@@ -1,11 +1,64 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { usePathname, useRouter } from "next/navigation";
-import { navItems } from "@/utils/config/navItems";
+import { NavItem, navItems } from "@/utils/config/navItems";
 import DynamicButton from "../elements/button/DynamicButton";
+import { HiChevronDown } from "react-icons/hi";
+
+type HeaderItemProps = {
+  item: NavItem;
+};
+
+const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <div className="relative flex flex-col items-start gap-2">
+      <div className="flex flex-row gap-2 items-center">
+        <BodyText
+          key={item.path}
+          onPress={() => router.push(item.path)}
+          className={`${pathname === item.path ? "text-blue-500!" : ""} flex items-center gap-2`}
+        >
+          {item.label}
+          {item.children && (
+            <HiChevronDown
+              className="cursor-pointer"
+              onClick={toggleDropdown}
+            />
+          )}
+        </BodyText>
+      </div>
+
+      {isOpen && item.children && (
+        <div className="absolute top-full left-0 mt-1 bg-[#EAEAEA] shadow-2xl border border-gray-300 rounded-xl z-50 min-w-80 overflow-hidden flex flex-col gap-2 p-2">
+          {item.children.map((child, index) => (
+            <div
+              key={index}
+              className="px-4 py-1 hover:bg-white rounded-xl cursor-pointer"
+              onClick={() => {
+                router.push(`${item.path}${child.path}`);
+                setIsOpen(false);
+              }}
+            >
+              <BodyText>{child.label}</BodyText>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Header: FC = () => {
   const router = useRouter();
@@ -52,14 +105,8 @@ const Header: FC = () => {
 
           {/* Navigation */}
           <div className="flex gap-8 items-center">
-            {navItems.map((item) => (
-              <BodyText
-                key={item.path}
-                onPress={() => router.push(item.path)}
-                className={pathname === item.path ? "text-blue-500!" : ""}
-              >
-                {item.label}
-              </BodyText>
+            {navItems.map((item, index) => (
+              <HeaderItem key={index} item={item} />
             ))}
           </div>
 

@@ -11,6 +11,7 @@
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as tables_booking_process from "../tables/booking_process.js";
+import type * as tables_frequently_asked_questions from "../tables/frequently_asked_questions.js";
 import type * as tables_services from "../tables/services.js";
 
 import type {
@@ -23,6 +24,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
   "tables/booking_process": typeof tables_booking_process;
+  "tables/frequently_asked_questions": typeof tables_frequently_asked_questions;
   "tables/services": typeof tables_services;
 }>;
 
