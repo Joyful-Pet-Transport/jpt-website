@@ -15,6 +15,7 @@ export default defineSchema({
     description: v.string(),
     image: v.string(),
     title: v.string(),
+    slug: v.optional(v.string()),
   }),
 
   frequently_asked_questions: defineTable({

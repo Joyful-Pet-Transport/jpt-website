@@ -8,8 +8,10 @@ import Heading from "@/components/elements/text/Heading";
 import Breadcrumbs from "@/components/elements/Breadcrumbs";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
+import { useRouter } from "next/navigation";
 
 const OurServicesScreen = () => {
+  const router = useRouter();
   const services = useQuery(api.tables.services.get);
 
   return (
@@ -28,13 +30,13 @@ const OurServicesScreen = () => {
         </div>
 
         <div className="w-full flex flex-row flex-wrap gap-6 justify-between">
-          {services?.map(({ _id, title, description, image }) => (
+          {services?.map(({ _id, title, description, image, slug }) => (
             <ServicePageImageContainer
               key={_id}
               title={title}
               description={description}
               image={image}
-              onPress={() => {}}
+              onPress={() => router.push(`/OurServices/${slug}`)}
             />
           ))}
         </div>

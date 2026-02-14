@@ -47,7 +47,12 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
         <BodyText
           key={item.path}
           onPress={() => router.push(item.path)}
-          className={`${pathname === item.path ? "text-blue-500!" : ""} flex items-center gap-2`}
+          className={`${
+            pathname === item.path ||
+            (item.path !== "/" && pathname.startsWith(item.path))
+              ? "text-blue-500!"
+              : ""
+          } flex items-center gap-2`}
         >
           {item.label}
           {item.children && (
@@ -70,7 +75,15 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
                 setIsOpen(false);
               }}
             >
-              <BodyText>{child.label}</BodyText>
+              <BodyText
+                className={
+                  pathname === `${item.path}${child.path}`
+                    ? "text-blue-500!"
+                    : ""
+                }
+              >
+                {child.label}
+              </BodyText>
             </div>
           ))}
         </div>
@@ -96,10 +109,11 @@ const Header: FC = () => {
             >
               <Image
                 src="/images/logo/logo-new.png"
-                width={75}
-                height={75}
+                width={150}
+                height={150}
                 alt="Logo"
                 priority
+                className="w-auto h-16"
               />
               <div className="text-center">
                 <BodyText

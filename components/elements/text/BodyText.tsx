@@ -5,7 +5,7 @@ import { FC, PropsWithChildren } from "react";
 type BodyTextProps = PropsWithChildren<{
   className?: string;
   weight?: "thin" | "normal" | "semibold" | "bold";
-  size?: "xsmall" | "small" | "normal" | "medium" | "large" | "xlarge";
+  size?: "xsmall" | "small" | "base" | "normal" | "medium" | "large" | "xlarge";
   font?: "poppins" | "fredoka" | "luckiestGuy" | "leagueSpartan";
   textColor?: string;
   white?: boolean;
@@ -32,6 +32,7 @@ const BodyText: FC<BodyTextProps> = ({
   const sizeClasses = {
     xsmall: "text-xs",
     small: "text-sm",
+    base: "text-base",
     normal: "text-lg",
     medium: "text-xl",
     large: "text-2xl",
