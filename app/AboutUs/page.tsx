@@ -6,7 +6,7 @@ import Heading from "@/components/elements/text/Heading";
 import Mission from "@/components/contents/Mission";
 import WhatMakesUsDiff from "@/components/sections/WhatMakesUsDiff";
 import Vision from "@/components/contents/Vision";
-import Breadcrumbs from "@/components/elements/Breadcrumbs";
+import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 
 const AboutUsScreen = () => {
   return (

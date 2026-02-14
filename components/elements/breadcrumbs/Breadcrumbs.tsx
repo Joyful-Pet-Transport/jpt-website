@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { useRouter } from "next/navigation";
-import BodyText from "./text/BodyText";
+import BodyText from "../text/BodyText";
 
 type BreadcrumbItem = {
   label: string;

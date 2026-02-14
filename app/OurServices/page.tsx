@@ -5,7 +5,7 @@ import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import ServicePageImageContainer from "@/components/containers/ServicePageImageContainer";
 import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
-import Breadcrumbs from "@/components/elements/Breadcrumbs";
+import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
