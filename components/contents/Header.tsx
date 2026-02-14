@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,6 +16,25 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isOpen]);
 
   const toggleDropdown = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -23,7 +42,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
   };
 
   return (
-    <div className="relative flex flex-col items-start gap-2">
+    <div className="relative flex flex-col items-start gap-2" ref={dropdownRef}>
       <div className="flex flex-row gap-2 items-center">
         <BodyText
           key={item.path}
@@ -121,14 +140,14 @@ const Header: FC = () => {
 
   if (isNotHomePage) {
     return (
-      <div className="relative flex flex-col h-96 bg-[#EAEAEA] mx-8 mt-8 rounded-t-4xl">
+      <div className="relative flex flex-col h-140 bg-[#EAEAEA] mx-8 mt-8 rounded-t-4xl">
         <HeaderBar />
         <div className="absolute inset-0 w-full h-full rounded-t-4xl overflow-hidden">
           <Image
-            src="/images/element/ourserviceBackground.jpg"
+            src="/images/element/header-bg-image.png"
             alt="background"
             fill
-            className="object-cover"
+            className="object-cover brightness-[.5]"
             priority
           />
         </div>

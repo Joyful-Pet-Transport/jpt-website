@@ -37,11 +37,9 @@ const FrequentlyAskedQuestionsScreen = () => {
               >
                 <div
                   onClick={() => toggleFAQ(index)}
-                  className="bg-[#0D436D] p-3.5 hover:bg-[#0D436D]/90 transition-colors flex items-center justify-between"
+                  className="bg-[#0D436D] p-6 hover:bg-[#0D436D]/90 transition-colors flex items-center justify-between"
                 >
-                  <span className="text-sm font-medium text-white">
-                    {question}
-                  </span>
+                  <BodyText white>{question}</BodyText>
                   <div
                     className={`text-white p-1 rounded transition-colors ${
                       openIndex === index ? "bg-white/20" : "hover:bg-white/10"
@@ -82,27 +80,18 @@ const FrequentlyAskedQuestionsScreen = () => {
                   </div>
                 </div>
                 <div
-                  className={`grid transition-all duration-300 ease-in-out bg-white ${
+                  className={`grid transition-all duration-300 ease-in-out bg-[#EAEAEA] ${
                     openIndex === index
                       ? "grid-rows-[1fr] opacity-100"
                       : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="p-3.5 pt-4">
-                      <div className="text-sm text-neutral-600 leading-relaxed whitespace-pre-line">
-                        {answer}
+                    <div className="p-6">
+                      <div className="leading-relaxed whitespace-pre-line">
+                        <BodyText>{answer}</BodyText>
                       </div>
                     </div>
-
-                    {/* <div className="flex flex-row-reverse">
-                      <Image
-                        src={"/images/element/ourteam.png"}
-                        alt="Our Team"
-                        width={50}
-                        height={50}
-                      />
-                    </div> */}
                   </div>
                 </div>
               </div>
