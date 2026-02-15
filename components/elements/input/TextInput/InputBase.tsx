@@ -25,6 +25,7 @@ export type InputBaseProps = {
   validation?: string;
   keyboardType?: KeyboardType;
   disabled?: boolean;
+  required?: boolean;
   onChange?: (value: string) => void;
 };
 
@@ -36,6 +37,7 @@ const InputBase: FC<InputBaseProps> = ({
   validation,
   keyboardType = "text",
   disabled = false,
+  required,
   onChange,
 }) => {
   const [value, setValue] = useState(initialValue);
@@ -57,8 +59,11 @@ const InputBase: FC<InputBaseProps> = ({
   );
 
   return (
-    <div className={`flex flex-col gap-1 w-full`}>
-      <BodyText white={whiteLabel}>{label}</BodyText>
+    <div className={`flex flex-col gap-1 w-full max-w-110`}>
+      <BodyText white={whiteLabel}>
+        {label}
+        {required && <span className="text-red-500">*</span>}
+      </BodyText>
 
       {keyboardType === "paragraph" ? (
         <Textarea

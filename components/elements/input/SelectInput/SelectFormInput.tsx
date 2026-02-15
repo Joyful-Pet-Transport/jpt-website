@@ -3,30 +3,34 @@ import { Controller, FieldErrors, FieldValues } from "react-hook-form";
 import SelectBase, { SelectBaseProps } from "./SelectBase";
 
 export type SelectFormInputProps = SelectBaseProps & {
-  fieldName: string;
+  name: string;
   control: any;
   errors?: FieldErrors<FieldValues>;
+  className?: string;
 };
 
 const SelectFormInput: FC<SelectFormInputProps> = ({
-  fieldName,
+  name,
   control,
   errors,
+  className,
   ...inputProps
 }) => {
   return (
-    <Controller
-      control={control}
-      name={fieldName}
-      render={({ field, fieldState }) => (
-        <SelectBase
-          {...inputProps}
-          initialValue={field.value ?? ""}
-          onChange={field.onChange}
-          validation={fieldState.error?.message}
-        />
-      )}
-    />
+    <div className={className}>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field, fieldState }) => (
+          <SelectBase
+            {...inputProps}
+            initialValue={field.value ?? ""}
+            onChange={field.onChange}
+            validation={fieldState.error?.message}
+          />
+        )}
+      />
+    </div>
   );
 };
 

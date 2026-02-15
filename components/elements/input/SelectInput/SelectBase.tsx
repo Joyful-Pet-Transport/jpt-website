@@ -30,6 +30,7 @@ export type SelectBaseProps = {
   validation?: string;
   selectType?: SelectType;
   disabled?: boolean;
+  required?: boolean;
   options?: Option[] | LabeledOption[];
   onChange?: (value: string | string[]) => void;
 };
@@ -42,6 +43,7 @@ const SelectBase: FC<SelectBaseProps> = ({
   validation,
   selectType = "default",
   disabled = false,
+  required,
   options = [],
   onChange,
 }) => {
@@ -87,8 +89,10 @@ const SelectBase: FC<SelectBaseProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-1 w-full">
-      <BodyText white={whiteLabel}>{label}</BodyText>
+    <div className="flex flex-col gap-1 w-full max-w-110">
+      <BodyText weight="semibold" white={whiteLabel}>
+        {label} {required && <span className="text-red-500">*</span>}
+      </BodyText>
 
       {/* DEFAULT SELECT */}
       {selectType === "default" && (
