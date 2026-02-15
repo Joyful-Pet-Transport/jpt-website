@@ -26,7 +26,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
     >
       {header && <Header />}
       <div
-        className={`min-h-screen py-8 mx-8 flex flex-col ${!removeBg && "bg-white rounded-b-4xl"} ${className}`}
+        className={`min-h-screen py-8 flex flex-col gap-12 ${!removeBg && "bg-white rounded-b-4xl mx-8"} ${className}`}
       >
         {children}
       </div>

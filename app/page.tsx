@@ -8,6 +8,7 @@ import ContactUsSection from "@/components/sections/ContactUs";
 import HeroSection from "@/components/sections/HeroSection";
 import OurServices from "@/components/sections/OurServices";
 import ProofOfLegitimacy from "@/components/sections/ProofOfLegitimacy";
+import RecognizedByMediaSection from "@/components/sections/RecognizedByMedia";
 import TestimonialSection from "@/components/sections/Testimonials";
 
 const Home = () => {
@@ -23,7 +24,7 @@ const Home = () => {
       <HeroSection />
       <OurServices />
       <BookingProcessSection />
-      <ProofOfLegitimacy />
+      <RecognizedByMediaSection />
       <TestimonialSection />
       <ConnectWithUs />
       <ContactUsSection />

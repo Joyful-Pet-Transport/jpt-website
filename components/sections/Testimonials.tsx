@@ -5,16 +5,11 @@ import BodyText from "../elements/text/BodyText";
 
 const TestimonialSection: FC = () => {
   return (
-    <div className="py-12 flex flex-col gap-10">
-      <Heading className="flex self-center" weight="semibold" size="medium">
-        TESTIMONIALS
+    <div className="flex flex-col gap-10">
+      <Heading font="fredoka" className="flex self-center">
+        What Our Client Says?
       </Heading>
       <TestimonialContents />
-      <div className="w-full flex justify-center">
-        <BodyText onPress={() => {}} size="large">
-          View Reviews →
-        </BodyText>
-      </div>
     </div>
   );
 };

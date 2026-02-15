@@ -79,8 +79,8 @@ const ContactUsSection: FC = () => {
               <InputBase
                 keyboardType="paragraph"
                 whiteLabel
-                label="Kupal"
-                placeholder="boboboobobo"
+                label="Test"
+                placeholder="Hello"
               />
               <SelectBase
                 options={[
@@ -89,8 +89,8 @@ const ContactUsSection: FC = () => {
                 ]}
                 selectType="multi"
                 whiteLabel
-                label="Kupal"
-                placeholder="boboboobobo"
+                label="Test"
+                placeholder="Hello"
               />
               <DynamicButton size="medium" type="orange">
                 SEND
@@ -104,38 +104,24 @@ const ContactUsSection: FC = () => {
 
   const Location: FC = () => {
     return (
-      <GrayCardContainer>
-        <div className="flex flex-1 flex-col gap-4">
-          <InfoItemContainer
-            icon={<IconContainer icon="location" />}
-            name="Location"
-            value="This is my Address"
-          />
-          <div className="flex flex-1 rounded-xl overflow-hidden">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3865.1523149329405!2d120.97726777594258!3d14.360595786097761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xad761acc944e2d03%3A0xac2abd07f92c8d03!2sJoyful%20International%20and%20Domestic%20Pet%20Transport%20and%20Pet%20Care%20Services!5e0!3m2!1sen!2sph!4v1769349936524!5m2!1sen!2sph"
-              width="auto"
-              height="450"
-              style={{ border: 0, flex: 1 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        </div>
-      </GrayCardContainer>
+      <div className="flex flex-1 w-full rounded-3xl overflow-hidden">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3865.1523149329405!2d120.97726777594258!3d14.360595786097761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xad761acc944e2d03%3A0xac2abd07f92c8d03!2sJoyful%20International%20and%20Domestic%20Pet%20Transport%20and%20Pet%20Care%20Services!5e0!3m2!1sen!2sph!4v1769349936524!5m2!1sen!2sph"
+          width="auto"
+          height="560"
+          style={{ border: 0, flex: 1 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
     );
   };
 
   return (
-    <BoxedContainer className="py-12">
-      <div className="flex flex-col items-center gap-10">
-        <Heading size="medium" weight="semibold">
-          Contact Us
-        </Heading>
-        <ContactUs />
-        <Location />
-      </div>
+    <BoxedContainer medium>
+      <ContactUs />
+      <Location />
     </BoxedContainer>
   );
 };
