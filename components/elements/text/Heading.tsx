@@ -3,7 +3,7 @@ import { FC, PropsWithChildren } from "react";
 type HeadingProps = PropsWithChildren<{
   className?: string;
   weight?: "normal" | "semibold" | "thin";
-  size?: "medium" | "normal" | "large";
+  size?: "medium" | "normal" | "large" | "xlarge";
   font?: "poppins" | "fredoka" | "luckiestGuy" | "leagueSpartan";
   textColor?: string;
   white?: boolean;
@@ -30,6 +30,7 @@ const Heading: FC<HeadingProps> = ({
     normal: "text-2xl",
     medium: "text-3xl",
     large: "text-5xl",
+    xlarge: "text-6xl",
   };
 
   const fontClasses = {

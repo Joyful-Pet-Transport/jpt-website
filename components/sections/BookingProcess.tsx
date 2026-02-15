@@ -6,22 +6,23 @@ import Image from "next/image";
 
 const BookingProcessSection: FC = () => {
   return (
-    <BoxedContainer className="py-12">
-      <div className="flex flex-col items-start w-full gap-0">
-        <div className="flex flex-row items-center justify-between w-full">
-          <Heading>
-            Our Joyful 4-Step Pet <br /> Transport Booking Process
-          </Heading>
+    <div className="flex flex-col items-start w-full gap-4">
+      <div className="flex flex-row items-center justify-between w-full relative">
+        <Heading font="fredoka">
+          Our Joyful 4-Step Pet <br /> Transport Booking Process
+        </Heading>
+        <div className="absolute right-30 -top-50">
           <Image
             src={"/images/element/bookingprocess.png"}
             alt="Booking Process"
-            width={200}
-            height={200}
+            width={500}
+            height={500}
+            className="w-96 h-auto"
           />
         </div>
-        <BookingProcessContent />
       </div>
-    </BoxedContainer>
+      <BookingProcessContent />
+    </div>
   );
 };
 

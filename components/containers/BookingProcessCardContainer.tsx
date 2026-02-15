@@ -26,11 +26,17 @@ const BookingProcessCardContainer: FC<BookingProcessCardContainerProps> = ({
     return (
       <div
         onClick={onToggle}
-        className="relative border border-black bg-white/50 cursor-pointer hover:bg-gray-50 transition-all h-full min-h-[400px] flex-1"
+        className="relative border-l first:border-0 border-black bg-white/20 cursor-pointer hover:bg-white/30 transition-all h-full min-h-[400px] flex-1"
       >
-        <div className="absolute left-30 top-0 bottom-0 flex items-center justify-center px-4">
+        <div className="absolute left-0 right-0 top-0 bottom-0 flex items-center justify-center px-4">
           <div className="[writing-mode:vertical-rl] rotate-180">
-            <Heading>{stepText}</Heading>
+            <Heading
+              size="xlarge"
+              font="fredoka"
+              textColor="text-neutral-950/70"
+            >
+              {stepText}
+            </Heading>
           </div>
         </div>
       </div>
@@ -40,25 +46,29 @@ const BookingProcessCardContainer: FC<BookingProcessCardContainerProps> = ({
   return (
     <div
       onClick={onToggle}
-      className="relative border border-black cursor-pointer hover:bg-gray-50 transition-all p-8 h-full min-h-[400px] flex-2"
+      className="relative border-l first:border-0 border-black cursor-pointer hover:bg-white/20 transition-all p-16 h-full min-h-[400px] flex-2"
     >
-      <div className="flex flex-col gap-6 h-full">
-        <div className="flex items-center gap-6">
-          {image && (
-            <div className="shrink-0 w-16 h-16 rounded-2xl border-2 border-black flex items-center justify-center overflow-hidden">
-              <Image src={image} alt={title} width={32} height={32} />
-            </div>
-          )}
+      <div className="flex flex-col justify-between gap-6 h-full">
+        <div className="flex justify-between gap-6">
+          {image && <Image src={image} alt={image} width={120} height={120} />}
 
           <div className="shrink-0">
-            <Heading className="text-4xl font-bold">{stepText}</Heading>
+            <Heading
+              textColor="text-neutral-950/70"
+              size="xlarge"
+              font="fredoka"
+            >
+              {stepText}
+            </Heading>
           </div>
         </div>
 
-        <div className="flex-1">
-          <Heading className="text-2xl font-bold mb-3">{title}</Heading>
+        <div className="flex flex-col gap-4">
+          <Heading size="medium" font="fredoka">
+            {title}
+          </Heading>
           {description && (
-            <BodyText className="text-gray-700 leading-relaxed">
+            <BodyText size="medium" font="fredoka">
               {description}
             </BodyText>
           )}
