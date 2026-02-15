@@ -18,7 +18,7 @@ const InternalPetRelocationScreen = () => {
       />
       <BoxedContainer medium>
         <div className="justify-center items-center flex flex-col mx-auto gap-10">
-          <Heading className="text-center">
+          <Heading className="text-center uppercase" font="fredoka">
             International Pet Relocation
           </Heading>
           <BodyText className="text-center w-220">

@@ -34,7 +34,7 @@ const Heading: FC<HeadingProps> = ({
 
   const fontClasses = {
     poppins: "font-poppins",
-    fredoka: "font-fredoka",
+    fredoka: "font-[fredoka]",
     luckiestGuy: "font-[luckiest_guy]",
     leagueSpartan: "font-[league_spartan]",
   };

@@ -41,7 +41,7 @@ const BodyText: FC<BodyTextProps> = ({
 
   const fontClasses = {
     poppins: "font-poppins",
-    fredoka: "font-fredoka",
+    fredoka: "font-[fredoka]",
     luckiestGuy: "font-[luckiest_guy]",
     leagueSpartan: "font-[league_spartan]",
   };
