@@ -93,6 +93,8 @@ npx convex import --table services initialData/ServiceData.jsonl
 npx convex import --table booking_process initialData/BookingProcess.jsonl
 # Import faq data
 npx convex import --table frequently_asked_questions initialData/FrequentlyAskedQuestions.jsonl
+# Import post service data sample
+npx convex import --table post_services initialData/PostService.jsonl
 
 
 ```

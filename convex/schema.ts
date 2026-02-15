@@ -22,4 +22,11 @@ export default defineSchema({
     question: v.string(),
     answer: v.string(),
   }),
+
+  post_services: defineTable({
+    name: v.string(),
+    description: v.string(),
+    image: v.optional(v.string()),
+    link: v.string(),
+  }),
 });
