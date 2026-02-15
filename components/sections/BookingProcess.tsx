@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const BookingProcessSection: FC = () => {
   return (
-    <div className="flex py-16 flex-col items-start w-full">
+    <div className="flex pb-16 flex-col items-start w-full">
       <div className="px-16 flex flex-row items-end justify-between w-full relative">
         <Heading font="fredoka" className="pb-8">
           Our Joyful 4-Step Pet <br /> Transport Booking Process
