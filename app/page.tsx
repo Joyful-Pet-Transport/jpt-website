@@ -3,6 +3,7 @@
 import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import UnderConstructionContent from "@/components/contents/UnderConstructionContent";
 import BookingProcessSection from "@/components/sections/BookingProcess";
+import ConnectWithUs from "@/components/sections/ConnectWithUs";
 import ContactUsSection from "@/components/sections/ContactUs";
 import HeroSection from "@/components/sections/HeroSection";
 import OurServices from "@/components/sections/OurServices";
@@ -24,6 +25,7 @@ const Home = () => {
       <BookingProcessSection />
       <ProofOfLegitimacy />
       <TestimonialSection />
+      <ConnectWithUs />
       <ContactUsSection />
     </PageWrapperContainer>
   );
