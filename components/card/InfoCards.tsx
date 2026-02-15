@@ -2,17 +2,12 @@ import { FC, PropsWithChildren } from "react";
 
 type InfoCardsProps = PropsWithChildren<{
   className?: string;
-  medium?: boolean;
 }>;
 
-const InfoCards: FC<InfoCardsProps> = ({
-  children,
-  className,
-  medium = false,
-}) => {
+const InfoCards: FC<InfoCardsProps> = ({ children, className }) => {
   return (
     <div
-      className={`${className} w-[500px] h-[420px] p-8 bg-[#EAEAEA] rounded-3xl flex flex-col gap-2`}
+      className={`min-h-[420px] w-full p-8 bg-[#FEF5EE] rounded-3xl flex flex-col gap-6 ${className}`}
     >
       {children}
     </div>

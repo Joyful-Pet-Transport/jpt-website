@@ -10,7 +10,7 @@ import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 
 const AboutUsScreen = () => {
   return (
-    <PageWrapperContainer className="items-center">
+    <PageWrapperContainer>
       <Breadcrumbs
         items={[{ label: "Home", path: "/" }, { label: "About Us" }]}
       />
