@@ -5,11 +5,18 @@ import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
 import InfoCards from "@/components/card/InfoCards";
+import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 
 const InternalPetRelocationScreen = () => {
   return (
     <PageWrapperContainer className="items-center">
-      <BoxedContainer className="gap-10 flex flex-col" medium>
+      <Breadcrumbs
+        items={[
+          { label: "Our Services", path: "/our-services" },
+          { label: "International Pet Relocation" },
+        ]}
+      />
+      <BoxedContainer medium>
         <div className="justify-center items-center flex flex-col mx-auto gap-10">
           <Heading className="text-center">
             International Pet Relocation

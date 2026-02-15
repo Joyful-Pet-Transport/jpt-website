@@ -11,10 +11,10 @@ import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 const AboutUsScreen = () => {
   return (
     <PageWrapperContainer className="items-center">
+      <Breadcrumbs
+        items={[{ label: "Home", path: "/" }, { label: "About Us" }]}
+      />
       <BoxedContainer medium className="flex flex-col gap-12">
-        <Breadcrumbs
-          items={[{ label: "Home", path: "/" }, { label: "About Us" }]}
-        />
         <div className="flex flex-col justify-center items-center">
           <Heading className="text-center">JOYFUL PET TRANSPORT</Heading>
           <BodyText size="large" weight="semibold" className="text-center pt-6">

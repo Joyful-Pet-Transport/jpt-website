@@ -13,7 +13,7 @@ const BoxedContainer: FC<BoxedContainerProps> = ({
   if (medium) {
     return (
       <div
-        className={`${className} w-full px-4
+        className={`${className} flex flex-col w-full py-40 gap-16 px-4
           md:max-w-5xl 
           lg:max-w-6xl 
           xl:max-w-7xl 

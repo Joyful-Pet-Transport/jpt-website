@@ -16,11 +16,10 @@ const OurServicesScreen = () => {
 
   return (
     <PageWrapperContainer className="items-center mx-4 rounded-b-4xl">
+      <Breadcrumbs
+        items={[{ label: "Home", path: "/" }, { label: "Our Services" }]}
+      />
       <BoxedContainer medium className="flex flex-col gap-12">
-        <Breadcrumbs
-          items={[{ label: "Home", path: "/" }, { label: "Our Services" }]}
-        />
-
         <div className="flex flex-col justify-center items-center max-w-2xl mx-auto">
           <Heading className="text-center">Our Services</Heading>
           <BodyText className="text-center">
