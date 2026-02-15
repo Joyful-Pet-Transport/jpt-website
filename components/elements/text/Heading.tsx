@@ -4,6 +4,7 @@ type HeadingProps = PropsWithChildren<{
   className?: string;
   weight?: "normal" | "semibold" | "thin";
   size?: "medium" | "normal" | "large";
+  font?: "poppins" | "fredoka" | "luckiestGuy" | "leagueSpartan";
   textColor?: string;
   white?: boolean;
   onPress?: () => void;
@@ -14,6 +15,7 @@ const Heading: FC<HeadingProps> = ({
   className,
   weight,
   size,
+  font,
   textColor,
   white = false,
   onPress,
@@ -30,23 +32,30 @@ const Heading: FC<HeadingProps> = ({
     large: "text-5xl",
   };
 
+  const fontClasses = {
+    poppins: "font-poppins",
+    fredoka: "font-fredoka",
+    luckiestGuy: "font-[luckiest_guy]",
+    leagueSpartan: "font-[league_spartan]",
+  };
+
   const colorClasses = textColor
     ? textColor
     : white
-    ? "text-neutral-50"
-    : "text-neutral-950";
+      ? "text-neutral-50"
+      : "text-neutral-950";
 
   return (
     <h1
       className={`${className} ${weightClasses[weight || "normal"]} ${
         sizeClasses[size || "large"]
-      } ${colorClasses} ${
+      } ${fontClasses[font || "poppins"]} ${colorClasses} ${
         onPress
           ? textColor
             ? "cursor-pointer"
             : white
-            ? "cursor-pointer hover:text-neutral-300"
-            : "cursor-pointer hover:text-neutral-800"
+              ? "cursor-pointer hover:text-neutral-300"
+              : "cursor-pointer hover:text-neutral-800"
           : ""
       }`}
       onClick={onPress}

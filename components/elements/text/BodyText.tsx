@@ -53,7 +53,7 @@ const BodyText: FC<BodyTextProps> = ({
       : "text-neutral-950";
 
   return (
-    <h1
+    <p
       className={`${className} ${weightClasses[weight || "normal"]} ${
         sizeClasses[size || "normal"]
       } ${fontClasses[font || "poppins"]} ${colorClasses} ${
@@ -68,7 +68,7 @@ const BodyText: FC<BodyTextProps> = ({
       onClick={onPress}
     >
       {children}
-    </h1>
+    </p>
   );
 };
 
