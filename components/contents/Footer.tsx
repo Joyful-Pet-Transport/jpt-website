@@ -41,7 +41,7 @@ const Footer: FC = () => {
           </BodyText>
         </div>
         <div className="mx-auto">
-          <DynamicButton className="min-w-80" rounded>
+          <DynamicButton onPress={() => {}} className="min-w-80" rounded>
             get in touch with us
           </DynamicButton>
         </div>
@@ -90,10 +90,22 @@ const Footer: FC = () => {
             International Pet Relocation
           </BodyText>
           <div className="flex flex-col pl-8">
-            <BodyText size="small" weight="thin">
+            <BodyText
+              size="small"
+              weight="thin"
+              onPress={() =>
+                router.push("/our-services/international-pet-relocation/import")
+              }
+            >
               Import to Philippines
             </BodyText>
-            <BodyText weight="thin" size="small">
+            <BodyText
+              weight="thin"
+              size="small"
+              onPress={() =>
+                router.push("/our-services/international-pet-relocation/export")
+              }
+            >
               Export from Philippines
             </BodyText>
           </div>
@@ -206,10 +218,10 @@ const Footer: FC = () => {
     <div className="flex flex-col justify-center mb-2 gap-2 mt-8">
       <div className="bg-[#EAEAEA] rounded-4xl mx-8 p-16 flex flex-col flex-1 relative">
         <div className="flex flex-row gap-6">
-          <div className="w-1/3">
+          <div className="w-1/3 z-10">
             <Brand />
           </div>
-          <div className="flex px-16 flex-row justify-center flex-1 gap-4">
+          <div className="flex px-16 flex-row justify-center flex-1 gap-4 z-10">
             <Navigation />
             <Services />
             <ContactUs />

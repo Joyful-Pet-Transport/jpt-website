@@ -7,8 +7,11 @@ import Heading from "@/components/elements/text/Heading";
 import InfoCards from "@/components/card/InfoCards";
 import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 import DynamicButton from "@/components/elements/button/DynamicButton";
+import { useRouter } from "next/navigation";
 
 const InternalPetRelocationScreen = () => {
+  const router = useRouter();
+
   const Import = () => {
     return (
       <InfoCards>
@@ -50,7 +53,12 @@ const InternalPetRelocationScreen = () => {
           <BodyText>3. We assist Customs Releasing.</BodyText>
           <BodyText>4. We assist you until your pet is safely home.</BodyText>
         </div>
-        <DynamicButton className="self-center justify-end mt-auto">
+        <DynamicButton
+          onPress={() =>
+            router.push("/our-services/international-pet-relocation/import")
+          }
+          className="self-center justify-end mt-auto"
+        >
           Book Now
         </DynamicButton>
       </InfoCards>
@@ -93,7 +101,12 @@ const InternalPetRelocationScreen = () => {
             4. We deliver your pet safely to your chosen destination.
           </BodyText>
         </div>
-        <DynamicButton className="self-center justify-end mt-auto">
+        <DynamicButton
+          onPress={() =>
+            router.push("/our-services/international-pet-relocation/export")
+          }
+          className="self-center justify-end mt-auto"
+        >
           Book Now
         </DynamicButton>
       </InfoCards>

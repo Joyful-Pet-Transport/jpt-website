@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import InputBase, { InputBaseProps } from "./InputBase";
 
 type FormInputProps = InputBaseProps & {

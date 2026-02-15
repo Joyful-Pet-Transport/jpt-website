@@ -27,18 +27,33 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ items }) => {
       className="z-100 h-16 w-[600px] flex self-center justify-center py-4 bg-white -mt-24"
     >
       {items.map((item, index) => (
-        <div key={index} className="flex gap-2">
+        <div key={index} className="flex gap-2 pt-2">
           {item.path ? (
             <BodyText
+              font="fredoka"
+              weight="semibold"
+              size="medium"
               onPress={() => router.push(item.path!)}
-              className="cursor-pointer hover:opacity-70 transition-opacity"
+              className="cursor-pointer hover:opacity-70 transition-opacity capitalize"
             >
               {item.label}
             </BodyText>
           ) : (
-            <BodyText className="text-red-500">{item.label}</BodyText>
+            <BodyText
+              font="fredoka"
+              weight="semibold"
+              size="medium"
+              textColor="text-[#F8721F]"
+              className="capitalize"
+            >
+              {item.label}
+            </BodyText>
           )}
-          {index < items.length - 1 && <span>/</span>}
+          {index < items.length - 1 && (
+            <BodyText font="fredoka" weight="semibold" size="medium">
+              /
+            </BodyText>
+          )}
         </div>
       ))}
     </div>

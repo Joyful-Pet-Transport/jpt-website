@@ -30,14 +30,14 @@ const DynamicButton: FC<DynamicButtonProps> = ({
   };
 
   return (
-    <div
+    <button
       className={`max-w-96 min-w-44 justify-center items-center ${rounded ? "rounded-full" : "rounded-lg"} ${
         ButtonType[type || "default"]
       } ${ButtonSize[size || "default"]} text-center uppercase font-semibold ${className}`}
       onClick={onPress}
     >
       {children}
-    </div>
+    </button>
   );
 };
 
