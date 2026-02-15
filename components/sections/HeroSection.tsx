@@ -21,7 +21,9 @@ const HeroSection: FC = () => {
         <BoxedContainer>
           <div className="flex h-full justify-center items-center">
             <div className="flex flex-col gap-6 w-full">
-              <Heading>Transporting Pets Has Never Been This Easy</Heading>
+              <Heading font="fredoka">
+                Transporting Pets Has Never Been This Easy
+              </Heading>
               <BodyText>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -39,7 +41,7 @@ const HeroSection: FC = () => {
       </div>
 
       {/* section 2 */}
-      <div className="relative h-[70vh] flex w-full">
+      {/* <div className="relative h-[70vh] flex w-full">
         <div className="absolute top-0 -left-[400px] z-50">
           <Image
             src={"/images/element/hero2.png"}
@@ -68,7 +70,7 @@ const HeroSection: FC = () => {
             </div>
           </div>
         </BoxedContainer>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -145,7 +145,9 @@ const Header: FC = () => {
 
           {/* Book now Button */}
           <div className="flex flex-1 justify-end items-center h-full">
-            <DynamicButton rounded>book now</DynamicButton>
+            <DynamicButton size="medium" rounded>
+              book now
+            </DynamicButton>
           </div>
         </div>
       </div>

@@ -1,17 +1,16 @@
 import { FC } from "react";
-import BoxedContainer from "../containers/BoxedContainer";
 import Heading from "../elements/text/Heading";
 import BookingProcessContent from "../contents/BookingProcessContent";
 import Image from "next/image";
 
 const BookingProcessSection: FC = () => {
   return (
-    <div className="flex flex-col items-start w-full gap-4">
-      <div className="flex flex-row items-center justify-between w-full relative">
-        <Heading font="fredoka">
+    <div className="flex flex-col items-start w-full">
+      <div className="flex flex-row items-end justify-between w-full relative">
+        <Heading font="fredoka" className="pb-8">
           Our Joyful 4-Step Pet <br /> Transport Booking Process
         </Heading>
-        <div className="absolute right-30 -top-50">
+        <div className="pr-24">
           <Image
             src={"/images/element/bookingprocess.png"}
             alt="Booking Process"

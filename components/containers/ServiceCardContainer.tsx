@@ -20,6 +20,7 @@ const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
           className="uppercase text-center"
           weight="semibold"
           size="medium"
+          font="fredoka"
         >
           {props.title}
         </BodyText>
