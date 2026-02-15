@@ -6,10 +6,10 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   { label: "Home", path: "/" },
-  { label: "About Us", path: "/AboutUs" },
+  { label: "About Us", path: "/about-us" },
   {
     label: "Our Services",
-    path: "/OurServices",
+    path: "/our-services",
     children: [
       {
         label: "International Pet Relocation",
@@ -25,7 +25,7 @@ export const navItems: NavItem[] = [
       },
     ],
   },
-  { label: "Testimonials", path: "/Testimonials" },
-  { label: "FAQs", path: "/Faq" },
-  { label: "Contact Us", path: "/ContactUs" },
+  { label: "Testimonials", path: "/testimonials" },
+  { label: "FAQs", path: "/faq" },
+  { label: "Contact Us", path: "/contact-us" },
 ];

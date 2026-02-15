@@ -36,7 +36,7 @@ const OurServicesScreen = () => {
               title={title}
               description={description}
               image={image}
-              onPress={() => router.push(`/OurServices/${slug}`)}
+              onPress={() => router.push(`/our-services/${slug}`)}
             />
           ))}
         </div>

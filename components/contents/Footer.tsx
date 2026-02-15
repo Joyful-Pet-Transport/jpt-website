@@ -84,7 +84,7 @@ const Footer: FC = () => {
             size="small"
             weight="thin"
             onPress={() =>
-              router.push("/OurServices/international-pet-relocation")
+              router.push("/our-services/international-pet-relocation")
             }
           >
             International Pet Relocation
@@ -100,7 +100,7 @@ const Footer: FC = () => {
           <BodyText
             weight="thin"
             size="small"
-            onPress={() => router.push("/OurServices/domestic-pet-relocation")}
+            onPress={() => router.push("/our-services/domestic-pet-relocation")}
           >
             Domestic Pet Relocation
           </BodyText>
@@ -115,7 +115,7 @@ const Footer: FC = () => {
           <BodyText
             size="small"
             weight="thin"
-            onPress={() => router.push("/OurServices/rabies-serology-test")}
+            onPress={() => router.push("/our-services/rabies-serology-test")}
           >
             Rabies Serology Test
           </BodyText>
