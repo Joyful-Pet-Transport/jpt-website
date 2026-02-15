@@ -118,7 +118,10 @@ const Footer: FC = () => {
           </BodyText>
           <div className="flex flex-col pl-8">
             <BodyText weight="thin" size="small">
-              Land & Sea Travel
+              Land Travel
+            </BodyText>
+            <BodyText weight="thin" size="small">
+              Sea Travel
             </BodyText>
             <BodyText weight="thin" size="small">
               Air Travel
