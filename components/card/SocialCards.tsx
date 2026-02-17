@@ -45,7 +45,12 @@ const SocialCards: FC<SocialCardsProps> = ({
           </BodyText>
         </div>
       </div>
-      <a className="absolute top-2 right-2 rounded-full" href={link}>
+      <a
+        className="absolute top-2 right-2 rounded-full"
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <BsArrowUpRightCircle className="h-12 w-12 text-white" />
       </a>
     </div>
