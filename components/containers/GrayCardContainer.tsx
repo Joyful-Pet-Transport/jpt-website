@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from "react";
 
 const GrayCardContainer: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div className="flex rounded-xl bg-[#17528AA6] w-full py-12 px-24">
+    <div className="rounded-xl bg-white justify-center items-center min-w-[500px] p-8">
       {children}
     </div>
   );

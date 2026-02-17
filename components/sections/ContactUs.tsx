@@ -7,98 +7,68 @@ import InfoItemContainer from "../containers/InfoItemContainer";
 import IconContainer from "../containers/IconContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import InputBase from "../elements/input/TextInput/InputBase";
-import SelectBase from "../elements/input/SelectInput/SelectBase";
 
 const ContactUsSection: FC = () => {
   const ContactUs: FC = () => {
     return (
-      <GrayCardContainer>
-        <div className="flex w-full">
-          <div className="flex flex-1 flex-col gap-8">
-            <div className="flex gap-4 w-full flex-row">
-              <div className="flex flex-1 flex-col gap-6">
-                <BodyText white>OUR SOCIALS</BodyText>
-                <div className="flex flex-col gap-4">
-                  <InfoItemContainer
-                    icon={<IconContainer icon="facebook" />}
-                    name="Facebook"
-                    value="Joyful Pet Transport"
-                  />
-                  <InfoItemContainer
-                    icon={<IconContainer icon="instagram" />}
-                    name="Instagram"
-                    value="Joyful Pet Transport"
-                  />
-                  <InfoItemContainer
-                    icon={<IconContainer icon="tiktok" />}
-                    name="Tiktok"
-                    value="Joyful Pet Transport"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-1 flex-col gap-6">
-                <BodyText white>CONTACT US</BodyText>
-                <div className="flex flex-col gap-4">
-                  <InfoItemContainer
-                    icon={<IconContainer icon="messenger" />}
-                    name="Messenger"
-                    value="Joyful Pet Transport"
-                  />
-                  <InfoItemContainer
-                    icon={<IconContainer icon="whatsapp" />}
-                    name="WhatsApp"
-                    value="Joyful Pet Transport"
-                  />
-                  <InfoItemContainer
-                    icon={<IconContainer icon="telegram" />}
-                    name="Telegram"
-                    value="Joyful Pet Transport"
-                  />
-                  <InfoItemContainer
-                    icon={<IconContainer icon="viber" />}
-                    name="Viber"
-                    value="Joyful Pet Transport"
-                  />
-                  <InfoItemContainer
-                    icon={<IconContainer icon="call" />}
-                    name="Phone Number"
-                    value="Joyful Pet Transport"
-                  />
-                </div>
-              </div>
+      <div className="grid lg:grid-cols-2 md:grid-cols gap-10">
+        <GrayCardContainer>
+          <div className="flex flex-col gap-8 items-center">
+            <div className="grid grid-cols-2 gap-4 w-full">
+              <InputBase label="First Name" placeholder="First name" />
+              <InputBase label="Last Name" placeholder="Last name" />
             </div>
+            <InputBase
+              keyboardType="email"
+              widthFull
+              label="Email Address"
+              placeholder="E-mail address"
+            />
+            <InputBase
+              keyboardType="paragraph"
+              widthFull
+              label="Message"
+              placeholder="Your message..."
+            />
+            <DynamicButton size="medium" type="orange" className="w-full">
+              SEND MESSAGE
+            </DynamicButton>
+          </div>
+        </GrayCardContainer>
+        <div className="flex flex-1 flex-col gap-4">
+          <div>
+            <Heading font="fredoka">Feel free to contact us</Heading>
+            <BodyText className="mt-2">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut ali...
+            </BodyText>
+          </div>
+          <div className="flex flex-col gap-4">
             <InfoItemContainer
-              icon={<IconContainer icon="google" />}
-              name="Email Address"
-              value="joyfulpettransportreservations@gmail.com"
+              icon={<IconContainer icon="location2" />}
+              name="Address"
+              value="B27 L9 Ph 3 Michaelangelo St, Avida Santa Catalina Brgy. Salawag, Dasmariñas, Cavite, Philippines"
+            />
+            <InfoItemContainer
+              icon={<IconContainer icon="email" />}
+              name="Email"
+              value="joyfultransportreservations@gmail.com"
+            />
+            <InfoItemContainer
+              icon={<IconContainer icon="phone" />}
+              name="Phone"
+              value="+63 993 370 3770"
+            />
+            <InfoItemContainer
+              icon={<IconContainer icon="clock" />}
+              name="Business Hours"
+              value="Mon - Sat: 10AM - 7PM"
             />
           </div>
-          <div className="flex flex-1 flex-col gap-6">
-            <BodyText white>QUICK INQUIRY </BodyText>
-            <div className="flex flex-col gap-4 h-full">
-              <InputBase
-                keyboardType="paragraph"
-                whiteLabel
-                label="Test"
-                placeholder="Hello"
-              />
-              <SelectBase
-                options={[
-                  { label: "Food", value: "food" },
-                  { label: "Transport", value: "transport" },
-                ]}
-                selectType="multi"
-                whiteLabel
-                label="Test"
-                placeholder="Hello"
-              />
-              <DynamicButton size="medium" type="orange">
-                SEND
-              </DynamicButton>
-            </div>
-          </div>
         </div>
-      </GrayCardContainer>
+      </div>
     );
   };
 
@@ -119,7 +89,7 @@ const ContactUsSection: FC = () => {
   };
 
   return (
-    <BoxedContainer medium>
+    <BoxedContainer>
       <ContactUs />
       <Location />
     </BoxedContainer>
