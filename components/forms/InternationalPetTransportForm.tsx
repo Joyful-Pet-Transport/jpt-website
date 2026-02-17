@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SelectFormInput from "../elements/input/SelectInput/SelectFormInput";
 import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
 import DynamicButton from "../elements/button/DynamicButton";
+import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
+import DateFormInput from "../elements/input/DateInput/DateFormInput";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -105,6 +107,38 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         <BodyText size="large" weight="semibold" className="text-center">
           TRAVEL DETAILS
         </BodyText>
+        <RadioFormInput
+          name="companionship"
+          label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
+          control={control}
+          options={[
+            {
+              label: "Travels WITH you (Accompanied or same flight)",
+              value: "with",
+            },
+            {
+              label: "Travels ALONE (Cargo/ Customs release)",
+              value: "alone",
+            },
+          ]}
+          required
+        />
+        <RadioFormInput
+          name="date"
+          label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
+          control={control}
+          options={[
+            { label: "Yes", value: "yes" },
+            { label: "No", value: "no" },
+          ]}
+          required
+        />
+        <DateFormInput
+          name="date"
+          label="TRAVEL DATE"
+          control={control}
+          dateType="range"
+        />
         <Buttons />
       </FormContainer>
     );

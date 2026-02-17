@@ -20,7 +20,7 @@ import {
 import { LabeledOption, Option } from "./Options";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
 
-export type SelectType = "default" | "multi" | "date" | "map";
+export type SelectType = "default" | "multi";
 
 export type SelectBaseProps = {
   label: string;
@@ -139,29 +139,6 @@ const SelectBase: FC<SelectBaseProps> = ({
           baseClass={baseClass}
           getOptionLabel={getOptionLabel}
         />
-      )}
-
-      {/* CALENDAR */}
-      {selectType === "date" && (
-        <input
-          type="date"
-          value={value as string}
-          onChange={handleInputChange}
-          disabled={disabled}
-          className={baseClass}
-        />
-      )}
-
-      {/* MAP */}
-      {selectType === "map" && (
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => onChange?.("open-map")}
-          className={`${baseClass} text-left`}
-        >
-          {(value as string) || placeholder}
-        </button>
       )}
 
       {validation && <BodyText textColor="text-red-500">{validation}</BodyText>}
