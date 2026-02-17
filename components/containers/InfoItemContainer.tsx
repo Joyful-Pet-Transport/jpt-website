@@ -11,14 +11,14 @@ const InfoItemContainer: FC<InfoItemContainerProps> = (props) => {
   return (
     <div
       onClick={props.onPress}
-      className="flex flex-row w-full gap-2 items-center"
+      className="flex flex-row w-full gap-6 items-center"
     >
       {props.icon}
       <div className="flex flex-col">
-        <BodyText white size="xsmall">
-          {props.name}
+        <BodyText size="xsmall">{props.name}</BodyText>
+        <BodyText font="fredoka" weight="semibold" size="large">
+          {props.value}
         </BodyText>
-        <BodyText white>{props.value}</BodyText>
       </div>
     </div>
   );
