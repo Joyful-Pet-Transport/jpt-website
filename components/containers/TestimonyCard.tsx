@@ -16,7 +16,18 @@ const TestimonyCard: FC<TestimonyCardProps> = (props) => {
   };
 
   return (
-    <div className="w-96 h-52 bg-[#FEF5EE] gap-2 rounded-md flex flex-col p-4">
+    <div className="w-96 bg-[#FFFFFF] gap-2 rounded-3xl flex flex-col p-8">
+      <div className="flex gap-1 text-yellow-400">
+        {Array.from({ length: props.testimony.rating }).map((_, i) => (
+          <FaStar key={i} />
+        ))}
+      </div>
+      {/* testimony */}
+      <div className="flex flex-row items-center h-full gap-2">
+        <BodyText className="text-justify">
+          "{truncateText(props.testimony.testimony, MAX_CHARS)}"
+        </BodyText>
+      </div>
       {/* user details */}
       <div className="flex flex-row gap-4">
         <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E]">
@@ -29,43 +40,12 @@ const TestimonyCard: FC<TestimonyCardProps> = (props) => {
           />
         </div>
         <div className="flex flex-1 flex-col">
-          <BodyText weight="semibold">
+          <BodyText weight="semibold" font="fredoka" size="large">
             {props.testimony.user?.name ?? "Anonymous"}
           </BodyText>
-          <div className="flex gap-1 text-yellow-400">
-            {Array.from({ length: props.testimony.rating }).map((_, i) => (
-              <FaStar key={i} />
-            ))}
-          </div>
-        </div>
-        <BodyText size="small" onPress={() => {}}>
-          View
-        </BodyText>
-      </div>
-      {/* testimony */}
-      <div className="flex flex-row items-center h-full gap-2">
-        <div className="h-full">
-          <Image
-            priority
-            src={"/images/icons/quote-up.svg"}
-            alt={"quote up"}
-            height={24}
-            width={24}
-          />
-        </div>
-        <div className="flex flex-1 items-center">
-          <BodyText className="text-justify text-clip truncate text-wrap">
-            {truncateText(props.testimony.testimony, MAX_CHARS)}
+          <BodyText size="small" font="poppins">
+            Joyful Pet Transport
           </BodyText>
-        </div>
-        <div className="h-full flex flex-col justify-end">
-          <Image
-            priority
-            src={"/images/icons/quote-down.svg"}
-            alt={"quote up"}
-            height={24}
-            width={24}
-          />
         </div>
       </div>
     </div>
