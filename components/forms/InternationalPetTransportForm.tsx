@@ -10,6 +10,7 @@ import DynamicButton from "../elements/button/DynamicButton";
 import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
 import DateFormInput from "../elements/input/DateInput/DateFormInput";
 import FormInput from "../elements/input/TextInput/FormInput";
+import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -313,6 +314,13 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
           control={control}
           keyboardType="paragraph"
+          widthFull
+          required
+        />
+        <ImageFormInput
+          name="pet_image"
+          label="UPLOAD PET'S LATEST PHOTO"
+          control={control}
           widthFull
           required
         />
