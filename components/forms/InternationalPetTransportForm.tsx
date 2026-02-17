@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectFormInput from "../elements/input/SelectInput/SelectFormInput";
 import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
@@ -21,6 +21,9 @@ const InternationalRelocationFormSchema = z.object({
   destination: z
     .string()
     .min(3, "Please enter a name with at least 3 characters"),
+  companionship: z.string().min(3, "Please enter an option"),
+  travel_date: z.string().min(3, "Please enter an option"),
+  date: z.string().min(3, "Please enter an option"),
 });
 
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
@@ -102,6 +105,13 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   };
 
   const TravelDetails: FC = () => {
+    const travelDate = useWatch({
+      control,
+      name: "travel_date",
+    });
+
+    const dateType = travelDate === "yes" ? "specific" : "range";
+
     return (
       <FormContainer>
         <BodyText size="large" weight="semibold" className="text-center">
@@ -124,7 +134,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           required
         />
         <RadioFormInput
-          name="date"
+          name="travel_date"
           label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
           control={control}
           options={[
@@ -137,7 +147,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           name="date"
           label="TRAVEL DATE"
           control={control}
-          dateType="range"
+          dateType={dateType}
+          required
         />
         <Buttons />
       </FormContainer>
