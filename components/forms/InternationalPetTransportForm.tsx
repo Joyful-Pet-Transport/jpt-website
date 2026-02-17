@@ -153,6 +153,22 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     );
   };
 
+  const Progress: FC<{ step: 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
+    const percentage = (step / 5) * 100;
+
+    return (
+      <div className="w-full max-w-96 h-3 rounded-full bg-neutral-200 overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-300 ease-in-out"
+          style={{
+            width: `${percentage}%`,
+            background: "linear-gradient(to right, #FF905D, #41B2F6)",
+          }}
+        />
+      </div>
+    );
+  };
+
   const Destination: FC = () => {
     return (
       <FormContainer>
@@ -340,7 +356,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     }) => {
       return (
         <div className="flex flex-col gap-20 w-full">
-          <FormContainer className={multiple ? "gap-6!" : "gap-12"}>
+          <FormContainer className={multiple ? "gap-6!" : ""}>
             <div className="flex flex-row justify-center items-center gap-4">
               <BodyText size="large" weight="semibold" className="text-center">
                 PET {index !== 0 && index + 1} DETAILS
@@ -506,7 +522,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     };
 
     return (
-      <div className="flex flex-col gap-20">
+      <div className="flex flex-col gap-20 w-full">
         <div
           className={`grid ${fields.length > 1 && "grid-cols-2"} gap-4 w-full`}
         >
@@ -562,23 +578,32 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     );
   };
 
-  if (step === 1) {
-    return <Destination />;
-  }
+  const RenderForm: FC = () => {
+    if (step === 1) {
+      return <Destination />;
+    }
 
-  if (step === 2) {
-    return <TravelDetails />;
-  }
+    if (step === 2) {
+      return <TravelDetails />;
+    }
 
-  if (step === 3) {
-    return <OwnerDetails />;
-  }
+    if (step === 3) {
+      return <OwnerDetails />;
+    }
 
-  if (step === 4) {
-    return <PetDetails />;
-  }
+    if (step === 4) {
+      return <PetDetails />;
+    }
 
-  return <Review />;
+    return <Review />;
+  };
+
+  return (
+    <div className="flex flex-col w-full items-center gap-8">
+      <RenderForm />
+      <Progress step={step} />
+    </div>
+  );
 };
 
 const InternationalPetRelocationForm: FC<
