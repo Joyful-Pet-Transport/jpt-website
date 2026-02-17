@@ -33,6 +33,9 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     defaultValues: {
       origin_country: "",
       destination: "",
+      companionship: "",
+      travel_date: "",
+      date: "",
     },
   });
 

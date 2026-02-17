@@ -11,6 +11,7 @@ import {
   useComboboxAnchor,
 } from "@/components/ui/combobox";
 import { FC } from "react";
+import { cn } from "@/lib/utils";
 import { LabeledOption, Option } from "./../Options";
 
 type MultiSelectDropdownProps = {
@@ -51,7 +52,11 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
       itemToStringLabel={(v) => getOptionLabel(v as string)}
       filter={() => true}
     >
-      <div ref={anchorRef} className={baseClass} aria-invalid={validation}>
+      <div
+        ref={anchorRef}
+        className={cn(baseClass, "text-lg")}
+        aria-invalid={validation}
+      >
         <ComboboxChips className="flex min-h-0 flex-wrap items-center gap-2 border-0 bg-transparent p-0 shadow-none focus-within:ring-0">
           {value.map((v) => (
             <ComboboxChip className="px-2" key={v} showRemove={false}>
@@ -62,6 +67,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           <ComboboxChipsInput
             placeholder={value.length === 0 ? placeholder : ""}
             readOnly
+            className="placeholder:text-neutral-600"
           />
         </ComboboxChips>
       </div>

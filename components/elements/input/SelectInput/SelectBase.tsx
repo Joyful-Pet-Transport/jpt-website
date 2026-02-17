@@ -101,7 +101,13 @@ const SelectBase: FC<SelectBaseProps> = ({
           onValueChange={handleSelectValueChange}
           disabled={disabled}
         >
-          <SelectTrigger className={baseClass} aria-invalid={!!validation}>
+          <SelectTrigger
+            className={cn(
+              baseClass,
+              "data-placeholder:text-neutral-600 text-lg",
+            )}
+            aria-invalid={!!validation}
+          >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
@@ -141,7 +147,11 @@ const SelectBase: FC<SelectBaseProps> = ({
         />
       )}
 
-      {validation && <BodyText textColor="text-red-500">{validation}</BodyText>}
+      {validation && (
+        <BodyText size="small" textColor="text-red-500">
+          {validation}
+        </BodyText>
+      )}
     </div>
   );
 };

@@ -56,11 +56,12 @@ const InputBase: FC<InputBaseProps> = ({
       ? baseInputValidationClass.invalid
       : baseInputValidationClass.valid,
     disabled && baseInputDisabledClass,
+    "text-lg placeholder:text-neutral-600",
   );
 
   return (
     <div className={`flex flex-col gap-1 w-full max-w-110`}>
-      <BodyText white={whiteLabel}>
+      <BodyText weight="semibold" white={whiteLabel}>
         {label}
         {required && <span className="text-red-500">*</span>}
       </BodyText>
