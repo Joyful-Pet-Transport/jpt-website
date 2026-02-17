@@ -26,6 +26,7 @@ export type InputBaseProps = {
   keyboardType?: KeyboardType;
   disabled?: boolean;
   required?: boolean;
+  widthFull?: boolean;
   onChange?: (value: string) => void;
 };
 
@@ -38,6 +39,7 @@ const InputBase: FC<InputBaseProps> = ({
   keyboardType = "text",
   disabled = false,
   required,
+  widthFull,
   onChange,
 }) => {
   const [value, setValue] = useState(initialValue);
@@ -60,7 +62,7 @@ const InputBase: FC<InputBaseProps> = ({
   );
 
   return (
-    <div className={`flex flex-col gap-1 w-full max-w-110`}>
+    <div className={`flex flex-col gap-1 w-full ${!widthFull && "max-w-110"}`}>
       <BodyText weight="semibold" white={whiteLabel}>
         {label}
         {required && <span className="text-red-500">*</span>}
@@ -72,7 +74,8 @@ const InputBase: FC<InputBaseProps> = ({
           value={value}
           onChange={handleChange}
           disabled={disabled}
-          className={inputClassName}
+          className={cn(inputClassName, "text-lg md:text-lg")}
+          rows={8}
         />
       ) : (
         <input

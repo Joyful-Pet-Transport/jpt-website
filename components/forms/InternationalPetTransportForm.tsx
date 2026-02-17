@@ -9,6 +9,7 @@ import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
 import DynamicButton from "../elements/button/DynamicButton";
 import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
 import DateFormInput from "../elements/input/DateInput/DateFormInput";
+import FormInput from "../elements/input/TextInput/FormInput";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -42,6 +43,10 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const control = createInternationalRelocationForm.control;
 
   const Buttons: FC = () => {
+    const scrollToTop = () => {
+      window.scrollTo({ top: 630, behavior: "smooth" });
+    };
+
     return (
       <div className="flex w-full justify-between items-center">
         <BodyText
@@ -50,7 +55,12 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           className={
             step <= 1 ? "text-neutral-400! select-none" : "select-none"
           }
-          onPress={() => step != 1 && setStep((step - 1) as 1 | 2 | 3 | 4 | 5)}
+          onPress={() => {
+            if (step != 1) {
+              setStep((step - 1) as 1 | 2 | 3 | 4 | 5);
+              scrollToTop();
+            }
+          }}
         >
           BACK
         </BodyText>
@@ -59,6 +69,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             if (step == 5) {
             } else {
               setStep((step + 1) as 1 | 2 | 3 | 4 | 5);
+              scrollToTop();
             }
           }}
         >
@@ -164,6 +175,69 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         <BodyText size="large" weight="semibold" className="text-center">
           OWNER DETAILS
         </BodyText>
+        <FormInput
+          name="owner_name"
+          label="OWNER'S NAME"
+          placeholder="Enter owner's name"
+          control={control}
+          required
+        />
+        <RadioFormInput
+          name="contact_form"
+          label="WHERE CAN WE CONTACT YOU?"
+          control={control}
+          options={[
+            {
+              label: "Facebook Messenger",
+              value: "facebook",
+            },
+            {
+              label: "WhatsApp",
+              value: "whatsapp",
+            },
+            {
+              label: "Viber",
+              value: "viber",
+            },
+            {
+              label: "Telegram",
+              value: "telegram",
+            },
+          ]}
+          required
+        />
+
+        <div className="flex w-full gap-4">
+          <FormInput
+            name="account_name"
+            label="ACCOUNT NAME"
+            placeholder="Enter account name"
+            control={control}
+            required
+            className="w-full"
+          />
+          <FormInput
+            name="account_link"
+            label="LINK"
+            placeholder="Enter link"
+            className="w-full"
+            control={control}
+          />
+        </div>
+        <FormInput
+          name="contact_number"
+          label="CONTACT NUMBER"
+          placeholder="Enter contact number"
+          control={control}
+          required
+        />
+        <FormInput
+          name="email_address"
+          label="ACTIVE EMAIL ADDRESS"
+          placeholder="Enter active email address"
+          control={control}
+          required
+        />
         <Buttons />
       </FormContainer>
     );
@@ -175,6 +249,73 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         <BodyText size="large" weight="semibold" className="text-center">
           PET DETAILS
         </BodyText>
+        <FormInput
+          name="pet_name"
+          label="PET'S NAME"
+          placeholder="Enter pet's name"
+          control={control}
+          required
+        />
+        <div className="flex w-full gap-4">
+          <FormInput
+            name="breed"
+            label="BREED"
+            placeholder="Enter pet's breed"
+            control={control}
+            className="w-full"
+            required
+          />
+          <FormInput
+            name="sex"
+            label="SEX"
+            placeholder="Enter pet's gender(or sex)"
+            control={control}
+            className="w-full"
+            required
+          />
+        </div>
+        <div className="flex w-full gap-4">
+          <DateFormInput
+            name="pet_birthday"
+            label="DATE OF BIRTH"
+            placeholder="Enter pet's birthday"
+            control={control}
+            className="w-full"
+            required
+          />
+          <FormInput
+            name="pet_age"
+            label="AGE"
+            placeholder="Enter pet's age"
+            control={control}
+            className="w-full"
+          />
+        </div>
+        <FormInput
+          name="pet_weight"
+          label="PET'S WEIGHT (ESTIMATED IS OKAY)"
+          placeholder="Enter pet's estimated weight"
+          control={control}
+          required
+        />
+        <FormInput
+          name="pet_condition"
+          label="MEDICAL CONDITION THAT WE SHOULD BE AWARE OF:"
+          placeholder="Enter pets’ medical condition that we should be aware of"
+          control={control}
+          keyboardType="paragraph"
+          widthFull
+          required
+        />
+        <FormInput
+          name="special_instructions"
+          label="PLEASE NOTE SPECIAL INSTRUCTIONS FOR YOUR PET"
+          placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
+          control={control}
+          keyboardType="paragraph"
+          widthFull
+          required
+        />
         <Buttons />
       </FormContainer>
     );
