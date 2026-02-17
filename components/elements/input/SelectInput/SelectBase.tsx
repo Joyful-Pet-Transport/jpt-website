@@ -32,6 +32,7 @@ export type SelectBaseProps = {
   disabled?: boolean;
   required?: boolean;
   options?: Option[] | LabeledOption[];
+  searchable?: boolean;
   onChange?: (value: string | string[]) => void;
 };
 
@@ -45,6 +46,7 @@ const SelectBase: FC<SelectBaseProps> = ({
   disabled = false,
   required,
   options = [],
+  searchable = false,
   onChange,
 }) => {
   const [value, setValue] = useState<string | string[]>(
@@ -52,6 +54,8 @@ const SelectBase: FC<SelectBaseProps> = ({
       ? (initialValue as string[]) || []
       : (initialValue as string),
   );
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -88,6 +92,27 @@ const SelectBase: FC<SelectBaseProps> = ({
     onChange?.(next);
   };
 
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const filteredOptions: Option[] | LabeledOption[] = !searchable
+    ? options
+    : isLabeledOptions(options)
+      ? options
+          .map((group) => ({
+            ...group,
+            options: group.options.filter(
+              (opt) =>
+                opt.label.toLowerCase().includes(normalizedSearch) ||
+                opt.value.toLowerCase().includes(normalizedSearch),
+            ),
+          }))
+          .filter((group) => group.options.length > 0)
+      : (options as Option[]).filter(
+          (opt) =>
+            opt.label.toLowerCase().includes(normalizedSearch) ||
+            opt.value.toLowerCase().includes(normalizedSearch),
+        );
+
   return (
     <div className="flex flex-col gap-1 w-full max-w-110">
       <BodyText weight="semibold" white={whiteLabel}>
@@ -110,21 +135,32 @@ const SelectBase: FC<SelectBaseProps> = ({
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
-          <SelectContent>
-            {isLabeledOptions(options)
-              ? options.map((group) => (
+          <SelectContent position="popper">
+            {searchable && (
+              <div className="py-2">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search..."
+                  className="w-full rounded-sm border border-gray-400 bg-neutral-100 px-2 py-2 text-base outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </div>
+            )}
+            {isLabeledOptions(filteredOptions)
+              ? filteredOptions.map((group) => (
                   <SelectGroup key={group.label}>
                     <SelectLabel>{group.label}</SelectLabel>
                     {group.options.map((opt) => (
                       <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
+                        <BodyText>{opt.label}</BodyText>
                       </SelectItem>
                     ))}
                   </SelectGroup>
                 ))
-              : options.map((opt) => (
+              : (filteredOptions as Option[]).map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
+                    <BodyText size="base">{opt.label}</BodyText>
                   </SelectItem>
                 ))}
           </SelectContent>

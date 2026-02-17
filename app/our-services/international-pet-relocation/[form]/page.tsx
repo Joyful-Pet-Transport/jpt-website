@@ -26,7 +26,7 @@ const InternationalPetRelocationFormScreen = () => {
           { label: formLabel + " Form" },
         ]}
       />
-      <BoxedContainer>
+      <BoxedContainer medium>
         <div className="text-center">
           <Heading size="medium" font="fredoka" className="uppercase">
             {formLabel} international Pet Relocation form
