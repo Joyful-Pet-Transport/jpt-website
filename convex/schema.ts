@@ -29,4 +29,18 @@ export default defineSchema({
     image: v.optional(v.string()),
     link: v.string(),
   }),
+
+  google_reviews: defineTable({
+    reviewId: v.string(),
+    name: v.optional(v.string()),
+    stars: v.number(),
+    reviewUrl: v.optional(v.string()),
+    text: v.optional(v.string()),
+
+    reviewImageUrls: v.optional(v.array(v.string())),
+    reviewerPhotoUrl: v.optional(v.string()),
+    publishedAtDate: v.string(),
+  })
+    .index("by_reviewId", ["reviewId"])
+    .index("by_publishedAtDate", ["publishedAtDate"]),
 });

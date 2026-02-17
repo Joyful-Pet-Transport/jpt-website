@@ -3,12 +3,13 @@ import { FC } from "react";
 import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { FaStar } from "react-icons/fa";
+import { GoogleReview } from "@/models/google-reviews";
 
 type TestimonyCardProps = {
-  testimony: Testimony;
+  review: GoogleReview;
 };
 
-const TestimonyCard: FC<TestimonyCardProps> = (props) => {
+const TestimonyCard: FC<TestimonyCardProps> = ({ review }) => {
   const MAX_CHARS = 115;
   const truncateText = (text: string, max: number) => {
     if (!text) return "";
@@ -16,36 +17,41 @@ const TestimonyCard: FC<TestimonyCardProps> = (props) => {
   };
 
   return (
-    <div className="w-96 bg-[#FFFFFF] gap-2 rounded-3xl flex flex-col p-8">
+    <div className="w-96 min-h-64 justify-between bg-[#FFFFFF] gap-2 rounded-3xl flex flex-col p-8">
       <div className="flex gap-1 text-yellow-400">
-        {Array.from({ length: props.testimony.rating }).map((_, i) => (
+        {Array.from({ length: review.stars }).map((_, i) => (
           <FaStar key={i} />
         ))}
       </div>
       {/* testimony */}
       <div className="flex flex-row items-center h-full gap-2">
-        <BodyText className="text-justify">
-          "{truncateText(props.testimony.testimony, MAX_CHARS)}"
+        <BodyText className="text-justify lowercase">
+          "{truncateText(review?.text ?? "", MAX_CHARS)}"
         </BodyText>
       </div>
       {/* user details */}
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-row items-center gap-4">
         <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E]">
           <Image
             priority
-            src={props.testimony.user?.avatar ?? ""}
-            alt={props.testimony.user?.avatar ?? ""}
+            src={review.reviewerPhotoUrl ?? ""}
+            alt={review.reviewerPhotoUrl ?? ""}
             height={50}
             width={50}
           />
         </div>
-        <div className="flex flex-1 flex-col">
-          <BodyText weight="semibold" font="fredoka" size="large">
-            {props.testimony.user?.name ?? "Anonymous"}
+        <div className="flex flex-col">
+          <BodyText
+            className="capitalize"
+            weight="semibold"
+            font="fredoka"
+            size="large"
+          >
+            {truncateText(review?.name ?? "", 15) ?? "Anonymous"}
           </BodyText>
-          <BodyText size="small" font="poppins">
+          {/* <BodyText size="small" font="poppins">
             Joyful Pet Transport
-          </BodyText>
+          </BodyText> */}
         </div>
       </div>
     </div>
