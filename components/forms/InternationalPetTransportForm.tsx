@@ -334,7 +334,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     }) => {
       return (
         <div className="flex flex-col gap-20 w-full">
-          <FormContainer>
+          <FormContainer className={multiple ? "gap-6!" : "gap-12"}>
             <div className="flex flex-row justify-center items-center gap-4">
               <BodyText size="large" weight="semibold" className="text-center">
                 PET {index !== 0 && index + 1} DETAILS
@@ -351,7 +351,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             </div>
 
             {multiple ? (
-              <div className="flex flex-col gap-12">
+              <div className={`flex flex-col ${multiple ? "gap-6" : "gap-12"}`}>
                 <div className="flex w-full gap-4">
                   <FormInput
                     name={`pets.${index}.pet_name`}
@@ -392,19 +392,19 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                 </div>
                 <div className="flex w-full gap-4">
                   <FormInput
-                    name={`pets.${index}.pet_age`}
-                    placeholder="Enter pet's age"
-                    label="AGE"
-                    control={control}
-                    className="w-full"
-                  />
-                  <FormInput
                     name={`pets.${index}.pet_weight`}
                     label="PET'S WEIGHT"
                     placeholder="Enter pet's estimated weight"
                     control={control}
                     className="w-full"
                     required
+                  />
+                  <FormInput
+                    name={`pets.${index}.pet_age`}
+                    placeholder="Enter pet's age"
+                    label="AGE"
+                    control={control}
+                    className="w-full"
                   />
                 </div>
               </div>
