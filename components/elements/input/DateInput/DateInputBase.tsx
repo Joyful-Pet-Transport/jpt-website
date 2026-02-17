@@ -28,6 +28,8 @@ export type DateInputBaseProps = {
   dateType?: DateInputType;
   disabled?: boolean;
   required?: boolean;
+  /** When true, calendar shows a year dropdown (useful for birthdays) */
+  enableYearSelect?: boolean;
   onChange?: (value: string | DateRange) => void;
 };
 
@@ -40,6 +42,7 @@ const DateInputBase: FC<DateInputBaseProps> = ({
   dateType = "specific",
   disabled = false,
   required,
+  enableYearSelect = false,
   onChange,
 }) => {
   const [specificValue, setSpecificValue] = useState<string>(
@@ -134,6 +137,7 @@ const DateInputBase: FC<DateInputBaseProps> = ({
               value={specificValue}
               onChange={handleSpecificChange}
               onClose={() => setShowSpecificCalendar(false)}
+              enableYearSelect={enableYearSelect}
               disabled={disabled}
             />
           )}

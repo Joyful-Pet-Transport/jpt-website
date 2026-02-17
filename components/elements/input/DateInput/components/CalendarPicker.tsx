@@ -12,6 +12,7 @@ type CalendarPickerProps = {
   min?: string;
   max?: string;
   disabled?: boolean;
+  enableYearSelect?: boolean;
 };
 
 const CalendarPicker: FC<CalendarPickerProps> = ({
@@ -21,6 +22,7 @@ const CalendarPicker: FC<CalendarPickerProps> = ({
   min,
   max,
   disabled,
+  enableYearSelect = false,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(() => {
     if (value) {
@@ -101,6 +103,23 @@ const CalendarPicker: FC<CalendarPickerProps> = ({
   const currentMonthName = dayjs(currentMonth).format("MMMM");
   const currentYear = dayjs(currentMonth).format("YYYY");
 
+  const handleYearChange = (yearStr: string) => {
+    const year = parseInt(yearStr, 10);
+    if (Number.isNaN(year)) return;
+    setCurrentMonth(dayjs(currentMonth).year(year).startOf("month").toDate());
+  };
+
+  const yearOptions: number[] = (() => {
+    const thisYear = dayjs().year();
+    const startYear = thisYear;
+    const endYear = thisYear - 120;
+    const years: number[] = [];
+    for (let y = startYear; y >= endYear; y--) {
+      years.push(y);
+    }
+    return years;
+  })();
+
   return (
     <div
       ref={calendarRef}
@@ -128,9 +147,25 @@ const CalendarPicker: FC<CalendarPickerProps> = ({
             />
           </svg>
         </button>
-        <BodyText weight="semibold">
-          {currentMonthName} {currentYear}
-        </BodyText>
+        <div className="flex items-center gap-2">
+          <BodyText weight="semibold">{currentMonthName}</BodyText>
+          {enableYearSelect ? (
+            <select
+              value={currentYear}
+              onChange={(e) => handleYearChange(e.target.value)}
+              disabled={disabled}
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+            >
+              {yearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <BodyText weight="semibold">{currentYear}</BodyText>
+          )}
+        </div>
         <button
           type="button"
           onClick={handleNextMonth}
