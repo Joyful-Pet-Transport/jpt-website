@@ -239,7 +239,13 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         />
         <DateFormInput
           name="date"
-          label="TRAVEL DATE"
+          label={
+            travelDate
+              ? travelDate === "yes"
+                ? "SPECIFIC TRAVEL DATE"
+                : "ESTIMATED TRAVEL DATE"
+              : "TRAVEL DATE"
+          }
           control={control}
           dateType={dateType}
           disabled={!travelDate}
