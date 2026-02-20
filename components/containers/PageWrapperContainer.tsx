@@ -7,6 +7,8 @@ type PageWrapperContainerProps = PropsWithChildren<{
   header?: boolean;
   className?: string;
   removeBg?: boolean;
+  square?: boolean;
+  noHeaderImage?: boolean;
 }>;
 
 const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
@@ -15,6 +17,8 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
   header = true,
   className,
   removeBg,
+  square = false,
+  noHeaderImage = false,
 }) => {
   return (
     <div
@@ -24,9 +28,9 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
           "linear-gradient(to bottom, #41B2F6, #FBF2B3, #FF985B)",
       }}
     >
-      {header && <Header />}
+      {header && <Header square={square} noHeaderImage={noHeaderImage} />}
       <div
-        className={`min-h-screen py-8 flex flex-col gap-12 ${!removeBg && "bg-white rounded-b-4xl mx-8"} ${className}`}
+        className={`min-h-screen py-8 flex flex-col gap-12 ${!removeBg && `bg-white ${!square ? "rounded-b-4xl" : ""} mx-8`} ${className}`}
       >
         {children}
       </div>

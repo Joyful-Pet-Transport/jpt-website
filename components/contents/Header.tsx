@@ -92,15 +92,22 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
   );
 };
 
-const Header: FC = () => {
+type HeaderProps = {
+  square?: boolean;
+  noHeaderImage?: boolean;
+};
+
+const Header: FC<HeaderProps> = ({ square = false, noHeaderImage = false }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isNotHomePage = pathname !== "/";
 
   const HeaderBar: FC = () => {
     return (
-      <div className="h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center z-1">
-        <div className="w-full h-full px-8 flex justify-between items-center">
+      <div
+        className={` relative ${!square ? "rounded-4xl mt-8 mx-8 bg-[#EAEAEA] h-22" : "bg-[#D9D9D9]/5 shadow-lg/3 h-26"}   flex items-center z-1`}
+      >
+        <div className="w-full h-full px-10 flex justify-between items-center">
           {/* Logo */}
           <div className="flex flex-1">
             <div
@@ -108,31 +115,37 @@ const Header: FC = () => {
               onClick={() => router.push("/")}
             >
               <Image
-                src="/images/logo/logo-new.png"
+                src={
+                  square
+                    ? "/images/logo/joyfullogo.png"
+                    : "/images/logo/logo-new.png"
+                }
                 width={150}
                 height={150}
                 alt="Logo"
                 priority
-                className="w-auto h-16"
+                className="w-auto h-16 pl-20"
               />
-              <div className="text-center">
-                <BodyText
-                  size="xlarge"
-                  weight="bold"
-                  font="luckiestGuy"
-                  textColor="000F3F"
-                >
-                  JOYFUL PET TRANSPORT
-                </BodyText>
-                <BodyText
-                  size="small"
-                  weight="semibold"
-                  font="leagueSpartan"
-                  textColor="000F3F"
-                >
-                  TRANSPORTING PETS HAS NEVER BEEN THIS EASY
-                </BodyText>
-              </div>
+              {!square && (
+                <div className="text-center">
+                  <BodyText
+                    size="xlarge"
+                    weight="bold"
+                    font="luckiestGuy"
+                    textColor="000F3F"
+                  >
+                    JOYFUL PET TRANSPORT
+                  </BodyText>
+                  <BodyText
+                    size="small"
+                    weight="semibold"
+                    font="leagueSpartan"
+                    textColor="000F3F"
+                  >
+                    TRANSPORTING PETS HAS NEVER BEEN THIS EASY
+                  </BodyText>
+                </div>
+              )}
             </div>
           </div>
 
@@ -144,21 +157,27 @@ const Header: FC = () => {
           </div>
 
           {/* Book now Button */}
-          <div className="flex flex-1 justify-end items-center h-full">
-            <DynamicButton size="medium" rounded>
-              book now
-            </DynamicButton>
-          </div>
+          {!square && (
+            <div className="flex flex-1 justify-end items-center h-full">
+              <DynamicButton size="medium" rounded>
+                book now
+              </DynamicButton>
+            </div>
+          )}
         </div>
       </div>
     );
   };
 
-  if (isNotHomePage) {
+  if (isNotHomePage && !noHeaderImage) {
     return (
-      <div className="relative flex flex-col h-140 bg-[#EAEAEA] mx-8 mt-8 rounded-t-4xl">
+      <div
+        className={`relative flex flex-col h-140 bg-[#EAEAEA] mx-8 mt-8 ${!square ? "rounded-t-4xl" : ""}`}
+      >
         <HeaderBar />
-        <div className="absolute inset-0 w-full h-full rounded-t-4xl overflow-hidden">
+        <div
+          className={`absolute inset-0 w-full h-full ${!square ? "rounded-t-4xl" : ""} overflow-hidden`}
+        >
           <Image
             src="/images/element/header-bg-image.png"
             alt="background"
