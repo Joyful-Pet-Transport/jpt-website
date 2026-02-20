@@ -6,7 +6,7 @@ import BodyText from "../elements/text/BodyText";
 import { usePathname, useRouter } from "next/navigation";
 import { NavItem, navItems } from "@/utils/config/navItems";
 import DynamicButton from "../elements/button/DynamicButton";
-import { HiChevronDown } from "react-icons/hi";
+import { HiChevronDown, HiMenu, HiX } from "react-icons/hi";
 
 type HeaderItemProps = {
   item: NavItem;
@@ -42,7 +42,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
   };
 
   return (
-    <div className="relative flex flex-col items-start gap-2" ref={dropdownRef}>
+    <div className="relative flex flex-col items-center gap-2" ref={dropdownRef}>
       <div className="flex flex-row gap-2 items-center">
         <BodyText
           key={item.path}
@@ -52,7 +52,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
             (item.path !== "/" && pathname.startsWith(item.path))
               ? "text-blue-500!"
               : ""
-          } flex items-center gap-2`}
+          } flex items-center gap-2 !text-sm lg:!text-sm xl:!text-base`}
         >
           {item.label}
           {item.children && (
@@ -65,7 +65,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
       </div>
 
       {isOpen && item.children && (
-        <div className="absolute top-full left-0 mt-1 bg-[#EAEAEA] shadow-2xl border border-gray-300 rounded-xl z-50 min-w-80 overflow-hidden flex flex-col gap-2 p-2">
+        <div className="relative left-0 mt-2 w-full flex flex-col gap-2 overflow-hidden rounded-xl border border-gray-300 bg-[#EAEAEA] p-2 shadow-lg lg:absolute lg:top-full lg:mt-1 lg:min-w-80 lg:w-auto lg:shadow-2xl">
           {item.children.map((child, index) => (
             <div
               key={index}
@@ -96,15 +96,32 @@ const Header: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isNotHomePage = pathname !== "/";
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   const HeaderBar: FC = () => {
     return (
-      <div className="h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center z-1">
-        <div className="w-full h-full px-8 flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex flex-1">
-            <div
-              className="flex flex-row gap-2 cursor-pointer items-center"
+      <div className="relative z-[100] w-full max-w-[100vw] overflow-visible">
+        <div className="relative z-[100] mx-2 mt-4 min-h-14 rounded-2xl bg-[#EAEAEA] flex items-center overflow-hidden sm:mx-4 sm:mt-6 sm:min-h-16 sm:rounded-3xl md:mx-6 md:mt-8 md:h-20 md:rounded-4xl lg:mx-8 lg:mt-8 lg:h-[5.5rem] lg:rounded-4xl">
+          <div className="flex w-full flex-1 items-center gap-2 px-2 py-3 sm:gap-3 sm:px-3 sm:py-4 md:px-4 md:py-4 lg:px-8 lg:py-4">
+            {/* Logo - text hidden on smaller screens */}
+            <div className="flex min-w-0 flex-shrink">
+              <div
+              className="flex cursor-pointer flex-row items-center gap-2 sm:gap-3 md:gap-4"
               onClick={() => router.push("/")}
             >
               <Image
@@ -113,52 +130,105 @@ const Header: FC = () => {
                 height={150}
                 alt="Logo"
                 priority
-                className="w-auto h-16"
+                className="h-14 w-auto shrink-0 sm:h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16"
               />
-              <div className="text-center">
+              <div className="flex min-w-0 flex-col items-start justify-center text-left">
                 <BodyText
                   size="xlarge"
                   weight="bold"
                   font="luckiestGuy"
                   textColor="000F3F"
+                  className="!text-base sm:!text-base md:text-lg lg:!text-xl xl:!text-2xl 2xl:!text-3xl !m-0 !leading-tight"
                 >
                   JOYFUL PET TRANSPORT
                 </BodyText>
-                <BodyText
-                  size="small"
-                  weight="semibold"
-                  font="leagueSpartan"
-                  textColor="000F3F"
-                >
-                  TRANSPORTING PETS HAS NEVER BEEN THIS EASY
-                </BodyText>
               </div>
             </div>
-          </div>
+            </div>
 
-          {/* Navigation */}
-          <div className="flex gap-8 items-center">
-            {navItems.map((item, index) => (
-              <HeaderItem key={index} item={item} />
-            ))}
-          </div>
+            {/* Desktop Navigation - centered */}
+            <div className="hidden flex-1 justify-center lg:flex lg:items-center lg:gap-3 xl:gap-4 2xl:gap-6">
+              {navItems.map((item, index) => (
+                <HeaderItem key={index} item={item} />
+              ))}
+            </div>
 
-          {/* Book now Button */}
-          <div className="flex flex-1 justify-end items-center h-full">
-            <DynamicButton size="medium" rounded>
-              book now
-            </DynamicButton>
+            {/* Right side: Book now Button (desktop) and Hamburger button (mobile/tablet) */}
+            <div className="flex items-center gap-2 ml-auto">
+              {/* Book now Button - desktop only (tablet/mobile: inside hamburger menu) */}
+              <div className="hidden lg:flex lg:items-center">
+                <DynamicButton size="medium" rounded>
+                  book now
+                </DynamicButton>
+              </div>
+
+              {/* Hamburger button - tablet & mobile only */}
+              <button
+                type="button"
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                className="relative z-[110] flex shrink-0 items-center justify-center rounded-lg p-1.5 text-[#000F3F] transition-colors hover:bg-white/60 focus:outline-none focus:ring-2 focus:ring-[#17528A] lg:hidden sm:p-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setMenuOpen((prev) => !prev);
+                }}
+              >
+                {menuOpen ? (
+                  <HiX className="h-7 w-7 sm:h-8 sm:w-8" />
+                ) : (
+                  <HiMenu className="h-7 w-7 sm:h-8 sm:w-8" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Centered Modal */}
+        <div
+          className={`fixed inset-0 z-[120] flex items-center justify-center px-4 transition-all duration-300 lg:hidden ${
+            menuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }`}
+        >
+          
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+          />
+
+          
+          <nav
+            className={`relative w-[92%] max-w-md rounded-3xl bg-[#EAEAEA] shadow-2xl transition-all duration-300 ${
+              menuOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
+            }`}
+          >
+            <div className="flex flex-col items-center px-6 py-8 text-center">
+              {navItems.map((item, index) => (
+                <div key={index} className="w-full py-4">
+                  <HeaderItem item={item} />
+                </div>
+              ))}
+
+              <div className="mt-6 w-full">
+                <DynamicButton size="medium" rounded>
+                  book now
+                </DynamicButton>
+              </div>
+            </div>
+          </nav>
+        </div>
+
       </div>
     );
   };
 
   if (isNotHomePage) {
     return (
-      <div className="relative flex flex-col h-140 bg-[#EAEAEA] mx-8 mt-8 rounded-t-4xl">
+      <div className="relative flex flex-col bg-[#EAEAEA] mx-2 mt-4 h-48 sm:mx-4 sm:mt-6 sm:h-64 md:mx-6 md:mt-8 md:h-80 lg:mx-8 lg:mt-8 lg:h-[22rem] xl:h-[35rem] rounded-t-2xl sm:rounded-t-3xl md:rounded-t-4xl">
         <HeaderBar />
-        <div className="absolute inset-0 w-full h-full rounded-t-4xl overflow-hidden">
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl md:rounded-t-4xl pointer-events-none">
           <Image
             src="/images/element/header-bg-image.png"
             alt="background"

@@ -10,6 +10,8 @@ type BodyTextProps = PropsWithChildren<{
   textColor?: string;
   white?: boolean;
   onPress?: () => void;
+  /** When true, no size class is applied so responsive sizes in className take effect */
+  suppressSize?: boolean;
 }>;
 
 const BodyText: FC<BodyTextProps> = ({
@@ -21,6 +23,7 @@ const BodyText: FC<BodyTextProps> = ({
   textColor,
   white = false,
   onPress,
+  suppressSize = false,
 }) => {
   const weightClasses = {
     thin: "font-[300]",
@@ -55,7 +58,7 @@ const BodyText: FC<BodyTextProps> = ({
   return (
     <p
       className={`${className} ${weightClasses[weight || "normal"]} ${
-        sizeClasses[size || "normal"]
+        !suppressSize ? sizeClasses[size || "normal"] : ""
       } ${fontClasses[font || "poppins"]} ${colorClasses} ${
         onPress
           ? textColor
