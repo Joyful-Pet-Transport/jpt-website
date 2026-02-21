@@ -8,13 +8,14 @@ import DynamicButton from "../elements/button/DynamicButton";
 import SocialButtons from "./SocialButtons";
 import { navItems } from "@/utils/config/navItems";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { handleContactClick } from "@/lib/utils";
 
 const Footer: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const responsive = useResponsive();
 
-  const Brand = () => {
+  const Brand: FC<{ hideButton?: boolean }> = ({ hideButton }) => {
     return (
       <div className="flex flex-col gap-6">
         <div onClick={() => router.push("/")} className="w-full">
@@ -42,11 +43,13 @@ const Footer: FC = () => {
             Get in touch with us today to begin your pet’s journey.
           </BodyText>
         </div>
-        <div className="mx-auto">
-          <DynamicButton onPress={() => {}} className="min-w-80" rounded>
-            get in touch with us
-          </DynamicButton>
-        </div>
+        {!hideButton && (
+          <div className="mx-auto">
+            <DynamicButton onPress={() => {}} className="min-w-80" rounded>
+              get in touch with us
+            </DynamicButton>
+          </div>
+        )}
       </div>
     );
   };
@@ -151,7 +154,7 @@ const Footer: FC = () => {
               Email Address:
             </BodyText>
             <div className="flex flex-col pl-8">
-              <BodyText weight="thin" size="small">
+              <BodyText weight="thin" size="small" onPress={handleContactClick}>
                 joyfulpettransportreservations@gmail.com
               </BodyText>
             </div>
@@ -219,13 +222,26 @@ const Footer: FC = () => {
     );
   };
 
+  if (responsive.isTabletOrMobile) {
+    return (
+      <div className="flex flex-col justify-center mb-2 gap-2 mt-4">
+        <div className="bg-[#EAEAEA] rounded-4xl p-8 flex flex-col gap-6 relative mx-4">
+          <Brand hideButton />
+          <Navigation />
+          <Services />
+          <ContactUs />
+          <SocialIcons />
+        </div>
+        <BodyText className="text-center" textColor="text-neutral-600">
+          © 2026 Joyful Pet Transport | All rights reserved.
+        </BodyText>
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={`flex flex-col justify-center mb-2 gap-2 ${responsive.isTabletOrMobile ? "mt-4" : "mt-8"}`}
-    >
-      <div
-        className={`bg-[#EAEAEA] rounded-4xl p-16 flex flex-col flex-1 relative ${responsive.isTabletOrMobile ? "mx-4" : "mx-8"}`}
-      >
+    <div className="flex flex-col justify-center mb-2 gap-2 mt-8">
+      <div className="bg-[#EAEAEA] rounded-4xl p-16 flex flex-col flex-1 relative mx-8">
         <div className="flex flex-row gap-6">
           <div className="w-1/3 z-10">
             <Brand />

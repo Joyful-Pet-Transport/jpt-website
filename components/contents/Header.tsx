@@ -216,7 +216,9 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
     }
 
     return (
-      <div className="h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center z-1">
+      <div
+        className={`h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center ${isNotHomePage && "z-1"}`}
+      >
         <div className="w-full h-full px-8 flex justify-between items-center">
           {/* Logo */}
           <div className="flex flex-1">
@@ -246,15 +248,19 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
           </div>
 
           {/* Navigation */}
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center z-50">
             {navItems.map((item, index) => (
               <HeaderItem key={index} item={item} />
             ))}
           </div>
 
           {/* Book now Button */}
-          <div className="flex flex-1 justify-end items-center h-full">
-            <DynamicButton size="medium" rounded>
+          <div className="flex flex-1 justify-end items-center h-full z-150">
+            <DynamicButton
+              size="medium"
+              rounded
+              onPress={() => router.push("/our-services")}
+            >
               book now
             </DynamicButton>
           </div>
