@@ -7,10 +7,12 @@ import { usePathname, useRouter } from "next/navigation";
 import DynamicButton from "../elements/button/DynamicButton";
 import SocialButtons from "./SocialButtons";
 import { navItems } from "@/utils/config/navItems";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 
 const Footer: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const responsive = useResponsive();
 
   const Brand = () => {
     return (
@@ -218,8 +220,12 @@ const Footer: FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center mb-2 gap-2 mt-8">
-      <div className="bg-[#EAEAEA] rounded-4xl mx-8 p-16 flex flex-col flex-1 relative">
+    <div
+      className={`flex flex-col justify-center mb-2 gap-2 ${responsive.isTabletOrMobile ? "mt-4" : "mt-8"}`}
+    >
+      <div
+        className={`bg-[#EAEAEA] rounded-4xl p-16 flex flex-col flex-1 relative ${responsive.isTabletOrMobile ? "mx-4" : "mx-8"}`}
+      >
         <div className="flex flex-row gap-6">
           <div className="w-1/3 z-10">
             <Brand />

@@ -1,6 +1,9 @@
+"use client";
+
 import { FC, PropsWithChildren } from "react";
 import Footer from "../contents/Footer";
 import Header from "../contents/Header";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 
 type PageWrapperContainerProps = PropsWithChildren<{
   footer?: boolean;
@@ -16,6 +19,8 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
   className,
   removeBg,
 }) => {
+  const responsive = useResponsive();
+
   return (
     <div
       className="flex flex-col overflow-hidden w-full"
@@ -26,7 +31,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
     >
       {header && <Header />}
       <div
-        className={`min-h-screen py-8 flex flex-col gap-12 ${!removeBg && "bg-white rounded-b-4xl mx-8"} ${className}`}
+        className={`min-h-screen flex flex-col gap-12 ${!removeBg && "bg-white rounded-b-4xl"} ${responsive.isTabletOrMobile ? "mx-4 py-4" : "mx-8 py-8"} ${className}`}
       >
         {children}
       </div>

@@ -27,10 +27,10 @@ const Heading: FC<HeadingProps> = ({
   };
 
   const sizeClasses = {
-    normal: "text-2xl",
-    medium: "text-3xl",
-    large: "text-5xl",
-    xlarge: "text-6xl",
+    normal: "text-lg lg:text-2xl",
+    medium: "text-xl lg:text-3xl",
+    large: "text-2xl lg:text-5xl",
+    xlarge: "text-3xl lg:text-6xl",
   };
 
   const fontClasses = {

@@ -6,10 +6,76 @@ import BodyText from "../elements/text/BodyText";
 import { usePathname, useRouter } from "next/navigation";
 import { NavItem, navItems } from "@/utils/config/navItems";
 import DynamicButton from "../elements/button/DynamicButton";
-import { HiChevronDown } from "react-icons/hi";
+import { HiChevronDown, HiChevronRight } from "react-icons/hi";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { IoMenuOutline } from "react-icons/io5";
+import useModal from "@/utils/hooks/useModal";
 
 type HeaderItemProps = {
   item: NavItem;
+};
+
+const ModalHeaderItem: FC<HeaderItemProps> = ({ item }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { setShown } = useModal();
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <div className="relative flex flex-col justify-center items-center py-3 px-6 hover:bg-neutral-100">
+      <div className="flex flex-row gap-2">
+        <BodyText
+          key={item.path}
+          onPress={() => {
+            router.push(item.path);
+            setShown(false);
+          }}
+          className={`${
+            pathname === item.path ||
+            (item.path !== "/" && pathname.startsWith(item.path))
+              ? "text-blue-500!"
+              : ""
+          } flex items-center text-center gap-2`}
+        >
+          {item.label}
+        </BodyText>
+        {item.children && (
+          <button onClick={toggleDropdown} className="cursor-pointer">
+            {isOpen ? <HiChevronDown /> : <HiChevronRight />}
+          </button>
+        )}
+      </div>
+      {isOpen && item.children && (
+        <div className="flex flex-col gap-2 py-2">
+          {item.children.map((child, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                router.push(`${item.path}${child.path}`);
+                setIsOpen(false);
+                setShown(false);
+              }}
+            >
+              <BodyText
+                className={
+                  pathname === `${item.path}${child.path}`
+                    ? "text-blue-500! text-center"
+                    : "text-center"
+                }
+              >
+                {child.label}
+              </BodyText>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
@@ -40,13 +106,13 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
     e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
-
   return (
     <div className="relative flex flex-col items-start gap-2" ref={dropdownRef}>
       <div className="flex flex-row gap-2 items-center">
         <BodyText
           key={item.path}
           onPress={() => router.push(item.path)}
+          size="base"
           className={`${
             pathname === item.path ||
             (item.path !== "/" && pathname.startsWith(item.path))
@@ -96,8 +162,59 @@ const Header: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isNotHomePage = pathname !== "/";
+  const responsive = useResponsive();
+  const modal = useModal();
 
   const HeaderBar: FC = () => {
+    if (responsive.isTabletOrMobile) {
+      return (
+        <div className="h-22 relative mx-4 rounded-3xl mt-4 bg-[#EAEAEA] flex items-center z-150">
+          <div className="w-full h-full px-8 flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex flex-1 gap-4 justify-between">
+              <div
+                className="flex flex-row gap-2 cursor-pointer"
+                onClick={() => router.push("/")}
+              >
+                <Image
+                  src="/images/logo/logo-new.png"
+                  width={150}
+                  height={150}
+                  alt="Logo"
+                  priority
+                  className="w-auto h-16"
+                />
+                <div className="flex items-center">
+                  <BodyText weight="bold" font="luckiestGuy" textColor="000F3F">
+                    JOYFUL PET TRANSPORT
+                  </BodyText>
+                </div>
+              </div>
+              <div
+                className="flex items-center z-20"
+                onClick={() => {
+                  modal.setModalComponent(
+                    <div className="flex flex-col gap-2">
+                      {navItems.map((item, index) => (
+                        <ModalHeaderItem key={index} item={item} />
+                      ))}
+                      <DynamicButton size="medium" rounded>
+                        book now
+                      </DynamicButton>
+                    </div>,
+                    "normal",
+                  );
+                  modal.setShown(true);
+                }}
+              >
+                <IoMenuOutline className="text-3xl" />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center z-1">
         <div className="w-full h-full px-8 flex justify-between items-center">
@@ -117,27 +234,19 @@ const Header: FC = () => {
               />
               <div className="text-center">
                 <BodyText
-                  size="xlarge"
+                  size="large"
                   weight="bold"
                   font="luckiestGuy"
                   textColor="000F3F"
                 >
                   JOYFUL PET TRANSPORT
                 </BodyText>
-                <BodyText
-                  size="small"
-                  weight="semibold"
-                  font="leagueSpartan"
-                  textColor="000F3F"
-                >
-                  TRANSPORTING PETS HAS NEVER BEEN THIS EASY
-                </BodyText>
               </div>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex gap-8 items-center">
+          <div className="flex gap-4 items-center">
             {navItems.map((item, index) => (
               <HeaderItem key={index} item={item} />
             ))}
@@ -156,7 +265,9 @@ const Header: FC = () => {
 
   if (isNotHomePage) {
     return (
-      <div className="relative flex flex-col h-140 bg-[#EAEAEA] mx-8 mt-8 rounded-t-4xl">
+      <div
+        className={`relative flex flex-col h-140 bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4" : "mx-8 mt-8"}`}
+      >
         <HeaderBar />
         <div className="absolute inset-0 w-full h-full rounded-t-4xl overflow-hidden">
           <Image
