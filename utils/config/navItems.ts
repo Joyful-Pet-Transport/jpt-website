@@ -6,7 +6,7 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   { label: "Home", path: "/" },
-  
+  { label: "About Us", path: "/about-us" },
   {
     label: "Our Services",
     path: "/our-services",
@@ -26,7 +26,6 @@ export const navItems: NavItem[] = [
     ],
   },
   { label: "Testimonials", path: "/testimonials" },
-  { label: "About Us", path: "/about-us" },
   { label: "FAQs", path: "/faq" },
   { label: "Contact Us", path: "/contact-us" },
 ];
