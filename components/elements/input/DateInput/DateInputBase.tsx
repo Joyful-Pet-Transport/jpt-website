@@ -114,7 +114,7 @@ const DateInputBase: FC<DateInputBaseProps> = ({
             aria-invalid={!!validation || !!rangeValidation}
           >
             <div className="flex items-center justify-between">
-              <BodyText className="text-neutral-600!">
+              <BodyText textColor="text-neutral-600">
                 {specificValue ? formatDisplayDate(specificValue) : placeholder}
               </BodyText>
               <svg
@@ -155,7 +155,7 @@ const DateInputBase: FC<DateInputBaseProps> = ({
             aria-invalid={!!validation || !!rangeValidation}
           >
             <div className="flex items-center justify-between">
-              <BodyText className="text-neutral-600!">
+              <BodyText textColor="text-neutral-600">
                 {rangeValue.start && rangeValue.end
                   ? `${formatDisplayDate(rangeValue.start)} - ${formatDisplayDate(rangeValue.end)}`
                   : placeholder}

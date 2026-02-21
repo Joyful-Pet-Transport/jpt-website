@@ -71,7 +71,7 @@ const RadioInputBase: FC<RadioInputBaseProps> = ({
         {isLabeledOptions(options)
           ? options.map((group) => (
               <div key={group.label} className="flex flex-col gap-4">
-                <BodyText size="small" className="font-medium text-gray-600">
+                <BodyText size="small" textColor="text-gray-600">
                   {group.label}
                 </BodyText>
                 <div

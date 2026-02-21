@@ -13,6 +13,7 @@ import {
 import { FC } from "react";
 import { cn } from "@/lib/utils";
 import { LabeledOption, Option } from "./../Options";
+import BodyText from "../../../text/BodyText";
 
 type MultiSelectDropdownProps = {
   value: string[];
@@ -54,7 +55,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     >
       <div
         ref={anchorRef}
-        className={cn(baseClass, "text-lg")}
+        className={cn(baseClass, "text-base lg:text-lg")}
         aria-invalid={validation}
       >
         <ComboboxChips className="flex min-h-0 flex-wrap items-center gap-2 border-0 bg-transparent p-0 shadow-none focus-within:ring-0">
@@ -67,7 +68,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           <ComboboxChipsInput
             placeholder={value.length === 0 ? placeholder : ""}
             readOnly
-            className="placeholder:text-neutral-600"
+            className="placeholder:text-neutral-600 text-base lg:text-lg"
           />
         </ComboboxChips>
       </div>
@@ -76,14 +77,16 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           {isLabeledOptions(options)
             ? options.map((group) => (
                 <ComboboxGroup key={group.label}>
-                  <ComboboxLabel className="px-2">{group.label}</ComboboxLabel>
+                  <ComboboxLabel className="px-2">
+                    <BodyText>{group.label}</BodyText>
+                  </ComboboxLabel>
                   {group.options.map((opt) => (
                     <ComboboxItem
                       key={opt.value}
                       value={opt.value}
                       className="px-2"
                     >
-                      {opt.label}
+                      <BodyText>{opt.label}</BodyText>
                     </ComboboxItem>
                   ))}
                 </ComboboxGroup>
@@ -94,7 +97,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
                   value={opt.value}
                   className="px-2"
                 >
-                  {opt.label}
+                  <BodyText>{opt.label}</BodyText>
                 </ComboboxItem>
               ))}
         </ComboboxList>

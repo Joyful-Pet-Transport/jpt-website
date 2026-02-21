@@ -118,7 +118,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
             (item.path !== "/" && pathname.startsWith(item.path))
               ? "text-blue-500!"
               : ""
-          } flex items-center gap-2`}
+          } flex items-center`}
         >
           {item.label}
           {item.children && (
