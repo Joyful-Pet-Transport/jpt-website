@@ -26,12 +26,12 @@ const DynamicButton: FC<DynamicButtonProps> = ({
 
   const ButtonSize = {
     default: "px-8 py-4 text-base",
-    medium: "py-2 px-4 text-sm",
+    medium: "py-2 text-sm",
   };
 
   return (
     <button
-      className={`max-w-96 min-w-44 justify-center items-center ${rounded ? "rounded-full" : "rounded-xl"} ${
+      className={`max-w-96 min-w-36 justify-center items-center ${rounded ? "rounded-full" : "rounded-xl"} ${
         ButtonType[type || "default"]
       } ${ButtonSize[size || "default"]} text-center uppercase font-semibold ${className}`}
       onClick={onPress}

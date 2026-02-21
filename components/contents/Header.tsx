@@ -219,7 +219,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
       <div
         className={`h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center ${isNotHomePage && "z-1"}`}
       >
-        <div className="w-full h-full px-8 flex justify-between items-center">
+        <div className="w-full h-full px-8 gap-4 flex justify-between items-center">
           {/* Logo */}
           <div className="flex flex-1">
             <div
@@ -234,21 +234,19 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                 priority
                 className="w-auto h-16"
               />
-              <div className="text-center">
-                <BodyText
-                  size="large"
-                  weight="bold"
-                  font="luckiestGuy"
-                  textColor="000F3F"
-                >
-                  JOYFUL PET TRANSPORT
-                </BodyText>
-              </div>
+              <BodyText
+                size="medium"
+                weight="bold"
+                font="luckiestGuy"
+                textColor="000F3F"
+              >
+                JOYFUL PET TRANSPORT
+              </BodyText>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex gap-4 items-center z-50">
+          <div className="flex gap-4 items-center justify-center z-50">
             {navItems.map((item, index) => (
               <HeaderItem key={index} item={item} />
             ))}
