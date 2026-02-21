@@ -158,7 +158,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
   );
 };
 
-const Header: FC = () => {
+const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isNotHomePage = pathname !== "/";
@@ -263,7 +263,7 @@ const Header: FC = () => {
     );
   };
 
-  if (isNotHomePage) {
+  if (isNotHomePage && !disableLayout) {
     return (
       <div
         className={`relative flex flex-col h-140 bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4" : "mx-8 mt-8"}`}

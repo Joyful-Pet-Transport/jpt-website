@@ -10,6 +10,7 @@ type PageWrapperContainerProps = PropsWithChildren<{
   header?: boolean;
   className?: string;
   removeBg?: boolean;
+  disableLayout?: boolean;
 }>;
 
 const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
@@ -18,6 +19,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
   header = true,
   className,
   removeBg,
+  disableLayout,
 }) => {
   const responsive = useResponsive();
 
@@ -29,7 +31,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
           "linear-gradient(to bottom, #41B2F6, #FBF2B3, #FF985B)",
       }}
     >
-      {header && <Header />}
+      {header && <Header disableLayout={disableLayout} />}
       <div
         className={`min-h-screen flex flex-col gap-12 ${!removeBg && "bg-white rounded-b-4xl"} ${responsive.isTabletOrMobile ? "mx-4 py-4" : "mx-8 py-8"} ${className}`}
       >

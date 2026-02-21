@@ -38,7 +38,7 @@ const ContactUsScreen = () => {
     );
   };
   return (
-    <PageWrapperContainer removeBg noHeaderImage square>
+    <PageWrapperContainer removeBg disableLayout>
       <BoxedContainer medium className="flex items-center justify-center">
         <div className="items-center justify-center flex flex-col gap-6">
           <Heading font="poppins">Contact Us</Heading>
