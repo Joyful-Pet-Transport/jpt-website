@@ -95,7 +95,7 @@ const UnderConstructionContent: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-sky-400 via-blue-300 to-orange-200">
+    <div className="min-h-screen relative overflow-hidden bg-linear-to-b from-sky-400 via-blue-300 to-orange-200">
       {/* Animated clouds */}
       <div
         ref={(el) => {
@@ -258,7 +258,7 @@ const UnderConstructionContent: React.FC = () => {
       </div>
 
       {/* Decorative ground elements */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-300/50 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-orange-300/50 to-transparent pointer-events-none" />
     </div>
   );
 };
