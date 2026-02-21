@@ -25,10 +25,11 @@ const HeroSection: FC = () => {
                 Transporting Pets Has Never Been This Easy
               </Heading>
               <BodyText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+                Your pets are family — and their journey deserves the highest level of care. At Joyful Pet Transport,
+                we specialize in safe, stress-free domestic and international pet relocation, carefully managing every
+                step of the travel process with compassion, expertise, and clear communication. From documentation and
+                airline coordination to dedicated travel day support, we provide complete peace of mind from departure
+                to arrival.
               </BodyText>
               <div className="flex flex-row gap-6">
                 <DynamicButton>BOOK NOW</DynamicButton>
