@@ -87,7 +87,7 @@ const philippinesCode =
   countryOptions.find((c) => c.label === "Philippines")?.value ?? "PH";
 
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
   const responsive = useResponsive();
   const modal = useModal();
   const [loading, setLoading] = useState<boolean>(false);
@@ -270,7 +270,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     );
   };
 
-  const Progress: FC<{ step: 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
+  const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
     const percentage = (step / 5) * 100;
 
     return (
@@ -283,6 +283,57 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           }}
         />
       </div>
+    );
+  };
+
+  const Disclaimer: FC = () => {
+    return (
+      <FormContainer className="justify-center items-center">
+        <BodyText
+          size="large"
+          weight="semibold"
+          className="text-center uppercase"
+        >
+          privacy notice and consent statement
+        </BodyText>
+        <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+          <BodyText className="text-center">
+            At <span className="italic font-bold">Joyful Pet Transport</span>,
+            we are committed to protecting your personal information.
+          </BodyText>
+          <BodyText className="text-center">
+            By proceeding with this form, you acknowledge and agree that all
+            information collected — including your personal details, contact
+            information, pet details, and travel documents — will be used solely
+            for the purpose of processing your pet’s transport arrangements,
+            documentation, and compliance with local and international travel
+            regulations.
+          </BodyText>
+          <BodyText className="text-center">
+            All information provided will be handled with strict confidentiality
+            and in accordance with applicable data privacy laws. We do not share
+            your information with unauthorized third parties.
+          </BodyText>
+          <BodyText className="text-center">
+            By continuing, you voluntarily consent to the collection, use, and
+            processing of your data for pet transport services.
+          </BodyText>
+        </div>
+        <div className="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2">
+          <DynamicButton size="medium" onPress={() => setStep(1)}>
+            I AGREE
+          </DynamicButton>
+          <BodyText
+            size="xsmall"
+            className="text-center"
+            textColor="text-neutral-500"
+          >
+            By clicking this button, you confirm that you have read the Privacy
+            Notice and Consent Statement and consent to the collection and use
+            of your personal information for your pet’s transport.
+          </BodyText>
+        </div>
+      </FormContainer>
     );
   };
 
@@ -979,6 +1030,10 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   };
 
   const RenderForm: FC = () => {
+    if (step === 0) {
+      return <Disclaimer />;
+    }
+
     if (step === 1) {
       return <Destination />;
     }
