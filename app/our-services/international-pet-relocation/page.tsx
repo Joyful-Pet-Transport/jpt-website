@@ -131,7 +131,7 @@ const InternalPetRelocationScreen = () => {
             country, we're here to take care of everything behind the scenes.
           </BodyText>
         </div>
-        <div className="flex justify-center gap-8">
+        <div className="flex flex-col md:flex-row justify-center gap-8">
           <Import />
           <Export />
         </div>

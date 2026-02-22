@@ -142,6 +142,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
               }}
             >
               <BodyText
+                size="base"
                 className={
                   pathname === `${item.path}${child.path}`
                     ? "text-blue-500!"
