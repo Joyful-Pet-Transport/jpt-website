@@ -43,4 +43,37 @@ export default defineSchema({
   })
     .index("by_reviewId", ["reviewId"])
     .index("by_publishedAtDate", ["publishedAtDate"]),
+
+  pet_details: defineTable({
+    pet_name: v.string(),
+    breed: v.string(),
+    sex: v.string(),
+    pet_birthday: v.string(),
+    pet_age: v.string(),
+    pet_weight: v.string(),
+    pet_condition: v.string(),
+    special_instructions: v.string(),
+    pet_image: v.id("_storage"),
+  }),
+
+  international_pet_transport: defineTable({
+    origin_country: v.string(),
+    destination: v.string(),
+
+    companionship: v.string(),
+    travel_date: v.string(),
+    date: v.string(),
+
+    owner_name: v.string(),
+    contact_form: v.string(),
+    account_name: v.string(),
+    account_link: v.optional(v.string()),
+    contact_number: v.string(),
+    email_address: v.string(),
+
+    origin_full_address: v.string(),
+    destination_full_address: v.string(),
+
+    pets: v.optional(v.array(v.id("pet_details"))),
+  }).index("by_pets", ["pets"]),
 });

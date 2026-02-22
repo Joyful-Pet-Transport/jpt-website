@@ -238,7 +238,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                 size="medium"
                 weight="bold"
                 font="luckiestGuy"
-                textColor="000F3F"
+                textColor="text-[#000F3F]"
               >
                 JOYFUL PET TRANSPORT
               </BodyText>
