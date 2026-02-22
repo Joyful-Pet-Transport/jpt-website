@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useState, useEffect } from "react";
 import Footer from "../contents/Footer";
 import Header from "../contents/Header";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
@@ -22,6 +22,15 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
   disableLayout,
 }) => {
   const responsive = useResponsive();
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <div

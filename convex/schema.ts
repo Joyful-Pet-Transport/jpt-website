@@ -51,8 +51,8 @@ export default defineSchema({
     pet_birthday: v.string(),
     pet_age: v.string(),
     pet_weight: v.string(),
-    pet_condition: v.string(),
-    special_instructions: v.string(),
+    pet_condition: v.optional(v.string()),
+    special_instructions: v.optional(v.string()),
     pet_image: v.id("_storage"),
   }),
 

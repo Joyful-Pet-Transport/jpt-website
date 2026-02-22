@@ -16,6 +16,8 @@ import { FaTrashCan } from "react-icons/fa6";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import useModal from "@/utils/hooks/useModal";
+import BookedSuccessfullyModal from "../modals/BookedSuccessfullyModal";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -36,15 +38,11 @@ const PetDetailsSchema = z.object({
   pet_birthday: z.string().min(3, "Please select your pet's date of birth"),
   pet_age: z.string().min(1, "Please enter your pet's age"),
   pet_weight: z.string().min(1, "Please enter your pet's weight"),
-  pet_condition: z
-    .string()
-    .min(1, "Please describe any medical conditions (or type 'None')"),
-  special_instructions: z
-    .string()
-    .min(1, "Please enter any special instructions (or type 'None')"),
+  pet_condition: z.string().optional(),
+  special_instructions: z.string().optional(),
   pet_image: z
     .array(z.instanceof(File))
-    .optional()
+    .min(1, "Please upload your pet's latest photo")
     .refine((files) => !files || files.length === 0 || files[0].size > 0, {
       message: "Please upload a valid image",
     }),
@@ -91,6 +89,8 @@ const philippinesCode =
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const responsive = useResponsive();
+  const modal = useModal();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const createPetDetails = useMutation(
     api.mutations.pet_details.createPetDetails,
@@ -179,6 +179,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             if (step == 5) {
               createInternationalRelocationForm.handleSubmit(async (data) => {
                 try {
+                  setLoading(true);
                   const petIds = [];
                   for (const pet of data.pets) {
                     let petImageId: string | undefined;
@@ -204,17 +205,22 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                       petImageId = storageId;
                     }
 
-                    const petData = {
+                    const petData: any = {
                       pet_name: pet.pet_name,
                       breed: pet.breed,
                       sex: pet.sex,
                       pet_birthday: pet.pet_birthday,
                       pet_age: pet.pet_age,
                       pet_weight: pet.pet_weight,
-                      pet_condition: pet.pet_condition,
-                      special_instructions: pet.special_instructions,
                       pet_image: petImageId as any,
                     };
+
+                    if (pet.pet_condition) {
+                      petData.pet_condition = pet.pet_condition;
+                    }
+                    if (pet.special_instructions) {
+                      petData.special_instructions = pet.special_instructions;
+                    }
 
                     const petId = await createPetDetails(petData);
                     petIds.push(petId);
@@ -240,8 +246,16 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   const bookingId =
                     await bookInternationalPetTransport(bookingData);
                   console.log("Booking created successfully:", bookingId);
+                  createInternationalRelocationForm.reset();
+                  modal.setModalComponent(<BookedSuccessfullyModal />, "large");
+                  modal.setShown(true);
+                  // setTimeout(() => {
+                  //   modal.setShown(false);
+                  // }, 3000);
                 } catch (error) {
                   console.error("Error creating booking:", error);
+                } finally {
+                  setLoading(false);
                 }
               })();
             } else {
@@ -250,7 +264,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             }
           }}
         >
-          {step == 5 ? "SUBMIT" : "NEXT"}
+          {step == 5 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
         </DynamicButton>
       </div>
     );
@@ -591,7 +605,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               control={control}
               keyboardType="paragraph"
               widthFull
-              required
             />
 
             <FormInput
@@ -601,7 +614,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               control={control}
               keyboardType="paragraph"
               widthFull
-              required
             />
 
             <ImageFormInput
@@ -747,6 +759,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               }
               control={control}
               dateType={dateType}
+              widthFull
               disabled
               required
             />
@@ -788,6 +801,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               label="OWNER'S NAME"
               placeholder="Enter owner's name"
               control={control}
+              widthFull
               disabled
               required
             />
@@ -821,6 +835,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               label="CONTACT NUMBER"
               placeholder="Enter contact number"
               control={control}
+              widthFull
               disabled
               required
             />
@@ -831,6 +846,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               label="ACCOUNT NAME"
               placeholder="Enter account name"
               control={control}
+              widthFull
               disabled
               required
               className="w-full"
@@ -841,6 +857,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               placeholder="Enter link"
               className="w-full"
               control={control}
+              widthFull
               disabled
             />
             <FormInput
@@ -848,15 +865,16 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               label="ACTIVE EMAIL ADDRESS"
               placeholder="Enter active email address"
               control={control}
+              widthFull
               disabled
               required
             />
           </div>
         </div>
         {fields.map((field, index) => (
-          <div className="flex flex-col gap-12" key={index}>
+          <div className="flex flex-col gap-12" key={field.id}>
             <BodyText className="text-center" size="large" weight="semibold">
-              PET DETAILS
+              PET {index !== 0 && index + 1} DETAILS
             </BodyText>
             <div
               className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
@@ -867,6 +885,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   label="PET'S NAME"
                   placeholder="Enter pet's name"
                   control={control}
+                  widthFull
                   disabled
                   className="w-full"
                   required
@@ -876,6 +895,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   label="BREED"
                   placeholder="Enter pet's breed"
                   control={control}
+                  widthFull
                   disabled
                   className="w-full"
                   required
@@ -885,6 +905,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   placeholder="Enter pet's age"
                   label="AGE"
                   control={control}
+                  widthFull
                   disabled
                   className="w-full"
                 />
@@ -895,6 +916,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   label="SEX"
                   placeholder="Enter pet's gender (or sex)"
                   control={control}
+                  widthFull
                   disabled
                   className="w-full"
                   required
@@ -904,6 +926,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   label="DATE OF BIRTH"
                   placeholder="Enter pet's birthday"
                   control={control}
+                  widthFull
                   disabled
                   className="w-full"
                   enableYearSelect
@@ -913,6 +936,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   name={`pets.${index}.pet_weight`}
                   label="PET'S WEIGHT"
                   control={control}
+                  widthFull
                   disabled
                   placeholder="Enter pet's estimated weight"
                   required
@@ -927,7 +951,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               disabled
               keyboardType="paragraph"
               widthFull
-              required
             />
 
             <FormInput
@@ -938,7 +961,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               disabled
               keyboardType="paragraph"
               widthFull
-              required
             />
 
             <ImageFormInput

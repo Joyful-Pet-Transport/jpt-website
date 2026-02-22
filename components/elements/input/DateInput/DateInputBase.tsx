@@ -23,14 +23,15 @@ export type DateInputBaseProps = {
   label: string;
   whiteLabel?: boolean;
   placeholder?: string;
-  initialValue?: string | DateRange;
+  initialValue?: string;
   validation?: string;
   dateType?: DateInputType;
   disabled?: boolean;
   required?: boolean;
-  /** When true, calendar shows a year dropdown (useful for birthdays) */
+
   enableYearSelect?: boolean;
-  onChange?: (value: string | DateRange) => void;
+  widthFull?: boolean;
+  onChange?: (value: string) => void;
 };
 
 const DateInputBase: FC<DateInputBaseProps> = ({
@@ -43,17 +44,23 @@ const DateInputBase: FC<DateInputBaseProps> = ({
   disabled = false,
   required,
   enableYearSelect = false,
+  widthFull,
   onChange,
 }) => {
   const [specificValue, setSpecificValue] = useState<string>(
     dateType === "specific" ? (initialValue as string) || "" : "",
   );
 
-  const [rangeValue, setRangeValue] = useState<DateRange>(
-    dateType === "range"
-      ? (initialValue as DateRange) || { start: "", end: "" }
-      : { start: "", end: "" },
-  );
+  const [rangeValue, setRangeValue] = useState<DateRange>(() => {
+    if (dateType === "range" && initialValue) {
+      const parts = initialValue.split(" - ");
+      return {
+        start: parts[0]?.trim() || "",
+        end: parts[1]?.trim() || "",
+      };
+    }
+    return { start: "", end: "" };
+  });
 
   const [rangeValidation, setRangeValidation] = useState<string>("");
   const [showSpecificCalendar, setShowSpecificCalendar] = useState(false);
@@ -93,11 +100,15 @@ const DateInputBase: FC<DateInputBaseProps> = ({
       setRangeValidation("");
     }
     setRangeValue(newRange);
-    onChange?.(newRange);
+    const rangeString = `${newRange.start} - ${newRange.end}`;
+    onChange?.(rangeString);
+    setShowRangeCalendar(false);
   };
 
   return (
-    <div className="flex flex-col gap-1 w-full max-w-110">
+    <div
+      className={`flex flex-col gap-1 ${widthFull ? "w-full" : "w-full max-w-110"}`}
+    >
       <BodyText weight="semibold" white={whiteLabel}>
         {label}
         {required && <span className="text-red-500">*</span>}

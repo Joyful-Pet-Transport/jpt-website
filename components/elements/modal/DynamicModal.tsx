@@ -16,9 +16,9 @@ export interface DynamicModalProps {
 
 const DynamicModal: FC<PropsWithChildren<DynamicModalProps>> = (props) => {
   const sizeClasses = {
-    normal: "w-md",
-    medium: "w-lg",
-    large: "w-2xl",
+    normal: "max-w-md w-full",
+    medium: "max-w-xl w-full",
+    large: "max-w-3xl w-full",
     full: "w-full",
   };
 
