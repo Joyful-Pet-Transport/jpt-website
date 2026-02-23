@@ -21,7 +21,8 @@ const DynamicButton: FC<DynamicButtonProps> = ({
       "bg-[#17528A] hover:bg-transparent border-2 border-[#17528A] text-neutral-100 hover:text-neutral-800",
     outline:
       "border-2 border-[#17528A] hover:bg-[#17528A] text-neutral-800 hover:text-neutral-300",
-    orange: "border-2 bg-[#F37E48] border-[#F37E48] text-white",
+    orange:
+      "border-2 bg-[#F37E48] border-[#F37E48] text-white hover:bg-transparent hover:text-[#F37E48]",
   };
 
   const ButtonSize = {

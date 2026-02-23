@@ -5,10 +5,20 @@ import IconContainer from "@/components/containers/IconContainer";
 import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
-import InputBase from "@/components/elements/input/TextInput/InputBase";
+import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
+import FormInput from "@/components/elements/input/TextInput/FormInput";
+import { useInquiryForm } from "@/components/forms/useInquiryForm";
+import { Button } from "@/components/ui/button";
 import { FC } from "react";
+import DynamicButton from "@/components/elements/button/DynamicButton";
 
 const ContactUsScreen = () => {
+  const form = useInquiryForm();
+  const { control, handleSubmit } = form;
+
+  const onSubmit = handleSubmit((data) => {
+    console.log("Form submitted:", data);
+  });
   const Location: FC = () => {
     return (
       <div className="flex flex-col w-full overflow-hidden">
@@ -38,8 +48,11 @@ const ContactUsScreen = () => {
     );
   };
   return (
-    <PageWrapperContainer removeBg disableLayout>
-      <BoxedContainer medium className="flex items-center justify-center">
+    <PageWrapperContainer>
+      <Breadcrumbs
+        items={[{ label: "Home", path: "/" }, { label: "Contact Us" }]}
+      />
+      <BoxedContainer medium className="flex justify-center">
         <div className="items-center justify-center flex flex-col gap-6">
           <Heading font="poppins">Contact Us</Heading>
           <BodyText>
@@ -109,35 +122,30 @@ const ContactUsScreen = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-4 pt-4">
-                <InfoItemContainer
-                  icon={<IconContainer icon="call3" />}
-                  name="Phone Number"
-                  value="Joyful Pet Transport"
-                />
-                <InfoItemContainer
-                  icon={<IconContainer icon="google3" />}
-                  name="Email Address"
-                  value="joyfulpettransportreservations@gmail.com"
-                />
-              </div>
             </div>
           </div>
-          <div className="p-2">
-            <BodyText font="poppins" weight="semibold" size="medium">
-              Quick Inquiry
-            </BodyText>
-            <BodyText font="poppins" weight="semibold">
-              Use our short inquiry form—your message goes straight to our
-              email.
-            </BodyText>
+          <div className="flex flex-col">
             <div>
-              <InputBase
-                keyboardType="paragraph"
-                label=""
-                placeholder="Your message..."
-                widthFull
-              />
+              <BodyText font="poppins" weight="semibold" size="medium">
+                Quick Inquiry
+              </BodyText>
+              <BodyText font="poppins" weight="semibold">
+                Use our short inquiry form—your message goes straight to our
+                email.
+              </BodyText>
+            </div>
+            <FormInput
+              name="message"
+              control={control}
+              keyboardType="paragraph"
+              label=""
+              placeholder="Your message..."
+              widthFull
+            />
+            <div className="flex justify-center pt-4">
+              <DynamicButton onPress={onSubmit} type="orange" size="medium">
+                Send
+              </DynamicButton>
             </div>
           </div>
         </div>
