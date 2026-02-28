@@ -15,6 +15,7 @@ import type * as mutations_domestic_pet_transport from "../mutations/domestic_pe
 import type * as mutations_google_reviews from "../mutations/google_reviews.js";
 import type * as mutations_international_pet_transport from "../mutations/international_pet_transport.js";
 import type * as mutations_pet_details from "../mutations/pet_details.js";
+import type * as mutations_rabies_serology_test from "../mutations/rabies_serology_test.js";
 import type * as tables_booking_process from "../tables/booking_process.js";
 import type * as tables_frequently_asked_questions from "../tables/frequently_asked_questions.js";
 import type * as tables_google_reviews from "../tables/google_reviews.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   "mutations/google_reviews": typeof mutations_google_reviews;
   "mutations/international_pet_transport": typeof mutations_international_pet_transport;
   "mutations/pet_details": typeof mutations_pet_details;
+  "mutations/rabies_serology_test": typeof mutations_rabies_serology_test;
   "tables/booking_process": typeof tables_booking_process;
   "tables/frequently_asked_questions": typeof tables_frequently_asked_questions;
   "tables/google_reviews": typeof tables_google_reviews;

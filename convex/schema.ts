@@ -99,4 +99,18 @@ export default defineSchema({
     origin_full_address: v.string(),
     destination_full_address: v.string(),
   }).index("by_pets", ["pets"]),
+
+  rabies_serology_test: defineTable({
+    owner_name: v.string(),
+
+    contact_form: v.string(),
+    account_name: v.string(),
+    account_link: v.optional(v.string()),
+    contact_number: v.string(),
+    email_address: v.string(),
+
+    date: v.string(),
+
+    pets: v.optional(v.array(v.id("pet_details"))),
+  }),
 });

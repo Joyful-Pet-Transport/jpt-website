@@ -1,24 +1,23 @@
-import { FC, useState } from "react";
-import FormContainer from "../containers/FormContainer";
-import BodyText from "../elements/text/BodyText";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
-import DynamicButton from "../elements/button/DynamicButton";
-import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
-import DateFormInput from "../elements/input/DateInput/DateFormInput";
-import FormInput from "../elements/input/TextInput/FormInput";
-import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
-import { FaTrashCan } from "react-icons/fa6";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { useRouter } from "next/navigation";
+import { FC, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import useModal from "@/utils/hooks/useModal";
+import { useFieldArray, useForm } from "react-hook-form";
+import RabiesSerologyTestSchema from "../schemas/rabies-serology-test-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import BookedSuccessfullyModal from "../modals/BookedSuccessfullyModal";
-import DomesticRelocationFormSchema from "../schemas/domestic-pet-relocation-schema";
-import IconSelectFormInput from "../elements/input/SelectInput/IconSelectFormInput";
+import useModal from "@/utils/hooks/useModal";
+import BodyText from "../elements/text/BodyText";
+import DynamicButton from "../elements/button/DynamicButton";
+import FormContainer from "../containers/FormContainer";
+import FormInput from "../elements/input/TextInput/FormInput";
+import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
+import DateFormInput from "../elements/input/DateInput/DateFormInput";
+import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
+import { FaTrashCan } from "react-icons/fa6";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
 
 type PetDetailsProps = {
   index: number;
@@ -28,12 +27,12 @@ type PetDetailsProps = {
   multiple?: boolean;
 };
 
-const RelocationForm: FC = () => {
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
+const RabiesSerologyTestForm: FC = () => {
+  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
   const responsive = useResponsive();
+  const router = useRouter();
   const modal = useModal();
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   const createPetDetails = useMutation(
     api.mutations.pet_details.createPetDetails,
@@ -41,17 +40,14 @@ const RelocationForm: FC = () => {
   const generateUploadUrl = useMutation(
     api.mutations.pet_details.generateUploadUrl,
   );
-  const bookDomesticPetTransport = useMutation(
-    api.mutations.domestic_pet_transport.bookDomesticPetTransport,
+  const bookRabiesSerologyTest = useMutation(
+    api.mutations.rabies_serology_test.bookRabiesSerologyTest,
   );
 
-  const createDomesticRelocationForm = useForm({
-    resolver: zodResolver(DomesticRelocationFormSchema),
+  const createRabiesSerologyTestForm = useForm({
+    resolver: zodResolver(RabiesSerologyTestSchema),
     defaultValues: {
       owner_name: "",
-
-      pickup_address: "",
-      destination: "",
 
       contact_form: "",
       account_name: "",
@@ -59,9 +55,7 @@ const RelocationForm: FC = () => {
       contact_number: "",
       email_address: "",
 
-      travel_date: "",
       date: "",
-      mode_of_transport: "",
 
       pets: [
         {
@@ -76,25 +70,15 @@ const RelocationForm: FC = () => {
           pet_image: [],
         },
       ],
-
-      origin_full_address: "",
-      destination_full_address: "",
     },
   });
 
-  const control = createDomesticRelocationForm.control;
+  const control = createRabiesSerologyTestForm.control;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "pets",
   });
-
-  const travelDate = useWatch({
-    control,
-    name: "travel_date",
-  });
-
-  const dateType = travelDate === "yes" ? "specific" : "range";
 
   const Buttons: FC = () => {
     const scrollToTop = () => {
@@ -111,7 +95,7 @@ const RelocationForm: FC = () => {
           }
           onPress={() => {
             if (step != 1) {
-              setStep((step - 1) as 1 | 2 | 3 | 4);
+              setStep((step - 1) as 1 | 2 | 3);
               scrollToTop();
             }
           }}
@@ -120,8 +104,8 @@ const RelocationForm: FC = () => {
         </BodyText>
         <DynamicButton
           onPress={() => {
-            if (step == 4) {
-              createDomesticRelocationForm.handleSubmit(async (data) => {
+            if (step == 3) {
+              createRabiesSerologyTestForm.handleSubmit(async (data) => {
                 try {
                   setLoading(true);
                   const petIds = [];
@@ -173,28 +157,20 @@ const RelocationForm: FC = () => {
                   const bookingData = {
                     owner_name: data.owner_name,
 
-                    pickup_address: data.pickup_address,
-                    destination: data.destination,
-
                     contact_form: data.contact_form,
                     account_name: data.account_name,
                     account_link: data.account_link,
                     contact_number: data.contact_number,
                     email_address: data.email_address,
 
-                    travel_date: data.travel_date,
                     date: data.date,
-                    mode_of_transport: data.mode_of_transport,
 
                     pets: petIds,
-
-                    origin_full_address: data.origin_full_address,
-                    destination_full_address: data.destination_full_address,
                   };
 
-                  const bookingId = await bookDomesticPetTransport(bookingData);
+                  const bookingId = await bookRabiesSerologyTest(bookingData);
                   console.log("Booking created successfully:", bookingId);
-                  createDomesticRelocationForm.reset();
+                  createRabiesSerologyTestForm.reset();
                   modal.setModalComponent(<BookedSuccessfullyModal />, "large");
                   modal.setShown(true);
                   setTimeout(() => {
@@ -208,25 +184,19 @@ const RelocationForm: FC = () => {
                 }
               })();
             } else {
-              setStep((step + 1) as 1 | 2 | 3 | 4);
+              setStep((step + 1) as 1 | 2 | 3);
               scrollToTop();
             }
           }}
         >
-          {step == 4 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
+          {step == 3 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
         </DynamicButton>
       </div>
     );
   };
 
-  const RenderIcon: FC<{ path: string }> = ({ path }) => {
-    return (
-      <Image src={path} alt="Transport mode icon" width={200} height={200} />
-    );
-  };
-
-  const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 }> = ({ step }) => {
-    const percentage = (step / 4) * 100;
+  const Progress: FC<{ step: 0 | 1 | 2 | 3 }> = ({ step }) => {
+    const percentage = (step / 3) * 100;
 
     return (
       <div className="w-full max-w-96 h-3 rounded-full bg-neutral-200 overflow-hidden">
@@ -306,34 +276,6 @@ const RelocationForm: FC = () => {
           required
         />
 
-        <div className="flex gap-6 px-10">
-          <div className="flex flex-col justify-end items-center gap-4 pb-2">
-            <LuMapPin className="text-2xl text[#5B5959]" />
-            <div className="flex flex-col gap-2">
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-            </div>
-            <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
-          </div>
-          <div className="flex flex-col flex-1 gap-6">
-            <FormInput
-              label="PICK-UP ADDRESS"
-              placeholder="Enter pick-up address"
-              name="pickup_address"
-              control={control}
-              required
-            />
-            <FormInput
-              label="DESTINATION ADDRESS"
-              placeholder="Enter destination Address"
-              name="destination"
-              control={control}
-              required
-            />
-          </div>
-        </div>
-
         <RadioFormInput
           name="contact_form"
           label="WHERE CAN WE CONTACT YOU?"
@@ -390,61 +332,16 @@ const RelocationForm: FC = () => {
           control={control}
           required
         />
-        <RadioFormInput
-          name="travel_date"
-          label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
-          control={control}
-          options={[
-            { label: "Yes", value: "yes" },
-            { label: "No", value: "no" },
-          ]}
-          required
-        />
+
         <DateFormInput
           name="date"
-          label={
-            travelDate
-              ? travelDate === "yes"
-                ? "SPECIFIC TRAVEL DATE"
-                : "ESTIMATED TRAVEL DATE"
-              : "TRAVEL DATE"
-          }
+          label="Date of testing"
           control={control}
-          dateType={dateType}
-          disabled={!travelDate}
+          dateType="specific"
           required
+          disabled
         />
 
-        <Buttons />
-      </FormContainer>
-    );
-  };
-
-  const ModeOfTransport: FC = () => {
-    return (
-      <FormContainer className="max-w-3xl!">
-        <IconSelectFormInput
-          label="CHOOSE THE MODE OF TRANSPORT"
-          name="mode_of_transport"
-          control={control}
-          options={[
-            {
-              label: "Land",
-              value: "land",
-              icon: <RenderIcon path="/images/icons/transport/car.png" />,
-            },
-            {
-              label: "Air",
-              value: "air",
-              icon: <RenderIcon path="/images/icons/transport/airplane.png" />,
-            },
-            {
-              label: "Sea",
-              value: "sea",
-              icon: <RenderIcon path="/images/icons/transport/ship.png" />,
-            },
-          ]}
-        />
         <Buttons />
       </FormContainer>
     );
@@ -675,128 +572,7 @@ const RelocationForm: FC = () => {
         <BodyText className="text-center" size="large" weight="semibold">
           REVIEW FORM
         </BodyText>
-        <div
-          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
-        >
-          <div className="flex flex-col gap-12">
-            <BodyText size="large" weight="semibold">
-              DESTINATION
-            </BodyText>
-            <div className="flex gap-6 pl-10">
-              <div className="flex flex-col justify-end items-center gap-4 pb-2">
-                <LuMapPin className="text-2xl text[#5B5959]" />
-                <div className="flex flex-col gap-2">
-                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                </div>
-                <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
-              </div>
-              <div className="flex flex-col flex-1 gap-6">
-                <FormInput
-                  label="PICK-UP ADDRESS"
-                  placeholder="Enter pick-up address"
-                  name="pickup_address"
-                  control={control}
-                  required
-                  disabled
-                />
-                <FormInput
-                  label="DESTINATION ADDRESS"
-                  placeholder="Enter destination Address"
-                  name="destination"
-                  control={control}
-                  required
-                  disabled
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-12">
-            <BodyText size="large" weight="semibold">
-              TRAVEL DETAILS
-            </BodyText>
 
-            <RadioFormInput
-              name="travel_date"
-              label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
-              control={control}
-              options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
-              ]}
-              required
-              disabled
-            />
-            <DateFormInput
-              name="date"
-              label={
-                travelDate
-                  ? travelDate === "yes"
-                    ? "SPECIFIC TRAVEL DATE"
-                    : "ESTIMATED TRAVEL DATE"
-                  : "TRAVEL DATE"
-              }
-              control={control}
-              dateType={dateType}
-              widthFull
-              disabled
-              required
-            />
-            <IconSelectFormInput
-              label="CHOOSE THE MODE OF TRANSPORT"
-              name="mode_of_transport"
-              control={control}
-              onlySelected
-              disabled
-              required
-              noSelectedLabel="No mode of transport selected"
-              options={[
-                {
-                  label: "Land",
-                  value: "land",
-                  icon: <RenderIcon path="/images/icons/transport/car.png" />,
-                },
-                {
-                  label: "Air",
-                  value: "air",
-                  icon: (
-                    <RenderIcon path="/images/icons/transport/airplane.png" />
-                  ),
-                },
-                {
-                  label: "Sea",
-                  value: "sea",
-                  icon: <RenderIcon path="/images/icons/transport/ship.png" />,
-                },
-              ]}
-            />
-          </div>
-        </div>
-        <BodyText className="text-center" size="large" weight="semibold">
-          DESTINATION
-        </BodyText>
-        <BodyText className="uppercase" size="medium" weight="semibold">
-          What are the full addresses of the origin and destination?
-        </BodyText>
-        <FormInput
-          name="origin_full_address"
-          label="ORIGIN FULL ADDRESS*"
-          placeholder="Enter the full address"
-          control={control}
-          keyboardType="paragraph"
-          widthFull
-          required
-        />
-        <FormInput
-          name="destination_full_address"
-          label="DESTINATION FULL ADDRESS*"
-          placeholder="Enter the full address"
-          control={control}
-          keyboardType="paragraph"
-          widthFull
-          required
-        />
         <BodyText className="text-center" size="large" weight="semibold">
           OWNER DETAILS
         </BodyText>
@@ -879,6 +655,13 @@ const RelocationForm: FC = () => {
             />
           </div>
         </div>
+        <DateFormInput
+          name="date"
+          label="Date of testing"
+          control={control}
+          dateType="specific"
+          required
+        />
         {fields.map((field, index) => (
           <div className="flex flex-col gap-12" key={field.id}>
             <BodyText className="text-center" size="large" weight="semibold">
@@ -996,10 +779,6 @@ const RelocationForm: FC = () => {
     }
 
     if (step === 2) {
-      return <ModeOfTransport />;
-    }
-
-    if (step === 3) {
       return <PetDetails />;
     }
 
@@ -1014,8 +793,4 @@ const RelocationForm: FC = () => {
   );
 };
 
-const DomesticPetRelocationForm: FC = () => {
-  return <RelocationForm />;
-};
-
-export default DomesticPetRelocationForm;
+export default RabiesSerologyTestForm;
