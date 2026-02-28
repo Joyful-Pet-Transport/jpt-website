@@ -1,10 +1,8 @@
 import { FC, useState } from "react";
-import { getData as getCountryListData } from "country-list";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SelectFormInput from "../elements/input/SelectInput/SelectFormInput";
 import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
 import DynamicButton from "../elements/button/DynamicButton";
 import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
@@ -17,12 +15,10 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import useModal from "@/utils/hooks/useModal";
 import BookedSuccessfullyModal from "../modals/BookedSuccessfullyModal";
-import InternationalRelocationFormSchema from "../schemas/international-pet-relocation-schema";
+import DomesticRelocationFormSchema from "../schemas/domestic-pet-relocation-schema";
+import IconSelectFormInput from "../elements/input/SelectInput/IconSelectFormInput";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-type InternationalPetRelocationFormProps = {
-  type: string;
-};
 
 type PetDetailsProps = {
   index: number;
@@ -32,19 +28,8 @@ type PetDetailsProps = {
   multiple?: boolean;
 };
 
-const countryOptions = getCountryListData().map((country) => ({
-  label: country.name
-    .replace(/\s*[\(\[].*?[\)\]]/g, "")
-    .replace(/\*/g, "")
-    .trim(),
-  value: country.code,
-}));
-
-const philippinesCode =
-  countryOptions.find((c) => c.label === "Philippines")?.value ?? "PH";
-
-const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+const RelocationForm: FC = () => {
+  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const responsive = useResponsive();
   const modal = useModal();
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,26 +41,27 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const generateUploadUrl = useMutation(
     api.mutations.pet_details.generateUploadUrl,
   );
-  const bookInternationalPetTransport = useMutation(
-    api.mutations.international_pet_transport.bookInternationalPetTransport,
+  const bookDomesticPetTransport = useMutation(
+    api.mutations.domestic_pet_transport.bookDomesticPetTransport,
   );
 
-  const createInternationalRelocationForm = useForm({
-    resolver: zodResolver(InternationalRelocationFormSchema),
+  const createDomesticRelocationForm = useForm({
+    resolver: zodResolver(DomesticRelocationFormSchema),
     defaultValues: {
-      origin_country: type === "export" ? philippinesCode : "",
-      destination: type === "import" ? philippinesCode : "",
-
-      companionship: "",
-      travel_date: "",
-      date: "",
-
       owner_name: "",
+
+      pickup_address: "",
+      destination: "",
+
       contact_form: "",
       account_name: "",
       account_link: "",
       contact_number: "",
       email_address: "",
+
+      travel_date: "",
+      date: "",
+      mode_of_transport: "",
 
       pets: [
         {
@@ -96,7 +82,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     },
   });
 
-  const control = createInternationalRelocationForm.control;
+  const control = createDomesticRelocationForm.control;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -125,7 +111,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           }
           onPress={() => {
             if (step != 1) {
-              setStep((step - 1) as 1 | 2 | 3 | 4 | 5);
+              setStep((step - 1) as 1 | 2 | 3 | 4);
               scrollToTop();
             }
           }}
@@ -134,8 +120,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         </BodyText>
         <DynamicButton
           onPress={() => {
-            if (step == 5) {
-              createInternationalRelocationForm.handleSubmit(async (data) => {
+            if (step == 4) {
+              createDomesticRelocationForm.handleSubmit(async (data) => {
                 try {
                   setLoading(true);
                   const petIds = [];
@@ -185,26 +171,30 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   }
 
                   const bookingData = {
-                    origin_country: data.origin_country,
-                    destination: data.destination,
-                    companionship: data.companionship,
-                    travel_date: data.travel_date,
-                    date: data.date,
                     owner_name: data.owner_name,
+
+                    pickup_address: data.pickup_address,
+                    destination: data.destination,
+
                     contact_form: data.contact_form,
                     account_name: data.account_name,
                     account_link: data.account_link,
                     contact_number: data.contact_number,
                     email_address: data.email_address,
+
+                    travel_date: data.travel_date,
+                    date: data.date,
+                    mode_of_transport: data.mode_of_transport,
+
+                    pets: petIds,
+
                     origin_full_address: data.origin_full_address,
                     destination_full_address: data.destination_full_address,
-                    pets: petIds,
                   };
 
-                  const bookingId =
-                    await bookInternationalPetTransport(bookingData);
+                  const bookingId = await bookDomesticPetTransport(bookingData);
                   console.log("Booking created successfully:", bookingId);
-                  createInternationalRelocationForm.reset();
+                  createDomesticRelocationForm.reset();
                   modal.setModalComponent(<BookedSuccessfullyModal />, "large");
                   modal.setShown(true);
                   setTimeout(() => {
@@ -218,18 +208,24 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                 }
               })();
             } else {
-              setStep((step + 1) as 1 | 2 | 3 | 4 | 5);
+              setStep((step + 1) as 1 | 2 | 3 | 4);
               scrollToTop();
             }
           }}
         >
-          {step == 5 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
+          {step == 4 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
         </DynamicButton>
       </div>
     );
   };
 
-  const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
+  const RenderIcon: FC<{ path: string }> = ({ path }) => {
+    return (
+      <Image src={path} alt="Transport mode icon" width={200} height={200} />
+    );
+  };
+
+  const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 }> = ({ step }) => {
     const percentage = (step / 5) * 100;
 
     return (
@@ -296,102 +292,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     );
   };
 
-  const Destination: FC = () => {
-    return (
-      <FormContainer>
-        <BodyText size="large" weight="semibold" className="text-center">
-          DESTINATION
-        </BodyText>
-        <BodyText size="medium" weight="semibold" className="uppercase">
-          Where are the origin and destination countries?
-        </BodyText>
-        <div className="flex gap-6 px-10">
-          <div className="flex flex-col justify-end items-center gap-4 pb-2">
-            <LuMapPin className="text-2xl text[#5B5959]" />
-            <div className="flex flex-col gap-2">
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-            </div>
-            <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
-          </div>
-          <div className="flex flex-col flex-1 gap-6">
-            <SelectFormInput
-              label="ORIGIN COUNTRY"
-              name="origin_country"
-              control={control}
-              // searchable
-              options={countryOptions}
-              disabled={type === "export"}
-              required
-            />
-            <SelectFormInput
-              label="DESTINATION"
-              name="destination"
-              control={control}
-              // searchable
-              options={countryOptions}
-              disabled={type === "import"}
-              required
-            />
-          </div>
-        </div>
-        <Buttons />
-      </FormContainer>
-    );
-  };
-
-  const TravelDetails: FC = () => {
-    return (
-      <FormContainer>
-        <BodyText size="large" weight="semibold" className="text-center">
-          TRAVEL DETAILS
-        </BodyText>
-        <RadioFormInput
-          name="companionship"
-          label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
-          control={control}
-          options={[
-            {
-              label: "Travels WITH you (Accompanied or same flight)",
-              value: "with",
-            },
-            {
-              label: "Travels ALONE (Cargo/ Customs release)",
-              value: "alone",
-            },
-          ]}
-          required
-        />
-        <RadioFormInput
-          name="travel_date"
-          label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
-          control={control}
-          options={[
-            { label: "Yes", value: "yes" },
-            { label: "No", value: "no" },
-          ]}
-          required
-        />
-        <DateFormInput
-          name="date"
-          label={
-            travelDate
-              ? travelDate === "yes"
-                ? "SPECIFIC TRAVEL DATE"
-                : "ESTIMATED TRAVEL DATE"
-              : "TRAVEL DATE"
-          }
-          control={control}
-          dateType={dateType}
-          disabled={!travelDate}
-          required
-        />
-        <Buttons />
-      </FormContainer>
-    );
-  };
-
   const OwnerDetails: FC = () => {
     return (
       <FormContainer>
@@ -405,6 +305,35 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           control={control}
           required
         />
+
+        <div className="flex gap-6 px-10">
+          <div className="flex flex-col justify-end items-center gap-4 pb-2">
+            <LuMapPin className="text-2xl text[#5B5959]" />
+            <div className="flex flex-col gap-2">
+              <div className="w-2 h-2 bg-gray-300 rounded-full" />
+              <div className="w-2 h-2 bg-gray-300 rounded-full" />
+              <div className="w-2 h-2 bg-gray-300 rounded-full" />
+            </div>
+            <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
+          </div>
+          <div className="flex flex-col flex-1 gap-6">
+            <FormInput
+              label="PICK-UP ADDRESS"
+              placeholder="Enter pick-up address"
+              name="pickup_address"
+              control={control}
+              required
+            />
+            <FormInput
+              label="DESTINATION ADDRESS"
+              placeholder="Enter destination Address"
+              name="destination"
+              control={control}
+              required
+            />
+          </div>
+        </div>
+
         <RadioFormInput
           name="contact_form"
           label="WHERE CAN WE CONTACT YOU?"
@@ -460,6 +389,61 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           placeholder="Enter active email address"
           control={control}
           required
+        />
+        <RadioFormInput
+          name="travel_date"
+          label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
+          control={control}
+          options={[
+            { label: "Yes", value: "yes" },
+            { label: "No", value: "no" },
+          ]}
+          required
+        />
+        <DateFormInput
+          name="date"
+          label={
+            travelDate
+              ? travelDate === "yes"
+                ? "SPECIFIC TRAVEL DATE"
+                : "ESTIMATED TRAVEL DATE"
+              : "TRAVEL DATE"
+          }
+          control={control}
+          dateType={dateType}
+          disabled={!travelDate}
+          required
+        />
+
+        <Buttons />
+      </FormContainer>
+    );
+  };
+
+  const ModeOfTransport: FC = () => {
+    return (
+      <FormContainer className="max-w-3xl!">
+        <IconSelectFormInput
+          label="CHOOSE THE MODE OF TRANSPORT"
+          name="mode_of_transport"
+          control={control}
+          options={[
+            {
+              label: "Land",
+              value: "land",
+              icon: <RenderIcon path="/images/icons/transport/car.png" />,
+            },
+            {
+              label: "Air",
+              value: "air",
+              icon: <RenderIcon path="/images/icons/transport/airplane.png" />,
+            },
+            {
+              label: "Sea",
+              value: "sea",
+              icon: <RenderIcon path="/images/icons/transport/ship.png" />,
+            },
+          ]}
         />
         <Buttons />
       </FormContainer>
@@ -688,6 +672,9 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const Review: FC = () => {
     return (
       <FormContainer>
+        <BodyText className="text-center" size="large" weight="semibold">
+          REVIEW FORM
+        </BodyText>
         <div
           className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
         >
@@ -706,41 +693,24 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                 <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
               </div>
               <div className="flex flex-col flex-1 gap-6">
-                <SelectFormInput
-                  label="ORIGIN COUNTRY"
-                  name="origin_country"
+                <FormInput
+                  label="PICK-UP ADDRESS"
+                  placeholder="Enter pick-up address"
+                  name="pickup_address"
                   control={control}
-                  options={countryOptions}
-                  disabled
                   required
+                  disabled
                 />
-                <SelectFormInput
-                  label="DESTINATION"
+                <FormInput
+                  label="DESTINATION ADDRESS"
+                  placeholder="Enter destination Address"
                   name="destination"
                   control={control}
-                  options={countryOptions}
-                  disabled
                   required
+                  disabled
                 />
               </div>
             </div>
-            <RadioFormInput
-              name="companionship"
-              label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
-              control={control}
-              options={[
-                {
-                  label: "Travels WITH you (Accompanied or same flight)",
-                  value: "with",
-                },
-                {
-                  label: "Travels ALONE (Cargo/ Customs release)",
-                  value: "alone",
-                },
-              ]}
-              required
-              disabled
-            />
           </div>
           <div className="flex flex-col gap-12">
             <BodyText size="large" weight="semibold">
@@ -772,6 +742,34 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               widthFull
               disabled
               required
+            />
+            <IconSelectFormInput
+              label="CHOOSE THE MODE OF TRANSPORT"
+              name="mode_of_transport"
+              control={control}
+              onlySelected
+              disabled
+              required
+              noSelectedLabel="No mode of transport selected"
+              options={[
+                {
+                  label: "Land",
+                  value: "land",
+                  icon: <RenderIcon path="/images/icons/transport/car.png" />,
+                },
+                {
+                  label: "Air",
+                  value: "air",
+                  icon: (
+                    <RenderIcon path="/images/icons/transport/airplane.png" />
+                  ),
+                },
+                {
+                  label: "Sea",
+                  value: "sea",
+                  icon: <RenderIcon path="/images/icons/transport/ship.png" />,
+                },
+              ]}
             />
           </div>
         </div>
@@ -994,18 +992,14 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     }
 
     if (step === 1) {
-      return <Destination />;
-    }
-
-    if (step === 2) {
-      return <TravelDetails />;
-    }
-
-    if (step === 3) {
       return <OwnerDetails />;
     }
 
-    if (step === 4) {
+    if (step === 2) {
+      return <ModeOfTransport />;
+    }
+
+    if (step === 3) {
       return <PetDetails />;
     }
 
@@ -1020,22 +1014,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   );
 };
 
-const InternationalPetRelocationForm: FC<
-  InternationalPetRelocationFormProps
-> = ({ type }) => {
-  if (type === "import") {
-    return <RelocationForm type="import" />;
-  }
-
-  if (type === "export") {
-    return <RelocationForm type="export" />;
-  }
-
-  return (
-    <FormContainer className="justify-center items-center">
-      <BodyText weight="bold">Invalid Form</BodyText>
-    </FormContainer>
-  );
+const DomesticPetRelocationForm: FC = () => {
+  return <RelocationForm />;
 };
 
-export default InternationalPetRelocationForm;
+export default DomesticPetRelocationForm;

@@ -76,4 +76,27 @@ export default defineSchema({
 
     pets: v.optional(v.array(v.id("pet_details"))),
   }).index("by_pets", ["pets"]),
+
+  domestic_pet_transport: defineTable({
+    owner_name: v.string(),
+
+    pickup_address: v.string(),
+    destination: v.string(),
+
+    contact_form: v.string(),
+    account_name: v.string(),
+    account_link: v.optional(v.string()),
+    contact_number: v.string(),
+    email_address: v.string(),
+
+    travel_date: v.string(),
+    date: v.string(),
+
+    mode_of_transport: v.string(),
+
+    pets: v.optional(v.array(v.id("pet_details"))),
+
+    origin_full_address: v.string(),
+    destination_full_address: v.string(),
+  }).index("by_pets", ["pets"]),
 });
