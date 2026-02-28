@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { FC } from "react";
+import { FC, use } from "react";
 import BodyText from "../elements/text/BodyText";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 type ServiceCardContainerProps = {
   title: string;
@@ -9,6 +10,33 @@ type ServiceCardContainerProps = {
 };
 
 const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
+  const mobile = useIsMobile();
+  if (mobile) {
+    return (
+      <div className="flex flex-col relative">
+        <div className="absolute inset-0 mt-20 h-70 bg-[#BBE2FC] rounded-[40px]" />
+        <div className="flex flex-col w-full items-center gap-4 p-8 relative z-10">
+          <div className="rounded-full overflow-hidden border-4 border-[#F37E48] aspect-square">
+            <Image
+              src={props.image}
+              alt={props.title}
+              height={106}
+              width={106}
+            />
+          </div>
+          <BodyText
+            className="uppercase text-center"
+            weight="semibold"
+            size="medium"
+            font="fredoka"
+          >
+            {props.title}
+          </BodyText>
+          <BodyText className="text-center w-70">{props.description}</BodyText>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-1 relative">
       <div className="absolute bottom-0 left-0 right-0 h-80 bg-[#BBE2FC] rounded-[40px]" />

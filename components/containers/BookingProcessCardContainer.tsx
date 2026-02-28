@@ -2,6 +2,7 @@ import { FC } from "react";
 import Heading from "../elements/text/Heading";
 import BodyText from "../elements/text/BodyText";
 import Image from "next/image";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 type BookingProcessCardContainerProps = {
   step: number;
@@ -21,6 +22,59 @@ const BookingProcessCardContainer: FC<BookingProcessCardContainerProps> = ({
   onToggle,
 }) => {
   const stepText = `STEP ${step.toString().padStart(2, "0")}`;
+  const mobile = useIsMobile();
+
+  if (mobile && !isExpanded)
+    return (
+      <div
+        onClick={onToggle}
+        className="relative border-t border-black bg-white/20 cursor-pointer hover:bg-white/30 transition-all h-full min-h-[100px] flex flex-col"
+      >
+        <div className="absolute left-0 right-0 top-0 bottom-0 flex items-center justify-center px-4">
+          <div>
+            <Heading
+              size="large"
+              font="fredoka"
+              textColor="text-neutral-950/70"
+            >
+              {stepText}
+            </Heading>
+          </div>
+        </div>
+      </div>
+    );
+
+  if (mobile) {
+    return (
+      <div
+        onClick={onToggle}
+        className="relative border-t border-black cursor-pointer hover:bg-white/20 transition-all p-4 h-full min-h-[100px]"
+      >
+        <div className="flex flex-row gap-6 h-full">
+          <div className="flex flex-col items-center justify-center">
+            {image && <Image src={image} alt={image} width={80} height={80} />}
+            <Heading
+              textColor="text-neutral-950/70"
+              size="large"
+              font="fredoka"
+            >
+              {stepText}
+            </Heading>
+          </div>
+          <div className="flex flex-col gap-2 flex-1 justify-center">
+            <Heading size="normal" font="fredoka">
+              {title}
+            </Heading>
+            {description && (
+              <BodyText size="small" font="poppins">
+                {description}
+              </BodyText>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!isExpanded) {
     return (

@@ -10,9 +10,27 @@ import TestimonyCard from "../containers/TestimonyCard";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { GoogleReview } from "@/models/google-reviews";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 const TestimonialContents: FC = () => {
   const reviews = useQuery(api.tables.google_reviews.get);
+  const mobile = useIsMobile();
+
+  if (mobile) {
+    return (
+      <div className="flex flex-row gap-6">
+        <Marquee>
+          <MarqueeContent>
+            {reviews?.map((data: GoogleReview, key) => (
+              <MarqueeItem key={key}>
+                <TestimonyCard review={data} />
+              </MarqueeItem>
+            )) || []}
+          </MarqueeContent>
+        </Marquee>
+      </div>
+    );
+  }
   // const TestimonialData: Testimony[] = [
   //   {
   //     user: { name: "charl", avatar: "/images/logo/logo.png", email: "email" },
