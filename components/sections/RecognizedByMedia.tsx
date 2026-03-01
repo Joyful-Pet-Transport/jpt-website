@@ -9,7 +9,6 @@ const RecognizedByMediaSection = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
-  // Sample media items - you can replace these with your actual media
   const mediaItems = [
     "https://www.youtube.com/embed/dQw4w9WgXcQ",
     "https://www.youtube.com/embed/dQw4w9WgXcQ",
