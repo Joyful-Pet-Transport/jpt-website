@@ -25,8 +25,8 @@ export const navItems: NavItem[] = [
       },
     ],
   },
-  { label: "Testimonials", path: "/testimonials" },
+  { label: "Testimonials", path: "/Testimonials" },
   { label: "About Us", path: "/about-us" },
-  { label: "FAQs", path: "/faq" },
+  { label: "FAQs", path: "/Faq" },
   { label: "Contact Us", path: "/contact-us" },
 ];

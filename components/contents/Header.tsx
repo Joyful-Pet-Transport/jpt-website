@@ -267,7 +267,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
 
         {/* Centered Modal */}
         <div
-          className={`fixed inset-0 z-[120] flex items-center justify-center px-4 transition-all duration-300 lg:hidden ${
+          className={`fixed inset-0 z-120 flex items-center justify-center px-4 transition-all duration-300 lg:hidden ${
             modal.shown
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"

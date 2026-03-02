@@ -8,6 +8,7 @@ import MoreQuestions from "@/components/sections/MoreQuestions";
 import React from "react";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
+import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 
 const FrequentlyAskedQuestionsScreen = () => {
   const [openIndex, setOpenIndex] = React.useState<number | null>(null);
@@ -20,14 +21,17 @@ const FrequentlyAskedQuestionsScreen = () => {
 
   return (
     <PageWrapperContainer>
-      <BoxedContainer medium>
-        <div className="flex flex-col justify-center items-center">
-          <Heading className="text-center">Frequently Asked Questions</Heading>
+      <Breadcrumbs
+        items={[{ label: "Home", path: "/" }, { label: "FAQs" }]}
+      />
+      <BoxedContainer medium className="flex justify-center">
+        <div className="flex flex-col justify-center items-center gap-6">
+          <Heading font="fredoka" className="text-center">Frequently Asked Questions</Heading>
           <BodyText className="text-center pt-4">
             Find answers to common questions about our pet transportation
             services.
           </BodyText>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-4 mt-12">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 mt-12 px-4">
             {faqs?.map(({ _id, question, answer }, index) => (
               <div
                 key={_id ?? index}

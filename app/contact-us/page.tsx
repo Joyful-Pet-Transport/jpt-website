@@ -54,7 +54,7 @@ const ContactUsScreen = () => {
       />
       <BoxedContainer medium className="flex justify-center">
         <div className="items-center justify-center flex flex-col gap-6">
-          <Heading font="poppins">Contact Us</Heading>
+          <Heading font="fredoka">Contact Us</Heading>
           <BodyText>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum
             dolor sit amet, consectetur
@@ -126,7 +126,7 @@ const ContactUsScreen = () => {
           </div>
           <div className="flex flex-col">
             <div>
-              <BodyText font="poppins" weight="semibold" size="medium">
+              <BodyText font="poppins" weight="semibold" size="medium" className="text-center pb-4">
                 Quick Inquiry
               </BodyText>
               <BodyText font="poppins" weight="semibold">

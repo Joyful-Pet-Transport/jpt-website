@@ -5,7 +5,7 @@ import BodyText from "../elements/text/BodyText";
 
 const MoreQuestions: FC = () => {
   return (
-    <div className="mt-12 flex flex-col items-center gap-6 rounded-2xl bg-secondary/60 px-6 py-8 text-center md:mt-16 md:gap-8 md:px-8 md:py-8 md:pb-10">
+    <div className="mt-12 flex flex-col items-center gap-6 rounded-2xl bg-secondary/80 px-6 py-8 text-center md:mt-16 md:gap-8 md:px-8 md:py-8 md:pb-10">
       <div>
         <BodyText weight="semibold" size="medium">
           Still have questions?

@@ -16,7 +16,7 @@ const AboutUsScreen = () => {
       />
       <BoxedContainer medium className="flex flex-col gap-12">
         <div className="flex flex-col justify-center items-center">
-          <Heading className="text-center">JOYFUL PET TRANSPORT</Heading>
+          <Heading font="fredoka" className="text-center">JOYFUL PET TRANSPORT</Heading>
           <BodyText size="large" weight="semibold" className="text-center pt-6">
             Transporting Pets Has Never Been This Easy
           </BodyText>
