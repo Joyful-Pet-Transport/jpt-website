@@ -33,13 +33,13 @@ const BodyText: FC<BodyTextProps> = ({
   };
 
   const sizeClasses = {
-    xsmall: "text-xs",
-    small: "text-sm",
-    base: "text-base",
-    normal: "text-lg",
-    medium: "text-xl",
-    large: "text-2xl",
-    xlarge: "text-3xl",
+    xsmall: "text-xs lg:text-xs",
+    small: "text-xs lg:text-sm",
+    base: "text-sm lg:text-base",
+    normal: "text-base lg:text-lg",
+    medium: "text-lg lg:text-xl",
+    large: "text-xl lg:text-2xl",
+    xlarge: "text-2xl lg:text-3xl",
   };
 
   const fontClasses = {

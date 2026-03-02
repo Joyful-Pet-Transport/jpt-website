@@ -7,7 +7,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { FC, PropsWithChildren } from "react";
-import Providers from "@/components/providers/Providers";
+import Providers from "@/utils/providers/Providers";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 const poppinsFont = Poppins({

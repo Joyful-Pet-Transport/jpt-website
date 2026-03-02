@@ -224,7 +224,7 @@ const CalendarRangePicker: FC<CalendarRangePickerProps> = ({
       <div className="grid grid-cols-7 gap-1 mb-2">
         {weekDays.map((day) => (
           <div key={day} className="text-center py-2">
-            <BodyText size="small" className="text-gray-600 font-medium">
+            <BodyText size="small" textColor="text-gray-600 font-medium">
               {day}
             </BodyText>
           </div>

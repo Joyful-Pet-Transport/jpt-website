@@ -7,14 +7,18 @@ import { usePathname, useRouter } from "next/navigation";
 import DynamicButton from "../elements/button/DynamicButton";
 import SocialButtons from "./SocialButtons";
 import { navItems } from "@/utils/config/navItems";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { handleContactClick } from "@/lib/utils";
 
 const Footer: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const responsive = useResponsive();
 
   const email = "joyfulpettransportreservations@gmail.com";
 
-  const Brand = () => {
+  // const Brand = () => {
+  const Brand: FC<{ hideButton?: boolean }> = ({ hideButton }) => {
     return (
       <div className="flex flex-col gap-6">
         <div
@@ -250,6 +254,23 @@ const Footer: FC = () => {
       </div>
     );
   };
+
+  if (responsive.isTabletOrMobile) {
+    return (
+      <div className="flex flex-col justify-center mb-2 gap-2 mt-4">
+        <div className="bg-[#EAEAEA] rounded-4xl p-8 flex flex-col gap-6 relative mx-4">
+          <Brand hideButton />
+          <Navigation />
+          <Services />
+          <ContactUs />
+          <SocialIcons />
+        </div>
+        <BodyText className="text-center" textColor="text-neutral-600">
+          © 2026 Joyful Pet Transport | All rights reserved.
+        </BodyText>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col justify-center mb-2 gap-4 mt-8">

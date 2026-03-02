@@ -6,10 +6,76 @@ import BodyText from "../elements/text/BodyText";
 import { usePathname, useRouter } from "next/navigation";
 import { NavItem, navItems } from "@/utils/config/navItems";
 import DynamicButton from "../elements/button/DynamicButton";
-import { HiChevronDown, HiMenu, HiX } from "react-icons/hi";
+import { HiChevronDown, HiChevronRight } from "react-icons/hi";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { IoMenuOutline } from "react-icons/io5";
+import useModal from "@/utils/hooks/useModal";
 
 type HeaderItemProps = {
   item: NavItem;
+};
+
+const ModalHeaderItem: FC<HeaderItemProps> = ({ item }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { setShown } = useModal();
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <div className="relative flex flex-col justify-center items-center py-3 px-6 hover:bg-neutral-100">
+      <div className="flex flex-row gap-2">
+        <BodyText
+          key={item.path}
+          onPress={() => {
+            router.push(item.path);
+            setShown(false);
+          }}
+          className={`${
+            pathname === item.path ||
+            (item.path !== "/" && pathname.startsWith(item.path))
+              ? "text-blue-500!"
+              : ""
+          } flex items-center text-center gap-2`}
+        >
+          {item.label}
+        </BodyText>
+        {item.children && (
+          <button onClick={toggleDropdown} className="cursor-pointer">
+            {isOpen ? <HiChevronDown /> : <HiChevronRight />}
+          </button>
+        )}
+      </div>
+      {isOpen && item.children && (
+        <div className="flex flex-col gap-2 py-2">
+          {item.children.map((child, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                router.push(`${item.path}${child.path}`);
+                setIsOpen(false);
+                setShown(false);
+              }}
+            >
+              <BodyText
+                className={
+                  pathname === `${item.path}${child.path}`
+                    ? "text-blue-500! text-center"
+                    : "text-center"
+                }
+              >
+                {child.label}
+              </BodyText>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
@@ -40,19 +106,19 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
     e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
-
   return (
     <div className="relative flex flex-col items-center gap-2" ref={dropdownRef}>
       <div className="flex flex-row gap-2 items-center">
         <BodyText
           key={item.path}
           onPress={() => router.push(item.path)}
+          size="base"
           className={`${
             pathname === item.path ||
             (item.path !== "/" && pathname.startsWith(item.path))
               ? "text-blue-500!"
               : ""
-          } flex items-center gap-2 !text-sm lg:!text-sm xl:!text-base`}
+          } flex items-center`}
         >
           {item.label}
           {item.children && (
@@ -76,6 +142,7 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
               }}
             >
               <BodyText
+                size="base"
                 className={
                   pathname === `${item.path}${child.path}`
                     ? "text-blue-500!"
@@ -92,36 +159,72 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
   );
 };
 
-const Header: FC = () => {
+const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isNotHomePage = pathname !== "/";
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+  const responsive = useResponsive();
+  const modal = useModal();
 
   const HeaderBar: FC = () => {
-    return (
-      <div className="relative z-[100] w-full max-w-[100vw] overflow-visible">
-        <div className="relative z-[100] mx-2 mt-4 min-h-14 rounded-2xl bg-[#EAEAEA] flex items-center overflow-hidden sm:mx-4 sm:mt-6 sm:min-h-16 sm:rounded-3xl md:mx-6 md:mt-8 md:h-20 md:rounded-4xl lg:mx-8 lg:mt-8 lg:h-[5.5rem] lg:rounded-4xl">
-          <div className="flex w-full flex-1 items-center gap-2 px-2 py-3 sm:gap-3 sm:px-3 sm:py-4 md:px-4 md:py-4 lg:px-8 lg:py-4">
-            {/* Logo - text hidden on smaller screens */}
-            <div className="flex min-w-0 flex-shrink">
+    if (responsive.isTabletOrMobile) {
+      return (
+        <div className="h-22 relative mx-4 rounded-3xl mt-4 bg-[#EAEAEA] flex items-center z-150">
+          <div className="w-full h-full px-8 flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex flex-1 gap-4 justify-between">
               <div
-              className="flex cursor-pointer flex-row items-center gap-2 sm:gap-3 md:gap-4"
+                className="flex flex-row gap-2 cursor-pointer"
+                onClick={() => router.push("/")}
+              >
+                <Image
+                  src="/images/logo/logo-new.png"
+                  width={150}
+                  height={150}
+                  alt="Logo"
+                  priority
+                  className="w-auto h-16"
+                />
+                <div className="flex items-center">
+                  <BodyText weight="bold" font="luckiestGuy" textColor="000F3F">
+                    JOYFUL PET TRANSPORT
+                  </BodyText>
+                </div>
+              </div>
+              <div
+                className="flex items-center z-20"
+                onClick={() => {
+                  modal.setModalComponent(
+                    <div className="flex flex-col gap-2">
+                      {navItems.map((item, index) => (
+                        <ModalHeaderItem key={index} item={item} />
+                      ))}
+                      <DynamicButton size="medium" rounded>
+                        book now
+                      </DynamicButton>
+                    </div>,
+                    "normal",
+                  );
+                  modal.setShown(true);
+                }}
+              >
+                <IoMenuOutline className="text-3xl" />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center ${isNotHomePage && "z-1"}`}
+      >
+        <div className="w-full h-full px-8 gap-4 flex justify-between items-center">
+          {/* Logo */}
+          <div className="flex flex-1">
+            <div
+              className="flex flex-row gap-2 cursor-pointer items-center"
               onClick={() => router.push("/")}
             >
               <Image
@@ -132,62 +235,40 @@ const Header: FC = () => {
                 priority
                 className="h-14 w-auto shrink-0 sm:h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16"
               />
-              <div className="flex min-w-0 flex-col items-start justify-center text-left">
-                <BodyText
-                  size="xlarge"
-                  weight="bold"
-                  font="luckiestGuy"
-                  textColor="000F3F"
-                  className="!text-base sm:!text-base md:text-lg lg:!text-xl xl:!text-2xl 2xl:!text-3xl !m-0 !leading-tight"
-                >
-                  JOYFUL PET TRANSPORT
-                </BodyText>
-              </div>
-            </div>
-            </div>
-
-            {/* Desktop Navigation - centered */}
-            <div className="hidden flex-1 justify-center lg:flex lg:items-center lg:gap-3 xl:gap-4 2xl:gap-6">
-              {navItems.map((item, index) => (
-                <HeaderItem key={index} item={item} />
-              ))}
-            </div>
-
-            {/* Right side: Book now Button (desktop) and Hamburger button (mobile/tablet) */}
-            <div className="flex items-center gap-2 ml-auto">
-              {/* Book now Button - desktop only (tablet/mobile: inside hamburger menu) */}
-              <div className="hidden lg:flex lg:items-center">
-                <DynamicButton size="medium" rounded>
-                  book now
-                </DynamicButton>
-              </div>
-
-              {/* Hamburger button - tablet & mobile only */}
-              <button
-                type="button"
-                aria-label={menuOpen ? "Close menu" : "Open menu"}
-                aria-expanded={menuOpen}
-                className="relative z-[110] flex shrink-0 items-center justify-center rounded-lg p-1.5 text-[#000F3F] transition-colors hover:bg-white/60 focus:outline-none focus:ring-2 focus:ring-[#17528A] lg:hidden sm:p-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setMenuOpen((prev) => !prev);
-                }}
+              <BodyText
+                size="medium"
+                weight="bold"
+                font="luckiestGuy"
+                textColor="text-[#000F3F]"
               >
-                {menuOpen ? (
-                  <HiX className="h-7 w-7 sm:h-8 sm:w-8" />
-                ) : (
-                  <HiMenu className="h-7 w-7 sm:h-8 sm:w-8" />
-                )}
-              </button>
+                JOYFUL PET TRANSPORT
+              </BodyText>
             </div>
+            </div>
+
+          {/* Navigation */}
+          <div className="flex gap-4 items-center justify-center z-50">
+            {navItems.map((item, index) => (
+              <HeaderItem key={index} item={item} />
+            ))}
+          </div>
+
+          {/* Book now Button */}
+          <div className="flex flex-1 justify-end items-center h-full z-150">
+            <DynamicButton
+              size="medium"
+              rounded
+              onPress={() => router.push("/our-services")}
+            >
+              book now
+            </DynamicButton>
           </div>
         </div>
 
         {/* Centered Modal */}
         <div
           className={`fixed inset-0 z-[120] flex items-center justify-center px-4 transition-all duration-300 lg:hidden ${
-            menuOpen
+            modal.shown
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
           }`}
@@ -195,13 +276,13 @@ const Header: FC = () => {
           
           <div
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => modal.setShown(false)}
           />
 
           
           <nav
             className={`relative w-[92%] max-w-md rounded-3xl bg-[#EAEAEA] shadow-2xl transition-all duration-300 ${
-              menuOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
+              modal.shown ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
             }`}
           >
             <div className="flex flex-col items-center px-6 py-8 text-center">
@@ -224,9 +305,11 @@ const Header: FC = () => {
     );
   };
 
-  if (isNotHomePage) {
+  if (isNotHomePage && !disableLayout) {
     return (
-      <div className="relative flex flex-col bg-[#EAEAEA] mx-2 mt-4 h-48 sm:mx-4 sm:mt-6 sm:h-64 md:mx-6 md:mt-8 md:h-80 lg:mx-8 lg:mt-8 lg:h-[22rem] xl:h-[35rem] rounded-t-2xl sm:rounded-t-3xl md:rounded-t-4xl">
+      <div
+        className={`relative flex flex-col h-140 bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4" : "mx-8 mt-8"}`}
+      >
         <HeaderBar />
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl md:rounded-t-4xl pointer-events-none">
           <Image

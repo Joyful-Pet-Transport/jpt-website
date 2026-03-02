@@ -129,7 +129,7 @@ const SelectBase: FC<SelectBaseProps> = ({
           <SelectTrigger
             className={cn(
               baseClass,
-              "data-placeholder:text-neutral-600 text-lg",
+              "data-placeholder:text-neutral-600 text-base lg:text-lg",
             )}
             aria-invalid={!!validation}
           >
@@ -143,7 +143,7 @@ const SelectBase: FC<SelectBaseProps> = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search..."
-                  className="w-full rounded-sm border border-gray-400 bg-neutral-100 px-2 py-2 text-base outline-none focus:ring-2 focus:ring-blue-300"
+                  className="w-full rounded-sm border border-gray-400 bg-neutral-100 px-2 py-2 text-base lg:text-lg outline-none focus:ring-2 focus:ring-blue-300"
                 />
               </div>
             )}
@@ -160,7 +160,7 @@ const SelectBase: FC<SelectBaseProps> = ({
                 ))
               : (filteredOptions as Option[]).map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
-                    <BodyText size="base">{opt.label}</BodyText>
+                    <BodyText>{opt.label}</BodyText>
                   </SelectItem>
                 ))}
           </SelectContent>

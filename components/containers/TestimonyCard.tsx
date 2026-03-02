@@ -4,17 +4,62 @@ import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { FaStar } from "react-icons/fa";
 import { GoogleReview } from "@/models/google-reviews";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 type TestimonyCardProps = {
   review: GoogleReview;
 };
 
 const TestimonyCard: FC<TestimonyCardProps> = ({ review }) => {
-  const MAX_CHARS = 115;
+  const mobile = useIsMobile();
+  const MAX_CHARS = mobile ? 80 : 115;
   const truncateText = (text: string, max: number) => {
     if (!text) return "";
     return text.length > max ? text.slice(0, max).trimEnd() + "..." : text;
   };
+
+  if (mobile) {
+    return (
+      <div className="w-70 h-60 justify-between bg-[#FFFFFF] gap-2 rounded-3xl flex flex-col p-8">
+        <div className="items-center flex flex-row justify-center gap-1 text-yellow-400">
+          {Array.from({ length: review.stars }).map((_, i) => (
+            <FaStar key={i} />
+          ))}
+        </div>
+        {/* testimony */}
+        <div className="flex flex-row items-center justify-center h-full gap-2">
+          <BodyText className="text-justify lowercase">
+            "{truncateText(review?.text ?? "", MAX_CHARS)}"
+          </BodyText>
+        </div>
+        {/* user details */}
+        <div className="flex flex-row items-center justify-center gap-4">
+          <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E]">
+            <Image
+              priority
+              src={review.reviewerPhotoUrl ?? ""}
+              alt={review.reviewerPhotoUrl ?? ""}
+              height={35}
+              width={35}
+            />
+          </div>
+          <div className="flex flex-col">
+            <BodyText
+              className="capitalize"
+              weight="semibold"
+              font="fredoka"
+              size="medium"
+            >
+              {truncateText(review?.name ?? "", 15) ?? "Anonymous"}
+            </BodyText>
+            {/* <BodyText size="small" font="poppins">
+            Joyful Pet Transport
+          </BodyText> */}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-96 min-h-64 justify-between bg-[#FFFFFF] gap-2 rounded-3xl flex flex-col p-8">

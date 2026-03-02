@@ -2,7 +2,6 @@ import { FC, useState } from "react";
 import { getData as getCountryListData } from "country-list";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
-import z from "zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectFormInput from "../elements/input/SelectInput/SelectFormInput";
@@ -13,6 +12,13 @@ import DateFormInput from "../elements/input/DateInput/DateFormInput";
 import FormInput from "../elements/input/TextInput/FormInput";
 import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
 import { FaTrashCan } from "react-icons/fa6";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import useModal from "@/utils/hooks/useModal";
+import BookedSuccessfullyModal from "../modals/BookedSuccessfullyModal";
+import InternationalRelocationFormSchema from "../schemas/international-pet-relocation-schema";
+import { useRouter } from "next/navigation";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -26,42 +32,6 @@ type PetDetailsProps = {
   multiple?: boolean;
 };
 
-const PetDetailsSchema = z.object({
-  pet_name: z.string().min(3, "Please enter your pet's name"),
-  breed: z.string().min(3, "Please enter your pet's breed"),
-  sex: z.string().min(1, "Please select your pet's sex"),
-  pet_birthday: z.string().min(3, "Please select your pet's date of birth"),
-  pet_age: z.string().min(1, "Please enter your pet's age"),
-  pet_weight: z.string().min(1, "Please enter your pet's weight"),
-  pet_condition: z
-    .string()
-    .min(1, "Please describe any medical conditions (or type 'None')"),
-  special_instructions: z
-    .string()
-    .min(1, "Please enter any special instructions (or type 'None')"),
-  pet_image: z.string().min(3, "Please upload your pet's latest photo"),
-});
-
-const InternationalRelocationFormSchema = z.object({
-  origin_country: z.string().min(2, "Please select an origin country"),
-  destination: z.string().min(2, "Please select a destination country"),
-
-  companionship: z.string().min(3, "Please choose how your pet will travel"),
-  travel_date: z
-    .string()
-    .min(2, "Please indicate if you have a specific travel date"),
-  date: z.string().min(3, "Please select a travel date"),
-
-  owner_name: z.string().min(3, "Please enter the owner's name"),
-  contact_form: z.string().min(3, "Please select where we can contact you"),
-  account_name: z.string().min(3, "Please enter your account name"),
-  account_link: z.string().optional(),
-  contact_number: z.string().min(3, "Please enter a contact number"),
-  email_address: z.string().email("Please enter a valid email address"),
-
-  pets: z.array(PetDetailsSchema).min(1, "Please add at least one pet"),
-});
-
 const countryOptions = getCountryListData().map((country) => ({
   label: country.name
     .replace(/\s*[\(\[].*?[\)\]]/g, "")
@@ -74,7 +44,21 @@ const philippinesCode =
   countryOptions.find((c) => c.label === "Philippines")?.value ?? "PH";
 
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+  const responsive = useResponsive();
+  const modal = useModal();
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const createPetDetails = useMutation(
+    api.mutations.pet_details.createPetDetails,
+  );
+  const generateUploadUrl = useMutation(
+    api.mutations.pet_details.generateUploadUrl,
+  );
+  const bookInternationalPetTransport = useMutation(
+    api.mutations.international_pet_transport.bookInternationalPetTransport,
+  );
 
   const createInternationalRelocationForm = useForm({
     resolver: zodResolver(InternationalRelocationFormSchema),
@@ -103,9 +87,12 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           pet_weight: "",
           pet_condition: "",
           special_instructions: "",
-          pet_image: "",
+          pet_image: [],
         },
       ],
+
+      origin_full_address: "",
+      destination_full_address: "",
     },
   });
 
@@ -115,6 +102,13 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     control,
     name: "pets",
   });
+
+  const travelDate = useWatch({
+    control,
+    name: "travel_date",
+  });
+
+  const dateType = travelDate === "yes" ? "specific" : "range";
 
   const Buttons: FC = () => {
     const scrollToTop = () => {
@@ -141,19 +135,101 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         <DynamicButton
           onPress={() => {
             if (step == 5) {
+              createInternationalRelocationForm.handleSubmit(async (data) => {
+                try {
+                  setLoading(true);
+                  const petIds = [];
+                  for (const pet of data.pets) {
+                    let petImageId: string | undefined;
+
+                    if (
+                      pet.pet_image &&
+                      pet.pet_image.length > 0 &&
+                      pet.pet_image[0] instanceof File
+                    ) {
+                      const uploadUrl = await generateUploadUrl({});
+
+                      const response = await fetch(uploadUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": pet.pet_image[0].type },
+                        body: pet.pet_image[0],
+                      });
+
+                      if (!response.ok) {
+                        throw new Error("Failed to upload image");
+                      }
+
+                      const { storageId } = await response.json();
+                      petImageId = storageId;
+                    }
+
+                    const petData: any = {
+                      pet_name: pet.pet_name,
+                      breed: pet.breed,
+                      sex: pet.sex,
+                      pet_birthday: pet.pet_birthday,
+                      pet_age: pet.pet_age,
+                      pet_weight: pet.pet_weight,
+                      pet_image: petImageId as any,
+                    };
+
+                    if (pet.pet_condition) {
+                      petData.pet_condition = pet.pet_condition;
+                    }
+                    if (pet.special_instructions) {
+                      petData.special_instructions = pet.special_instructions;
+                    }
+
+                    const petId = await createPetDetails(petData);
+                    petIds.push(petId);
+                  }
+
+                  const bookingData = {
+                    origin_country: data.origin_country,
+                    destination: data.destination,
+                    companionship: data.companionship,
+                    travel_date: data.travel_date,
+                    date: data.date,
+                    owner_name: data.owner_name,
+                    contact_form: data.contact_form,
+                    account_name: data.account_name,
+                    account_link: data.account_link,
+                    contact_number: data.contact_number,
+                    email_address: data.email_address,
+                    origin_full_address: data.origin_full_address,
+                    destination_full_address: data.destination_full_address,
+                    pets: petIds,
+                  };
+
+                  const bookingId =
+                    await bookInternationalPetTransport(bookingData);
+                  console.log("Booking created successfully:", bookingId);
+                  createInternationalRelocationForm.reset();
+                  modal.setModalComponent(<BookedSuccessfullyModal />, "large");
+                  modal.setShown(true);
+                  setTimeout(() => {
+                    modal.setShown(false);
+                    router.push("/");
+                  }, 3000);
+                } catch (error) {
+                  console.error("Error creating booking:", error);
+                } finally {
+                  setLoading(false);
+                }
+              })();
             } else {
               setStep((step + 1) as 1 | 2 | 3 | 4 | 5);
               scrollToTop();
             }
           }}
         >
-          {step == 5 ? "SUBMIT" : "NEXT"}
+          {step == 5 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
         </DynamicButton>
       </div>
     );
   };
 
-  const Progress: FC<{ step: 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
+  const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
     const percentage = (step / 5) * 100;
 
     return (
@@ -166,6 +242,57 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           }}
         />
       </div>
+    );
+  };
+
+  const Disclaimer: FC = () => {
+    return (
+      <FormContainer className="justify-center items-center">
+        <BodyText
+          size="large"
+          weight="semibold"
+          className="text-center uppercase"
+        >
+          privacy notice and consent statement
+        </BodyText>
+        <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+          <BodyText className="text-center">
+            At <span className="italic font-bold">Joyful Pet Transport</span>,
+            we are committed to protecting your personal information.
+          </BodyText>
+          <BodyText className="text-center">
+            By proceeding with this form, you acknowledge and agree that all
+            information collected — including your personal details, contact
+            information, pet details, and travel documents — will be used solely
+            for the purpose of processing your pet’s transport arrangements,
+            documentation, and compliance with local and international travel
+            regulations.
+          </BodyText>
+          <BodyText className="text-center">
+            All information provided will be handled with strict confidentiality
+            and in accordance with applicable data privacy laws. We do not share
+            your information with unauthorized third parties.
+          </BodyText>
+          <BodyText className="text-center">
+            By continuing, you voluntarily consent to the collection, use, and
+            processing of your data for pet transport services.
+          </BodyText>
+        </div>
+        <div className="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2">
+          <DynamicButton size="medium" onPress={() => setStep(1)}>
+            I AGREE
+          </DynamicButton>
+          <BodyText
+            size="xsmall"
+            className="text-center"
+            textColor="text-neutral-500"
+          >
+            By clicking this button, you confirm that you have read the Privacy
+            Notice and Consent Statement and consent to the collection and use
+            of your personal information for your pet’s transport.
+          </BodyText>
+        </div>
+      </FormContainer>
     );
   };
 
@@ -215,13 +342,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   };
 
   const TravelDetails: FC = () => {
-    const travelDate = useWatch({
-      control,
-      name: "travel_date",
-    });
-
-    const dateType = travelDate === "yes" ? "specific" : "range";
-
     return (
       <FormContainer>
         <BodyText size="large" weight="semibold" className="text-center">
@@ -495,7 +615,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               control={control}
               keyboardType="paragraph"
               widthFull
-              required
             />
 
             <FormInput
@@ -505,7 +624,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               control={control}
               keyboardType="paragraph"
               widthFull
-              required
             />
 
             <ImageFormInput
@@ -556,7 +674,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                 pet_weight: "",
                 pet_condition: "",
                 special_instructions: "",
-                pet_image: "",
+                pet_image: [],
               })
             }
           >
@@ -570,15 +688,311 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const Review: FC = () => {
     return (
       <FormContainer>
-        <BodyText size="large" weight="semibold" className="text-center">
-          REVIEW KEME
+        <div
+          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+        >
+          <div className="flex flex-col gap-12">
+            <BodyText size="large" weight="semibold">
+              DESTINATION
+            </BodyText>
+            <div className="flex gap-6 pl-10">
+              <div className="flex flex-col justify-end items-center gap-4 pb-2">
+                <LuMapPin className="text-2xl text[#5B5959]" />
+                <div className="flex flex-col gap-2">
+                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                </div>
+                <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
+              </div>
+              <div className="flex flex-col flex-1 gap-6">
+                <SelectFormInput
+                  label="ORIGIN COUNTRY"
+                  name="origin_country"
+                  control={control}
+                  options={countryOptions}
+                  disabled
+                  required
+                />
+                <SelectFormInput
+                  label="DESTINATION"
+                  name="destination"
+                  control={control}
+                  options={countryOptions}
+                  disabled
+                  required
+                />
+              </div>
+            </div>
+            <RadioFormInput
+              name="companionship"
+              label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
+              control={control}
+              options={[
+                {
+                  label: "Travels WITH you (Accompanied or same flight)",
+                  value: "with",
+                },
+                {
+                  label: "Travels ALONE (Cargo/ Customs release)",
+                  value: "alone",
+                },
+              ]}
+              required
+              disabled
+            />
+          </div>
+          <div className="flex flex-col gap-12">
+            <BodyText size="large" weight="semibold">
+              TRAVEL DETAILS
+            </BodyText>
+
+            <RadioFormInput
+              name="travel_date"
+              label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
+              control={control}
+              options={[
+                { label: "Yes", value: "yes" },
+                { label: "No", value: "no" },
+              ]}
+              required
+              disabled
+            />
+            <DateFormInput
+              name="date"
+              label={
+                travelDate
+                  ? travelDate === "yes"
+                    ? "SPECIFIC TRAVEL DATE"
+                    : "ESTIMATED TRAVEL DATE"
+                  : "TRAVEL DATE"
+              }
+              control={control}
+              dateType={dateType}
+              widthFull
+              disabled
+              required
+            />
+          </div>
+        </div>
+        <BodyText className="text-center" size="large" weight="semibold">
+          DESTINATION
         </BodyText>
+        <BodyText className="uppercase" size="medium" weight="semibold">
+          What are the full addresses of the origin and destination?
+        </BodyText>
+        <FormInput
+          name="origin_full_address"
+          label="ORIGIN FULL ADDRESS*"
+          placeholder="Enter the full address"
+          control={control}
+          keyboardType="paragraph"
+          widthFull
+          required
+        />
+        <FormInput
+          name="destination_full_address"
+          label="DESTINATION FULL ADDRESS*"
+          placeholder="Enter the full address"
+          control={control}
+          keyboardType="paragraph"
+          widthFull
+          required
+        />
+        <BodyText className="text-center" size="large" weight="semibold">
+          OWNER DETAILS
+        </BodyText>
+        <div
+          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+        >
+          <div className="flex flex-col gap-12">
+            <FormInput
+              name="owner_name"
+              label="OWNER'S NAME"
+              placeholder="Enter owner's name"
+              control={control}
+              widthFull
+              disabled
+              required
+            />
+            <RadioFormInput
+              name="contact_form"
+              label="WHERE CAN WE CONTACT YOU?"
+              control={control}
+              disabled
+              options={[
+                {
+                  label: "Facebook Messenger",
+                  value: "facebook",
+                },
+                {
+                  label: "WhatsApp",
+                  value: "whatsapp",
+                },
+                {
+                  label: "Viber",
+                  value: "viber",
+                },
+                {
+                  label: "Telegram",
+                  value: "telegram",
+                },
+              ]}
+              required
+            />
+            <FormInput
+              name="contact_number"
+              label="CONTACT NUMBER"
+              placeholder="Enter contact number"
+              control={control}
+              widthFull
+              disabled
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-12">
+            <FormInput
+              name="account_name"
+              label="ACCOUNT NAME"
+              placeholder="Enter account name"
+              control={control}
+              widthFull
+              disabled
+              required
+              className="w-full"
+            />
+            <FormInput
+              name="account_link"
+              label="LINK"
+              placeholder="Enter link"
+              className="w-full"
+              control={control}
+              widthFull
+              disabled
+            />
+            <FormInput
+              name="email_address"
+              label="ACTIVE EMAIL ADDRESS"
+              placeholder="Enter active email address"
+              control={control}
+              widthFull
+              disabled
+              required
+            />
+          </div>
+        </div>
+        {fields.map((field, index) => (
+          <div className="flex flex-col gap-12" key={field.id}>
+            <BodyText className="text-center" size="large" weight="semibold">
+              PET {index !== 0 && index + 1} DETAILS
+            </BodyText>
+            <div
+              className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+            >
+              <div className="flex flex-col gap-12">
+                <FormInput
+                  name={`pets.${index}.pet_name`}
+                  label="PET'S NAME"
+                  placeholder="Enter pet's name"
+                  control={control}
+                  widthFull
+                  disabled
+                  className="w-full"
+                  required
+                />
+                <FormInput
+                  name={`pets.${index}.breed`}
+                  label="BREED"
+                  placeholder="Enter pet's breed"
+                  control={control}
+                  widthFull
+                  disabled
+                  className="w-full"
+                  required
+                />
+                <FormInput
+                  name={`pets.${index}.pet_age`}
+                  placeholder="Enter pet's age"
+                  label="AGE"
+                  control={control}
+                  widthFull
+                  disabled
+                  className="w-full"
+                />
+              </div>
+              <div className="flex flex-col gap-12">
+                <FormInput
+                  name={`pets.${index}.sex`}
+                  label="SEX"
+                  placeholder="Enter pet's gender (or sex)"
+                  control={control}
+                  widthFull
+                  disabled
+                  className="w-full"
+                  required
+                />
+                <DateFormInput
+                  name={`pets.${index}.pet_birthday`}
+                  label="DATE OF BIRTH"
+                  placeholder="Enter pet's birthday"
+                  control={control}
+                  widthFull
+                  disabled
+                  className="w-full"
+                  enableYearSelect
+                  required
+                />
+                <FormInput
+                  name={`pets.${index}.pet_weight`}
+                  label="PET'S WEIGHT"
+                  control={control}
+                  widthFull
+                  disabled
+                  placeholder="Enter pet's estimated weight"
+                  required
+                />
+              </div>
+            </div>
+            <FormInput
+              name={`pets.${index}.pet_condition`}
+              label="MEDICAL CONDITION"
+              placeholder="Enter pets’ medical condition that we should be aware of"
+              control={control}
+              disabled
+              keyboardType="paragraph"
+              widthFull
+            />
+
+            <FormInput
+              name={`pets.${index}.special_instructions`}
+              label="SPECIAL INSTRUCTIONS"
+              placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
+              control={control}
+              disabled
+              keyboardType="paragraph"
+              widthFull
+            />
+
+            <ImageFormInput
+              name={`pets.${index}.pet_image`}
+              label="UPLOAD PET PHOTO"
+              control={control}
+              disabled
+              widthFull
+              required
+            />
+          </div>
+        ))}
         <Buttons />
       </FormContainer>
     );
   };
 
   const RenderForm: FC = () => {
+    if (step === 0) {
+      return <Disclaimer />;
+    }
+
     if (step === 1) {
       return <Destination />;
     }

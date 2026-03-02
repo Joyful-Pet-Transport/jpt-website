@@ -4,13 +4,45 @@ import BodyText from "../elements/text/BodyText";
 import BoxedContainer from "../containers/BoxedContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import Image from "next/image";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 const HeroSection: FC = () => {
+  const mobile = useIsMobile();
+
+  if (mobile) {
+    return (
+      <BoxedContainer>
+        <div className="flex h-full justify-center items-center">
+          <div className="flex flex-col gap-6">
+            <Heading font="fredoka" className="text-center w-80">
+              Transporting Pets Has Never Been This Easy
+            </Heading>
+            <BodyText className="text-center">
+              Your pets are family — and their journey deserves the highest
+              level of care. At Joyful Pet Transport, we specialize in safe,
+              stress-free domestic and international pet relocation, carefully
+              managing every step of the travel process with compassion,
+              expertise, and clear communication. From documentation and airline
+              coordination to dedicated travel day support, we provide complete
+              peace of mind from departure to arrival.
+            </BodyText>
+            <div className="flex flex-row gap-4">
+              <DynamicButton size="medium">BOOK NOW</DynamicButton>
+              <DynamicButton type="outline" size="medium">
+                LEARN MORE
+              </DynamicButton>
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 w-full"></div>
+        </div>
+      </BoxedContainer>
+    );
+  }
   return (
     <div className="flex flex-col gap-24">
       {/* section 1 */}
       <div className="relative h-[70vh] flex w-full">
-        <div className="absolute -top-28 -right-[110px] z-50">
+        <div className="absolute -top-28 -right-[110px] z-10">
           <Image
             src={"/images/element/hero1.png"}
             alt="Pet transportation hero image"
@@ -25,10 +57,13 @@ const HeroSection: FC = () => {
                 Transporting Pets Has Never Been This Easy
               </Heading>
               <BodyText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+                Your pets are family — and their journey deserves the highest
+                level of care. At Joyful Pet Transport, we specialize in safe,
+                stress-free domestic and international pet relocation, carefully
+                managing every step of the travel process with compassion,
+                expertise, and clear communication. From documentation and
+                airline coordination to dedicated travel day support, we provide
+                complete peace of mind from departure to arrival.
               </BodyText>
               <div className="flex flex-row gap-6">
                 <DynamicButton>BOOK NOW</DynamicButton>

@@ -74,7 +74,7 @@ const InputBase: FC<InputBaseProps> = ({
           value={value}
           onChange={handleChange}
           disabled={disabled}
-          className={cn(inputClassName, "text-lg md:text-lg")}
+          className={cn(inputClassName, "text-base lg:text-lg")}
           rows={8}
         />
       ) : (
@@ -84,7 +84,7 @@ const InputBase: FC<InputBaseProps> = ({
           value={value}
           onChange={handleChange}
           disabled={disabled}
-          className={inputClassName}
+          className={cn(inputClassName, "text-base lg:text-lg")}
         />
       )}
 

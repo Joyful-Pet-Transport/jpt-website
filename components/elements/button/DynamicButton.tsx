@@ -21,17 +21,18 @@ const DynamicButton: FC<DynamicButtonProps> = ({
       "bg-[#17528A] hover:bg-transparent border-2 border-[#17528A] text-neutral-100 hover:text-neutral-800",
     outline:
       "border-2 border-[#17528A] hover:bg-[#17528A] text-neutral-800 hover:text-neutral-300",
-    orange: "border-2 bg-[#F37E48] border-[#F37E48] text-white",
+    orange:
+      "border-2 bg-[#F37E48] border-[#F37E48] text-white hover:bg-transparent hover:text-[#F37E48]",
   };
 
   const ButtonSize = {
     default: "px-8 py-4 text-base",
-    medium: "py-2 px-4 text-sm",
+    medium: "py-2 text-sm",
   };
 
   return (
     <button
-      className={`max-w-96 min-w-44 justify-center items-center ${rounded ? "rounded-full" : "rounded-xl"} ${
+      className={`max-w-96 min-w-36 justify-center items-center ${rounded ? "rounded-full" : "rounded-xl"} ${
         ButtonType[type || "default"]
       } ${ButtonSize[size || "default"]} text-center uppercase font-semibold ${className}`}
       onClick={onPress}
