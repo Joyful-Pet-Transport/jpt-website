@@ -7,15 +7,20 @@ import InfoItemContainer from "../containers/InfoItemContainer";
 import IconContainer from "../containers/IconContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import InputBase from "../elements/input/TextInput/InputBase";
-import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
+import { useIsMobile, useIsTablet } from "@/utils/hooks/useWindowsDimensions";
 
 const ContactUsSection: FC = () => {
   const mobile = useIsMobile();
+  const tablet = useIsTablet();
   const ContactUs: FC = () => {
     return (
-      <div className={`flex ${mobile ? "flex-col" : "flex-row"} gap-10 w-full`}>
-        <div className={`flex flex-col ${mobile ? "w-full" : "flex-1"}`}>
-          <div className={`mb-6 ${mobile ? "text-center" : ""}`}>
+      <div
+        className={`flex ${mobile || tablet ? "flex-col" : "flex-row"} gap-10 w-full`}
+      >
+        <div
+          className={`flex flex-col ${mobile || tablet ? "w-full" : "flex-1"}`}
+        >
+          <div className={`mb-6 ${mobile || tablet ? "text-center" : ""}`}>
             <Heading font="fredoka">Feel free to contact us</Heading>
             <BodyText className="mt-2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
