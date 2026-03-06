@@ -12,9 +12,9 @@ const HeroSection: FC = () => {
   if (mobile) {
     return (
       <BoxedContainer>
-        <div className="flex h-full justify-center items-center">
+        <div className="flex justify-center items-center">
           <div className="flex flex-col gap-6">
-            <Heading font="fredoka" className="text-center w-80">
+            <Heading font="fredoka" className="text-center">
               Transporting Pets Has Never Been This Easy
             </Heading>
             <BodyText className="text-center">
@@ -26,14 +26,13 @@ const HeroSection: FC = () => {
               coordination to dedicated travel day support, we provide complete
               peace of mind from departure to arrival.
             </BodyText>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4 items-center justify-center">
               <DynamicButton size="medium">BOOK NOW</DynamicButton>
               <DynamicButton type="outline" size="medium">
                 LEARN MORE
               </DynamicButton>
             </div>
           </div>
-          <div className="flex flex-col gap-4 w-full"></div>
         </div>
       </BoxedContainer>
     );
