@@ -4,10 +4,11 @@ import BodyText from "../elements/text/BodyText";
 import BoxedContainer from "../containers/BoxedContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import Image from "next/image";
-import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
+import { useIsMobile, useIsTablet } from "@/utils/hooks/useWindowsDimensions";
 
 const HeroSection: FC = () => {
   const mobile = useIsMobile();
+  const tablet = useIsTablet();
 
   if (mobile) {
     return (
@@ -37,6 +38,49 @@ const HeroSection: FC = () => {
       </BoxedContainer>
     );
   }
+
+  if (tablet) {
+    return (
+      <div className="flex flex-col gap-24">
+        {/* section 1 */}
+        <div className="relative h-[70vh] flex w-full">
+          <div className="absolute top-10 -right-20 z-10">
+            <Image
+              src={"/images/element/hero1.png"}
+              alt="Pet transportation hero image"
+              width={500}
+              height={650}
+            />
+          </div>
+          <BoxedContainer>
+            <div className="flex h-full justify-center items-center">
+              <div className="flex flex-col gap-6 w-full">
+                <Heading font="fredoka">
+                  Transporting Pets Has Never Been This Easy
+                </Heading>
+                <BodyText>
+                  Your pets are family — and their journey deserves the highest
+                  level of care. At Joyful Pet Transport, we specialize in safe,
+                  stress-free domestic and international pet relocation,
+                  carefully managing every step of the travel process with
+                  compassion, expertise, and clear communication. From
+                  documentation and airline coordination to dedicated travel day
+                  support, we provide complete peace of mind from departure to
+                  arrival.
+                </BodyText>
+                <div className="flex flex-row gap-6">
+                  <DynamicButton>BOOK NOW</DynamicButton>
+                  <DynamicButton type="outline">LEARN MORE</DynamicButton>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 w-full"></div>
+            </div>
+          </BoxedContainer>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-24">
       {/* section 1 */}
