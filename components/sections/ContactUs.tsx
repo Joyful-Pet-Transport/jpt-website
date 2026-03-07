@@ -53,7 +53,7 @@ const ContactUsSection: FC = () => {
             />
           </div>
         </div>
-        <div className={mobile ? "w-full" : "flex-1"}>
+        <div className={mobile ? "w-full" : ""}>
           <ContactUsCard />
         </div>
       </div>
