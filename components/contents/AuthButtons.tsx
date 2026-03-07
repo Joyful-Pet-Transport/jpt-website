@@ -1,37 +1,32 @@
 "use client";
 
 import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
-import DynamicButton from "../elements/button/DynamicButton";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import BodyText from "../elements/text/BodyText";
+import { useGetCurrentUser } from "@/utils/hooks/useGetCurrentUser";
+import { useRouter } from "next/navigation";
 
-// subject to change very soon
-export const SignInButton: FC = () => {
-  const { signIn } = useAuthActions();
+const AuthButton: FC = () => {
+  const { signIn, signOut } = useAuthActions();
   const token = useAuthToken();
-
-  if (token) {
-    return null;
-  }
-
-  return (
-    <BodyText weight="semibold" onPress={() => void signIn("google")}>
-      Google
-    </BodyText>
-  );
-};
-
-export const SignOutButton: FC = () => {
-  const { signOut } = useAuthActions();
-  const token = useAuthToken();
+  const { user, isLoading } = useGetCurrentUser();
+  const router = useRouter();
 
   if (!token) {
-    return null;
+    return (
+      <BodyText
+        onPress={() => void signIn("google")}
+        textColor="text-neutral-600"
+      >
+        Login
+      </BodyText>
+    );
   }
 
   return (
-    <BodyText weight="semibold" onPress={() => void signOut()}>
-      Sign out
+    <BodyText onPress={() => void signOut()} textColor="text-neutral-600">
+      Logout
     </BodyText>
   );
 };
+export default AuthButton;

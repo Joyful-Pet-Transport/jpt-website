@@ -87,6 +87,8 @@ npx convex dev
 ### Data Import Examples
 
 ```bash
+# Import user roles
+npx convex import --table roles initialData/RolesData.jsonl
 # Import services data
 npx convex import --table services initialData/ServiceData.jsonl
 # Import booking process data

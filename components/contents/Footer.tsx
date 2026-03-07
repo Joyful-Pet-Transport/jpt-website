@@ -10,6 +10,8 @@ import { navItems } from "@/utils/config/navItems";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { handleContactClick } from "@/lib/utils";
 import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
+import { useGetCurrentUser } from "@/utils/hooks/useGetCurrentUser";
+import AuthButton from "./AuthButtons";
 
 const Footer: FC = () => {
   const router = useRouter();
@@ -277,24 +279,14 @@ const Footer: FC = () => {
   const Credits: FC = () => {
     const { signIn, signOut } = useAuthActions();
     const token = useAuthToken();
+    const { user, isLoading } = useGetCurrentUser();
 
     return (
       <div className="flex gap-2 items-center justify-center">
         <BodyText className="text-center" textColor="text-neutral-600">
           © 2026 Joyful Pet Transport | All rights reserved. |
         </BodyText>
-        {token ? (
-          <BodyText onPress={() => void signOut()} textColor="text-neutral-600">
-            Logout
-          </BodyText>
-        ) : (
-          <BodyText
-            onPress={() => void signIn("google")}
-            textColor="text-neutral-600"
-          >
-            Login
-          </BodyText>
-        )}
+        <AuthButton />
       </div>
     );
   };

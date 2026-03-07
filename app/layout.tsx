@@ -7,8 +7,8 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { FC, PropsWithChildren } from "react";
-import Providers from "@/utils/providers/Providers";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import ClientLayout from "@/components/layouts/ClientLayout";
 
 const poppinsFont = Poppins({
   variable: "--font-poppins",
@@ -51,7 +51,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
             } as React.CSSProperties
           }
         >
-          <Providers>{children}</Providers>
+          <ClientLayout>{children}</ClientLayout>
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>

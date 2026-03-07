@@ -3,15 +3,17 @@
 import { FC, PropsWithChildren } from "react";
 import ConvexClientProvider from "./ConvexClientProvider";
 import LoaderProvider from "@/utils/providers/LoaderProvider";
-import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ModalProvider from "./ModalProvider";
+import AuthUserProvider from "./AuthUserProvider";
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ConvexClientProvider>
-      <LoaderProvider>
-        <ModalProvider>{children}</ModalProvider>
-      </LoaderProvider>
+      <AuthUserProvider>
+        <LoaderProvider>
+          <ModalProvider>{children}</ModalProvider>
+        </LoaderProvider>
+      </AuthUserProvider>
     </ConvexClientProvider>
   );
 };
