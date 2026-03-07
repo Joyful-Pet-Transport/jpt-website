@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import BodyText from "../elements/text/BodyText";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import SocialButtons from "./SocialButtons";
 import { navItems } from "@/utils/config/navItems";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { handleContactClick } from "@/lib/utils";
+import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
 
 const Footer: FC = () => {
   const router = useRouter();
@@ -273,6 +274,31 @@ const Footer: FC = () => {
     );
   };
 
+  const Credits: FC = () => {
+    const { signIn, signOut } = useAuthActions();
+    const token = useAuthToken();
+
+    return (
+      <div className="flex gap-2 items-center justify-center">
+        <BodyText className="text-center" textColor="text-neutral-600">
+          © 2026 Joyful Pet Transport | All rights reserved. |
+        </BodyText>
+        {token ? (
+          <BodyText onPress={() => void signOut()} textColor="text-neutral-600">
+            Logout
+          </BodyText>
+        ) : (
+          <BodyText
+            onPress={() => void signIn("google")}
+            textColor="text-neutral-600"
+          >
+            Login
+          </BodyText>
+        )}
+      </div>
+    );
+  };
+
   if (responsive.isTabletOrMobile) {
     return (
       <div className="flex flex-col justify-center mb-2 gap-2 mt-4">
@@ -283,9 +309,7 @@ const Footer: FC = () => {
           <ContactUs />
           <SocialIcons />
         </div>
-        <BodyText className="text-center" textColor="text-neutral-600">
-          © 2026 Joyful Pet Transport | All rights reserved.
-        </BodyText>
+        <Credits />
       </div>
     );
   }
@@ -308,9 +332,7 @@ const Footer: FC = () => {
         <SocialIcons />
       </div>
 
-      <BodyText className="text-center text-neutral-600 text-xs sm:text-sm">
-        © 2026 Joyful Pet Transport | All rights reserved.
-      </BodyText>
+      <Credits />
     </div>
   );
 };
