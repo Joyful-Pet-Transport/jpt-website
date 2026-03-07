@@ -3,6 +3,7 @@ import { BsArrowUpRightCircle } from "react-icons/bs";
 import Image from "next/image";
 import Heading from "../elements/text/Heading";
 import BodyText from "../elements/text/BodyText";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 type SocialCardsProps = PropsWithChildren<{
   title: string;
@@ -17,6 +18,49 @@ const SocialCards: FC<SocialCardsProps> = ({
   image,
   link,
 }) => {
+  const mobile = useIsMobile();
+
+  if (mobile) {
+    return (
+      <div className="relative w-[300px] h-[360px]">
+        <div
+          style={{
+            clipPath:
+              "path('M27 0 L209 0 A27 27 0 0 1 236 27 L236 46 A27 27 0 0 0 255 65 L273 65 A27 27 0 0 1 300 92 L300 333 A27 27 0 0 1 282 360 L27 360 A27 27 0 0 1 0 333 L0 27 A27 27 0 0 1 27 0 Z')",
+            WebkitClipPath:
+              "path('M27 0 L209 0 A27 27 0 0 1 236 27 L236 46 A27 27 0 0 0 255 65 L273 65 A27 27 0 0 1 300 92 L300 333 A27 27 0 0 1 282 360 L27 360 A27 27 0 0 1 0 333 L0 27 A27 27 0 0 1 27 0 Z')",
+          }}
+          className="w-full h-full p-8 bg-[#EAEAEA] flex flex-col gap-2 justify-end"
+        >
+          {image && <Image src={image} alt={title} fill />}
+          {image && (
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+          )}
+          <div className="flex flex-col gap-2 z-10 relative">
+            <Heading size="normal" weight="thin" className="text-white">
+              {title}
+            </Heading>
+            <BodyText
+              weight="normal"
+              size="small"
+              className="text-white line-clamp-2"
+            >
+              {description}
+            </BodyText>
+          </div>
+        </div>
+        <a
+          className="absolute top-2 right-2 rounded-full"
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <BsArrowUpRightCircle className="h-12 w-12 text-white" />
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-[330px] h-[400px]">
       <div
