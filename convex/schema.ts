@@ -23,6 +23,13 @@ export default defineSchema({
     answer: v.string(),
   }),
 
+  contact_us: defineTable({
+    first_name: v.string(),
+    last_name: v.string(),
+    email: v.string(),
+    message: v.string(),
+  }),
+
   post_services: defineTable({
     name: v.string(),
     description: v.string(),

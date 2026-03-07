@@ -8,6 +8,7 @@ import IconContainer from "../containers/IconContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import InputBase from "../elements/input/TextInput/InputBase";
 import { useIsMobile, useIsTablet } from "@/utils/hooks/useWindowsDimensions";
+import ContactUsCard from "../forms/ContactUsForm";
 
 const ContactUsSection: FC = () => {
   const mobile = useIsMobile();
@@ -53,31 +54,7 @@ const ContactUsSection: FC = () => {
           </div>
         </div>
         <div className={mobile ? "w-full" : "flex-1"}>
-          <GrayCardContainer>
-            <div className="flex flex-col gap-8 items-center">
-              <div
-                className={`grid ${mobile ? "grid-cols-2" : "grid-cols-2"} gap-4 w-full`}
-              >
-                <InputBase label="First Name" placeholder="First name" />
-                <InputBase label="Last Name" placeholder="Last name" />
-              </div>
-              <InputBase
-                keyboardType="email"
-                widthFull
-                label="Email Address"
-                placeholder="E-mail address"
-              />
-              <InputBase
-                keyboardType="paragraph"
-                widthFull
-                label="Message"
-                placeholder="Your message..."
-              />
-              <DynamicButton size="medium" type="orange" className="w-full">
-                SEND MESSAGE
-              </DynamicButton>
-            </div>
-          </GrayCardContainer>
+          <ContactUsCard />
         </div>
       </div>
     );

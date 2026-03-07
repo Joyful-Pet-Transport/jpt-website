@@ -3,6 +3,7 @@
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import BodyText from "../text/BodyText";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 
 type BreadcrumbItem = {
   label: string;
@@ -15,6 +16,11 @@ type BreadcrumbsProps = {
 
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ items }) => {
   const router = useRouter();
+  const responsive = useResponsive();
+
+  if (responsive.isTabletOrMobile) {
+    return null;
+  }
 
   return (
     <div

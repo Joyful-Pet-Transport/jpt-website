@@ -32,6 +32,12 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
     return null;
   }
 
+  const styleClass: string = `
+    ${responsive.isTabletOrMobile ? "py-4" : "py-8"}
+    ${!removeBg ? (responsive.isTabletOrMobile ? "mx-4" : "mx-8") : ""}
+    ${!removeBg ? "bg-white rounded-b-4xl" : ""}
+  `;
+
   return (
     <div
       className="flex flex-col overflow-hidden w-full"
@@ -42,7 +48,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
     >
       {header && <Header disableLayout={disableLayout} />}
       <div
-        className={`min-h-screen flex flex-col gap-12 ${!removeBg && "bg-white rounded-b-4xl"} ${responsive.isTabletOrMobile ? "mx-4 py-4" : "mx-8 py-8"} ${className}`}
+        className={`min-h-screen flex flex-col gap-12 ${styleClass} ${className}`}
       >
         {children}
       </div>

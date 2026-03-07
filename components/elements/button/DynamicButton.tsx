@@ -6,6 +6,8 @@ type DynamicButtonProps = PropsWithChildren<{
   onPress?: () => void;
   className?: string;
   rounded?: boolean;
+  disabled?: boolean;
+  htmlType?: "submit" | "button";
 }>;
 
 const DynamicButton: FC<DynamicButtonProps> = ({
@@ -15,6 +17,8 @@ const DynamicButton: FC<DynamicButtonProps> = ({
   onPress,
   className,
   rounded,
+  disabled = false,
+  htmlType = "button",
 }) => {
   const ButtonType = {
     default:
@@ -32,10 +36,12 @@ const DynamicButton: FC<DynamicButtonProps> = ({
 
   return (
     <button
+      type={htmlType}
       className={`max-w-96 min-w-36 justify-center items-center ${rounded ? "rounded-full" : "rounded-xl"} ${
         ButtonType[type || "default"]
-      } ${ButtonSize[size || "default"]} text-center uppercase font-semibold ${className}`}
+      } ${ButtonSize[size || "default"]} text-center uppercase font-semibold ${disabled ? "opacity-50 cursor-not-allowed" : ""} ${className}`}
       onClick={onPress}
+      disabled={disabled}
     >
       {children}
     </button>

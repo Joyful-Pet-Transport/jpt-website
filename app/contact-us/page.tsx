@@ -11,6 +11,7 @@ import { useInquiryForm } from "@/components/forms/useInquiryForm";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import DynamicButton from "@/components/elements/button/DynamicButton";
+import ContactUs from "@/components/forms/ContactUsForm";
 
 const ContactUsScreen = () => {
   const form = useInquiryForm();
@@ -124,29 +125,26 @@ const ContactUsScreen = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col">
-            <div>
-              <BodyText font="poppins" weight="semibold" size="medium" className="text-center pb-4">
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-4">
+              <BodyText
+                font="poppins"
+                weight="semibold"
+                size="medium"
+                className="text-center"
+              >
                 Quick Inquiry
               </BodyText>
-              <BodyText font="poppins" weight="semibold">
+              <BodyText
+                font="poppins"
+                weight="semibold"
+                className="text-center"
+              >
                 Use our short inquiry form—your message goes straight to our
                 email.
               </BodyText>
             </div>
-            <FormInput
-              name="message"
-              control={control}
-              keyboardType="paragraph"
-              label=""
-              placeholder="Your message..."
-              widthFull
-            />
-            <div className="flex justify-center pt-4">
-              <DynamicButton onPress={onSubmit} type="orange" size="medium">
-                Send
-              </DynamicButton>
-            </div>
+            <ContactUs />
           </div>
         </div>
         <Location />

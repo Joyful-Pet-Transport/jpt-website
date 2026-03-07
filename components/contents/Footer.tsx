@@ -21,10 +21,7 @@ const Footer: FC = () => {
   const Brand: FC<{ hideButton?: boolean }> = ({ hideButton }) => {
     return (
       <div className="flex flex-col gap-6">
-        <div
-          onClick={() => router.push("/")}
-          className="w-full cursor-pointer"
-        >
+        <div onClick={() => router.push("/")} className="w-full cursor-pointer">
           <Image
             src="/images/logo/footer-bg.png"
             width={500}
@@ -52,7 +49,7 @@ const Footer: FC = () => {
         {/* ✅ Functional Button */}
         <div className="w-full sm:w-auto">
           <DynamicButton
-            onPress={() => router.push("/contact")}
+            onPress={() => router.push("/contact-us")}
             className="w-full sm:min-w-80"
             rounded
           >
@@ -75,7 +72,7 @@ const Footer: FC = () => {
               className={`cursor-pointer hover:text-blue-600 transition ${
                 pathname === item.path ||
                 (item.path !== "/" && pathname.startsWith(item.path))
-                  ? "text-blue-600"
+                  ? "text-blue-600!"
                   : ""
               }`}
               weight="thin"
@@ -112,9 +109,7 @@ const Footer: FC = () => {
               weight="thin"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push(
-                  "/our-services/international-pet-relocation/import"
-                )
+                router.push("/our-services/international-pet-relocation/import")
               }
             >
               Import to Philippines
@@ -125,9 +120,7 @@ const Footer: FC = () => {
               weight="thin"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push(
-                  "/our-services/international-pet-relocation/export"
-                )
+                router.push("/our-services/international-pet-relocation/export")
               }
             >
               Export from Philippines
@@ -138,9 +131,7 @@ const Footer: FC = () => {
             size="small"
             weight="thin"
             className="cursor-pointer hover:text-blue-600 transition"
-            onPress={() =>
-              router.push("/our-services/domestic-pet-relocation")
-            }
+            onPress={() => router.push("/our-services/domestic-pet-relocation")}
           >
             Domestic Pet Relocation
           </BodyText>
@@ -192,6 +183,19 @@ const Footer: FC = () => {
   };
 
   const ContactUs = () => {
+    const shareNumber = async (label: string, number: string) => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Contact Number",
+            text: `${label}: ${number}`,
+          });
+        } catch (err) {
+          console.error("Share cancelled", err);
+        }
+      }
+    };
+
     return (
       <div className="flex flex-col gap-6 w-full">
         <BodyText weight="semibold">CONTACT US NOW!</BodyText>
@@ -203,7 +207,11 @@ const Footer: FC = () => {
           </BodyText>
           <div className="pl-6">
             <a
-              href={`mailto:${email}`}
+              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(
+                "I would like to Inquire",
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm font-light hover:text-blue-600 transition break-all"
             >
               {email}
@@ -220,22 +228,32 @@ const Footer: FC = () => {
               height={32}
               alt="Call Icon"
             />
-            <BodyText weight="semibold">
-              Want to Talk? Please Call Us
-            </BodyText>
+            <BodyText weight="semibold">Want to Talk? Please Call Us</BodyText>
           </div>
 
           <div className="flex flex-col gap-2 text-sm font-light">
-            <a href="tel:+639766308124" className="hover:text-blue-600">
+            <button
+              onClick={() => shareNumber("GOMO", "+63 976 630 8124")}
+              className="text-left hover:text-blue-600"
+            >
               GOMO: +63 976 630 8124
-            </a>
-            <a href="tel:+639933703770" className="hover:text-blue-600">
+            </button>
+
+            <button
+              onClick={() => shareNumber("DITO", "+63 993 370 3770")}
+              className="text-left hover:text-blue-600"
+            >
               DITO: +63 993 370 3770
-            </a>
+            </button>
+
             <span>SMART: N/A</span>
-            <a href="tel:+639568101871" className="hover:text-blue-600">
+
+            <button
+              onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
+              className="text-left hover:text-blue-600"
+            >
               GLOBE: +63 956 810 1871
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -275,7 +293,6 @@ const Footer: FC = () => {
   return (
     <div className="flex flex-col justify-center mb-2 gap-4 mt-8">
       <div className="bg-[#EAEAEA] rounded-3xl sm:rounded-4xl mx-4 sm:mx-8 px-6 py-10 sm:p-16 flex flex-col gap-12">
-        
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="w-full lg:w-1/3">
             <Brand />
