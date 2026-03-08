@@ -8,6 +8,7 @@ type TableProps = {
   hasActions: boolean;
   action?: TableAction[];
   loading?: boolean;
+  pagination?: number;
 };
 
 export type TableAction = {
@@ -21,6 +22,9 @@ export type TableHeader = {
   key: string;
   parse?: (value: any) => any;
   resizable?: boolean;
+  initialWidth?: number;
+  sortable?: boolean;
+  toggleAble?: boolean;
 };
 
 export default TableProps;
