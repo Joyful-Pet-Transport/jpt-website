@@ -21,17 +21,17 @@ const FrequentlyAskedQuestionsScreen = () => {
 
   return (
     <PageWrapperContainer>
-      <Breadcrumbs
-        items={[{ label: "Home", path: "/" }, { label: "FAQs" }]}
-      />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "FAQs" }]} />
       <BoxedContainer medium className="flex justify-center">
         <div className="flex flex-col justify-center items-center gap-6">
-          <Heading font="fredoka" className="text-center">Frequently Asked Questions</Heading>
+          <Heading font="fredoka" className="text-center">
+            Frequently Asked Questions
+          </Heading>
           <BodyText className="text-center pt-4">
             Find answers to common questions about our pet transportation
             services.
           </BodyText>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-4 mt-12 px-4">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 mt-12">
             {faqs?.map(({ _id, question, answer }, index) => (
               <div
                 key={_id ?? index}
