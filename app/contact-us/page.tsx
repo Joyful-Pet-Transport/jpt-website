@@ -12,39 +12,45 @@ import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import DynamicButton from "@/components/elements/button/DynamicButton";
 import ContactUs from "@/components/forms/ContactUsForm";
+import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 const ContactUsScreen = () => {
   const form = useInquiryForm();
-  const { control, handleSubmit } = form;
+  const mobile = useIsMobile();
 
-  const onSubmit = handleSubmit((data) => {
-    console.log("Form submitted:", data);
-  });
   const Location: FC = () => {
     return (
-      <div className="flex flex-col w-full overflow-hidden">
-        <BodyText
-          font="poppins"
-          size="medium"
-          weight="semibold"
-          className="text-center"
-        >
-          Our Location
-        </BodyText>
+      <div className="flex flex-col w-full gap-8">
+        <div className="flex flex-col w-full gap-4">
+          <Heading font="fredoka" size="medium" className="text-center">
+            Find Us
+          </Heading>
 
-        <BodyText className="text-center">
-          joyfulpettransportreservations@gmail.com
-        </BodyText>
+          <a
+            href={`https://mail.google.com/mail/?view=cm&fs=1&to=joyfulpettransportreservations@gmail.com&su=${encodeURIComponent(
+              "I would like to Inquire",
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-light hover:text-blue-600 transition break-all"
+          >
+            <BodyText className="text-center">
+              joyfulpettransportreservations@gmail.com
+            </BodyText>
+          </a>
+        </div>
 
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3865.1523149329405!2d120.97726777594258!3d14.360595786097761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xad761acc944e2d03%3A0xac2abd07f92c8d03!2sJoyful%20International%20and%20Domestic%20Pet%20Transport%20and%20Pet%20Care%20Services!5e0!3m2!1sen!2sph!4v1769349936524!5m2!1sen!2sph"
-          width="100%"
-          height="560"
-          style={{ border: 0, paddingTop: 20 }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
+        <div className="flex flex-1 w-full rounded-3xl overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3865.1523149329405!2d120.97726777594258!3d14.360595786097761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xad761acc944e2d03%3A0xac2abd07f92c8d03!2sJoyful%20International%20and%20Domestic%20Pet%20Transport%20and%20Pet%20Care%20Services!5e0!3m2!1sen!2sph!4v1769349936524!5m2!1sen!2sph"
+            width={mobile ? "100%" : ""}
+            height={mobile ? "400" : "560"}
+            style={{ border: 0, flex: 1 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
       </div>
     );
   };
@@ -57,8 +63,8 @@ const ContactUsScreen = () => {
         <div className="items-center justify-center flex flex-col gap-6">
           <Heading font="fredoka">Contact Us</Heading>
           <BodyText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum
-            dolor sit amet, consectetur
+            Have a question or need assistance? Reach out to us directly and our
+            team will be happy to help you.
           </BodyText>
         </div>
         <div className="grid grid-cols-2 gap-8">
