@@ -277,10 +277,6 @@ const Footer: FC = () => {
   };
 
   const Credits: FC = () => {
-    const { signIn, signOut } = useAuthActions();
-    const token = useAuthToken();
-    const { user, isLoading } = useGetCurrentUser();
-
     return (
       <div className="flex gap-2 items-center justify-center">
         <BodyText className="text-center" textColor="text-neutral-600">

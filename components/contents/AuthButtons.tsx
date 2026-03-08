@@ -24,9 +24,19 @@ const AuthButton: FC = () => {
   }
 
   return (
-    <BodyText onPress={() => void signOut()} textColor="text-neutral-600">
-      Logout
-    </BodyText>
+    <div className="flex gap-2">
+      <BodyText onPress={() => void signOut()} textColor="text-neutral-600">
+        Logout
+      </BodyText>
+      {["customer", "admin"].includes(user?.role?.slug ?? "") && (
+        <BodyText
+          onPress={() => router.push("/dashboard")}
+          textColor="text-neutral-600"
+        >
+          | Dashboard
+        </BodyText>
+      )}
+    </div>
   );
 };
 export default AuthButton;

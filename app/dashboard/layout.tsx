@@ -12,7 +12,7 @@ const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!user) {
+    if (!user || !token) {
       router.replace("/");
       return;
     }
@@ -20,7 +20,7 @@ const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
     if (user?.role?.slug !== "staff" && user?.role?.slug !== "admin") {
       router.replace("/");
     }
-  }, []);
+  }, [user, isLoading, token ?? null]);
 
   return <>{children}</>;
 };
