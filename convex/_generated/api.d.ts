@@ -22,6 +22,7 @@ import type * as tables_contact_us from "../tables/contact_us.js";
 import type * as tables_frequently_asked_questions from "../tables/frequently_asked_questions.js";
 import type * as tables_google_reviews from "../tables/google_reviews.js";
 import type * as tables_international_pet_transport from "../tables/international_pet_transport.js";
+import type * as tables_pet_details from "../tables/pet_details.js";
 import type * as tables_post_services from "../tables/post_services.js";
 import type * as tables_roles from "../tables/roles.js";
 import type * as tables_services from "../tables/services.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "tables/frequently_asked_questions": typeof tables_frequently_asked_questions;
   "tables/google_reviews": typeof tables_google_reviews;
   "tables/international_pet_transport": typeof tables_international_pet_transport;
+  "tables/pet_details": typeof tables_pet_details;
   "tables/post_services": typeof tables_post_services;
   "tables/roles": typeof tables_roles;
   "tables/services": typeof tables_services;

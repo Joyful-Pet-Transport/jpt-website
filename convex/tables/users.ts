@@ -28,3 +28,27 @@ export const current = query({
     };
   },
 });
+
+export const get = query({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+
+    const usersWithRoles = await Promise.all(
+      users.map(async (user) => {
+        let role = null;
+
+        if (user.roleId) {
+          role = await getRoleById(ctx, user.roleId);
+        }
+
+        return {
+          ...user,
+          role,
+        };
+      }),
+    );
+
+    return usersWithRoles;
+  },
+});
