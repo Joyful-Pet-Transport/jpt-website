@@ -190,7 +190,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
       </div>
 
       {/* Image carousel */}
-      <div className="relative overflow-hidden bg-gray-200 h-56">
+      <div className="relative overflow-hidden rounded-2xl bg-gray-200 h-96">
         {images.length > 0 ? (
           <Image
             src={images[currentImageIndex]}
@@ -230,12 +230,12 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
           </>
         )}
       </div>
-      <div className="border-t border-[#5B5959]"></div>
+      {/* <div className="border-t border-[#5B5959]"></div>
       <div className="flex justify-end">
         <button>
           <FiThumbsUp className="text-gray-600" size={18} />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
