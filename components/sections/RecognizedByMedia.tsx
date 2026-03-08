@@ -1,20 +1,17 @@
 import { useState } from "react";
 import BoxedContainer from "../containers/BoxedContainer";
 import Heading from "../elements/text/Heading";
-import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 
 const RecognizedByMediaSection = () => {
-  const mobile = useIsMobile();
+  const { isMobile } = useResponsive();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
   const mediaItems = [
-    "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "https://www.youtube.com/embed/guQ4NGkOevg",
+    "https://www.youtube.com/embed/hAY8na2bZy0",
   ];
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -43,13 +40,92 @@ const RecognizedByMediaSection = () => {
     setTouchEnd(0);
   };
 
-  if (mobile) {
-    return (
-      <BoxedContainer>
-        <Heading font="fredoka" className="text-center mb-6">
-          Recognized by Trusted Media
-        </Heading>
-        <div className="relative">
+  const goToPrev = () => {
+    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
+  };
+
+  const goToNext = () => {
+    if (currentIndex < mediaItems.length - 1) setCurrentIndex(currentIndex + 1);
+  };
+
+  const ArrowButton = ({ direction }: { direction: "prev" | "next" }) => (
+    <button
+      onClick={direction === "prev" ? goToPrev : goToNext}
+      disabled={
+        direction === "prev"
+          ? currentIndex === 0
+          : currentIndex === mediaItems.length - 1
+      }
+      className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-md disabled:opacity-30 transition-opacity hover:bg-gray-50"
+      aria-label={direction === "prev" ? "Previous" : "Next"}
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        {direction === "prev" ? (
+          <path
+            d="M13 4L7 10L13 16"
+            stroke="#929292"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ) : (
+          <path
+            d="M7 4L13 10L7 16"
+            stroke="#929292"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+      </svg>
+    </button>
+  );
+
+  return (
+    <BoxedContainer>
+      <Heading font="fredoka" className="text-center">
+        Recognized by Trusted Media
+      </Heading>
+
+      {/* Desktop/Tablet: arrows flanking the video */}
+      {!isMobile ? (
+        <div className="relative flex items-center gap-4">
+          <ArrowButton direction="prev" />
+          <div className="flex-1">
+            <div className="overflow-hidden rounded-3xl">
+              <div
+                className="flex transition-transform duration-300 ease-out"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                {mediaItems.map((src, index) => (
+                  <div key={index} className="w-full shrink-0 aspect-video">
+                    <iframe
+                      className="w-full h-full"
+                      src={src}
+                      width="560"
+                      height="315"
+                      allowFullScreen
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              {mediaItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+          <ArrowButton direction="next" />
+        </div>
+      ) : (
+        /* Mobile: swipeable video, dots + arrows below */
+        <div>
           <div
             className="overflow-hidden rounded-3xl"
             onTouchStart={handleTouchStart}
@@ -74,38 +150,23 @@ const RecognizedByMediaSection = () => {
             </div>
           </div>
 
-          {/* indicators */}
-          <div className="flex justify-center gap-2 mt-4">
-            {mediaItems.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+          {/* Dots + arrows below on mobile */}
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <ArrowButton direction="prev" />
+            <div className="flex gap-2">
+              {mediaItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+            <ArrowButton direction="next" />
           </div>
         </div>
-      </BoxedContainer>
-    );
-  }
-
-  return (
-    <BoxedContainer>
-      <Heading font="fredoka" className="text-center">
-        Recognized by Trusted Media
-      </Heading>
-      <div className="aspect-video rounded-4xl overflow-hidden">
-        <iframe
-          className="w-full h-full"
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          width="560"
-          height="315"
-          allowFullScreen
-        />
-      </div>
+      )}
     </BoxedContainer>
   );
 };
