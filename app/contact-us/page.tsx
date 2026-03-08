@@ -7,13 +7,11 @@ import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import BodyText from "@/components/elements/text/BodyText";
 import Heading from "@/components/elements/text/Heading";
 import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
-import { useInquiryForm } from "@/components/forms/useInquiryForm";
 import { FC } from "react";
 import ContactUs from "@/components/forms/ContactUsForm";
 import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 const ContactUsScreen = () => {
-  const form = useInquiryForm();
   const mobile = useIsMobile();
 
   const Location: FC = () => {
