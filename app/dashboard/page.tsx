@@ -61,7 +61,7 @@ const DashboardPage = () => {
             { key: "contact_form", label: "Contact Form" },
             { key: "account_name", label: "Account Name" },
             { key: "account_link", label: "Account Link" },
-            { key: "contact_number", label: "Contact Number" },
+            { key: "contact_number", label: "Contact #" },
             { key: "email_address", label: "Email Address" },
 
             { key: "companionship", label: "Companionship" },
@@ -110,7 +110,7 @@ const DashboardPage = () => {
             { key: "contact_form", label: "Contact Form" },
             { key: "account_name", label: "Account Name" },
             { key: "account_link", label: "Account Link" },
-            { key: "contact_number", label: "Contact Number" },
+            { key: "contact_number", label: "Contact #" },
             { key: "email_address", label: "Email Address" },
 
             { key: "travel_date", label: "Has Travel Date" },
@@ -206,6 +206,33 @@ const DashboardPage = () => {
     );
   };
 
+  const InquiryTable: FC = () => {
+    const inquiries = useQuery(api.tables.contact_us.get);
+
+    return (
+      <div>
+        <BaseTable
+          headers={[
+            {
+              key: "_creationTime",
+              label: "Inquired On",
+              parse: (value: number) =>
+                dayjs(value).format("MMM DD, YYYY hh:mm A"),
+              sortable: true,
+            },
+            { key: "email", label: "Email" },
+            { key: "first_name", label: "Name" },
+            { key: "last_name", label: "Last Name" },
+            { key: "message", label: "Message" },
+          ]}
+          heading="All Inquiries"
+          hasActions={false}
+          data={inquiries}
+        />
+      </div>
+    );
+  };
+
   return (
     <PageWrapperContainer removeBg disableLayout>
       <div
@@ -218,6 +245,7 @@ const DashboardPage = () => {
           <DomesticPetTransportTable />
           <RabiesSerologyTest />
           <PetsTable />
+          <InquiryTable />
         </BoxedContainer>
       </div>
     </PageWrapperContainer>
