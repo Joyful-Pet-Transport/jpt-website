@@ -4,7 +4,10 @@ import Heading from "../elements/text/Heading";
 
 const MissionVision: FC = () => {
   return (
-    <section className="w-full mt-16">
+    <section className="w-full mt-12 px-4">
+      <Heading font="fredoka" weight="semibold" className="text-center mb-12">
+        OUR MISSION & VISION
+      </Heading>
       <div className="grid gap-8 md:grid-cols-2">
         <div className="flex flex-col items-center justify-center bg-neutral-100 rounded-xl px-8 py-12 md:px-10 md:py-14 shadow-lg">
           <Heading weight="semibold" size="medium" className="pb-4 text-center">
@@ -31,4 +34,3 @@ const MissionVision: FC = () => {
 };
 
 export default MissionVision;
-
