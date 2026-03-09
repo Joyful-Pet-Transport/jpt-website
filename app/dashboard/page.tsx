@@ -238,7 +238,7 @@ const DashboardPage = () => {
       <div
         className={`flex flex-col min-h-screen bg-neutral-100 rounded-4xl ${responsive.isTabletOrMobile ? "mx-4" : "mx-8"}`}
       >
-        <BoxedContainer>
+        <BoxedContainer className="py-10!">
           <Heading size="medium">Dashboard</Heading>
           <UserTable />
           <InternationalPetTransportTable />
