@@ -2,18 +2,24 @@ import Image from "next/image";
 import { FC, use } from "react";
 import BodyText from "../elements/text/BodyText";
 import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
+import { useRouter } from "next/navigation";
 
 type ServiceCardContainerProps = {
   title: string;
   description: string;
   image: string; // URL or file path
+  slug: string;
 };
 
 const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
+  const router = useRouter();
   const mobile = useIsMobile();
   if (mobile) {
     return (
-      <div className="flex flex-col relative">
+      <button
+        className="flex flex-col relative"
+        onClick={() => router.push("/our-services/" + props.slug)}
+      >
         <div className="absolute inset-0 mt-20 h-70 bg-[#BBE2FC] rounded-4xl" />
         <div className="flex flex-col w-full items-center gap-4 p-8 relative z-10">
           <div className="rounded-full overflow-hidden border-4 border-[#F37E48] aspect-square">
@@ -34,11 +40,14 @@ const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
           </BodyText>
           <BodyText className="text-center w-70">{props.description}</BodyText>
         </div>
-      </div>
+      </button>
     );
   }
   return (
-    <div className="flex flex-1 relative">
+    <button
+      className="flex flex-1 relative"
+      onClick={() => router.push("/our-services/" + props.slug)}
+    >
       <div className="absolute bottom-0 left-0 right-0 h-80 bg-[#BBE2FC] rounded-[40px]" />
       <div className="flex flex-col w-full h-full items-center gap-4 p-8 relative z-10">
         <div className="rounded-full overflow-hidden border-8 border-[#F37E48] aspect-square">
@@ -54,7 +63,7 @@ const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
         </BodyText>
         <BodyText className="text-center">{props.description}</BodyText>
       </div>
-    </div>
+    </button>
   );
 };
 
