@@ -249,7 +249,7 @@ const Footer: FC = () => {
               DITO: +63 993 370 3770
             </button>
 
-            <span>SMART: N/A</span>
+            {/* <span>SMART: N/A</span> */}
 
             <button
               onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
