@@ -145,7 +145,9 @@ const Footer: FC = () => {
               size="small"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push("/our-services/domestic-pet-relocation/land")
+                router.push(
+                  "/our-services/domestic-pet-relocation/form?type=land",
+                )
               }
             >
               Land Travel
@@ -155,7 +157,9 @@ const Footer: FC = () => {
               size="small"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push("/our-services/domestic-pet-relocation/sea")
+                router.push(
+                  "/our-services/domestic-pet-relocation/form?type=sea",
+                )
               }
             >
               Sea Travel
@@ -165,7 +169,9 @@ const Footer: FC = () => {
               size="small"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push("/our-services/domestic-pet-relocation/air")
+                router.push(
+                  "/our-services/domestic-pet-relocation/form?type=air",
+                )
               }
             >
               Air Travel

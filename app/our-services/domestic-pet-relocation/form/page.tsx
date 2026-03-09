@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import BoxedContainer from "@/components/containers/BoxedContainer";
 import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
@@ -8,6 +9,8 @@ import Heading from "@/components/elements/text/Heading";
 import DomesticPetRelocationForm from "@/components/forms/DomesticPetRelocationForm";
 
 const DomesticPetRelocationFormScreen = () => {
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
   return (
     <PageWrapperContainer>
       <Breadcrumbs
@@ -29,7 +32,7 @@ const DomesticPetRelocationFormScreen = () => {
             — by land, sea, or air.
           </BodyText>
         </div>
-        <DomesticPetRelocationForm />
+        <DomesticPetRelocationForm type={type || undefined} />
       </BoxedContainer>
     </PageWrapperContainer>
   );

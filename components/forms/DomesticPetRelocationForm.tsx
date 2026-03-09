@@ -298,6 +298,7 @@ type ModeOfTransportProps = {
   setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
   onSubmit: () => void;
   loading: boolean;
+  type?: string;
 };
 
 const ModeOfTransport: FC<ModeOfTransportProps> = ({
@@ -306,6 +307,7 @@ const ModeOfTransport: FC<ModeOfTransportProps> = ({
   setStep,
   onSubmit,
   loading,
+  type,
 }) => {
   return (
     <FormContainer className="max-w-3xl!">
@@ -946,7 +948,11 @@ const Review: FC<ReviewProps> = ({
 
 // ─── RelocationForm ───────────────────────────────────────────────────────────
 
-const RelocationForm: FC = () => {
+type RelocationFormProps = {
+  type?: string;
+};
+
+const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
   const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
@@ -975,7 +981,7 @@ const RelocationForm: FC = () => {
       email_address: "",
       travel_date: "",
       date: "",
-      mode_of_transport: "",
+      mode_of_transport: type || "",
       pets: [
         {
           pet_name: "",
@@ -1092,7 +1098,7 @@ const RelocationForm: FC = () => {
         />
       )}
       {step === 2 && (
-        <ModeOfTransport control={control} {...sharedButtonProps} />
+        <ModeOfTransport control={control} type={type} {...sharedButtonProps} />
       )}
       {step === 3 && (
         <PetDetails
@@ -1119,8 +1125,14 @@ const RelocationForm: FC = () => {
 
 // ─── DomesticPetRelocationForm ────────────────────────────────────────────────
 
-const DomesticPetRelocationForm: FC = () => {
-  return <RelocationForm />;
+type DomesticPetRelocationFormProps = {
+  type?: string;
+};
+
+const DomesticPetRelocationForm: FC<DomesticPetRelocationFormProps> = ({
+  type,
+}) => {
+  return <RelocationForm type={type} />;
 };
 
 export default DomesticPetRelocationForm;
