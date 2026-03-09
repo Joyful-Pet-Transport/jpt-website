@@ -14,7 +14,7 @@ const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
   if (mobile) {
     return (
       <div className="flex flex-col relative">
-        <div className="absolute inset-0 mt-20 h-70 bg-[#BBE2FC] rounded-[40px]" />
+        <div className="absolute inset-0 mt-20 h-70 bg-[#BBE2FC] rounded-4xl" />
         <div className="flex flex-col w-full items-center gap-4 p-8 relative z-10">
           <div className="rounded-full overflow-hidden border-4 border-[#F37E48] aspect-square">
             <Image

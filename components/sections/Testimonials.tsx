@@ -5,7 +5,7 @@ import BodyText from "../elements/text/BodyText";
 
 const TestimonialSection: FC = () => {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 pb-12">
       <Heading font="fredoka" className="flex self-center">
         What Our Client Says?
       </Heading>

@@ -48,7 +48,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
     >
       {header && <Header disableLayout={disableLayout} />}
       <div
-        className={`min-h-screen flex flex-col gap-12 ${styleClass} ${className}`}
+        className={`min-h-screen flex flex-col ${responsive.isTabletOrMobile ? "gap-4" : "gap-12"} ${styleClass} ${className}`}
       >
         {children}
       </div>

@@ -5,8 +5,8 @@ import OurServiceContents from "../contents/OurServiceContents";
 
 const OurServicesSection: FC = () => {
   return (
-    <BoxedContainer>
-      <div className="flex flex-col items-center justify-center w-full gap-10">
+    <BoxedContainer className="pb-16 pt-6">
+      <div className="flex flex-col items-center justify-center w-full gap-4">
         <Heading font="fredoka">WHAT WE OFFER</Heading>
         <OurServiceContents />
       </div>

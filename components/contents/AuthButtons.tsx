@@ -15,6 +15,7 @@ const AuthButton: FC = () => {
   if (!token) {
     return (
       <BodyText
+        size="small"
         onPress={() => void signIn("google")}
         textColor="text-neutral-600"
       >
@@ -25,11 +26,16 @@ const AuthButton: FC = () => {
 
   return (
     <div className="flex gap-2">
-      <BodyText onPress={() => void signOut()} textColor="text-neutral-600">
+      <BodyText
+        size="small"
+        onPress={() => void signOut()}
+        textColor="text-neutral-600"
+      >
         Logout
       </BodyText>
       {["customer", "admin"].includes(user?.role?.slug ?? "") && (
         <BodyText
+          size="small"
           onPress={() => router.push("/dashboard")}
           textColor="text-neutral-600"
         >
