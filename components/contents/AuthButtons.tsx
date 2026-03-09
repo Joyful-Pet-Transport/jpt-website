@@ -33,7 +33,7 @@ const AuthButton: FC = () => {
       >
         Logout
       </BodyText>
-      {["customer", "admin"].includes(user?.role?.slug ?? "") && (
+      {["staff", "admin"].includes(user?.role?.slug ?? "") && (
         <BodyText
           size="small"
           onPress={() => router.push("/dashboard")}
