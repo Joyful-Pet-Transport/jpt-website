@@ -305,7 +305,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         <BodyText size="medium" weight="semibold" className="uppercase">
           Where are the origin and destination countries?
         </BodyText>
-        <div className="flex gap-6 px-10">
+        <div className="flex gap-6 lg:px-10">
           <div className="flex flex-col justify-end items-center gap-4 pb-2">
             <LuMapPin className="text-2xl text[#5B5959]" />
             <div className="flex flex-col gap-2">
@@ -430,7 +430,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           required
         />
 
-        <div className="flex w-full gap-4">
+        <div className="flex flex-col md:flex-row w-full gap-4">
           <FormInput
             name="account_name"
             label="ACCOUNT NAME"
@@ -494,7 +494,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
 
             {multiple ? (
               <div className={`flex flex-col ${multiple ? "gap-6" : "gap-12"}`}>
-                <div className="flex w-full gap-4">
+                <div className="flex flex-col md:flex-row w-full gap-4">
                   <FormInput
                     name={`pets.${index}.pet_name`}
                     label="PET'S NAME"
@@ -513,7 +513,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   />
                 </div>
 
-                <div className="flex w-full gap-4">
+                <div className="flex flex-col md:flex-row w-full gap-4">
                   <FormInput
                     name={`pets.${index}.sex`}
                     label="SEX"
@@ -532,7 +532,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                     required
                   />
                 </div>
-                <div className="flex w-full gap-4">
+                <div className="flex flex-col md:flex-row w-full gap-4">
                   <FormInput
                     name={`pets.${index}.pet_weight`}
                     label="PET'S WEIGHT"
@@ -640,9 +640,9 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     };
 
     return (
-      <div className="flex flex-col gap-20 w-full">
+      <div className="flex flex-col gap-6 w-full">
         <div
-          className={`grid ${fields.length > 1 && "grid-cols-2"} gap-4 w-full`}
+          className={`grid ${fields.length > 1 && "lg:grid-cols-2"} gap-4 w-full`}
         >
           {fields.map((field, index) => (
             <PetIndexDetails
@@ -691,11 +691,11 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         <div
           className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
         >
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-6">
             <BodyText size="large" weight="semibold">
               DESTINATION
             </BodyText>
-            <div className="flex gap-6 pl-10">
+            <div className="flex gap-6 md:pl-10">
               <div className="flex flex-col justify-end items-center gap-4 pb-2">
                 <LuMapPin className="text-2xl text[#5B5959]" />
                 <div className="flex flex-col gap-2">
@@ -742,7 +742,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               disabled
             />
           </div>
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-6">
             <BodyText size="large" weight="semibold">
               TRAVEL DETAILS
             </BodyText>
@@ -803,9 +803,9 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           OWNER DETAILS
         </BodyText>
         <div
-          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
         >
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-6">
             <FormInput
               name="owner_name"
               label="OWNER'S NAME"
@@ -850,7 +850,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
               required
             />
           </div>
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-6">
             <FormInput
               name="account_name"
               label="ACCOUNT NAME"
@@ -882,14 +882,14 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           </div>
         </div>
         {fields.map((field, index) => (
-          <div className="flex flex-col gap-12" key={field.id}>
+          <div className="flex flex-col gap-6" key={field.id}>
             <BodyText className="text-center" size="large" weight="semibold">
               PET {index !== 0 && index + 1} DETAILS
             </BodyText>
             <div
-              className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+              className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
             >
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-6">
                 <FormInput
                   name={`pets.${index}.pet_name`}
                   label="PET'S NAME"
@@ -920,7 +920,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
                   className="w-full"
                 />
               </div>
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-6">
                 <FormInput
                   name={`pets.${index}.sex`}
                   label="SEX"

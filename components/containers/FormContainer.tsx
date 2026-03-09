@@ -11,7 +11,7 @@ const FormContainer: FC<PropsWithChildren<FormContainerProps>> = ({
   const responsive = useResponsive();
   return (
     <div
-      className={`bg-[#F0F8FF] w-full max-w-5xl mx-auto min-h-20 rounded-3xl flex flex-col gap-12 ${responsive.isMobile ? "p-4" : responsive.isTablet ? "p-8" : "p-12"} ${className}`}
+      className={`bg-[#F0F8FF] w-full max-w-5xl mx-auto min-h-20 rounded-3xl flex flex-col gap-6 ${responsive.isMobile ? "p-4" : responsive.isTablet ? "p-8" : "p-12"} ${className}`}
     >
       {children}
     </div>

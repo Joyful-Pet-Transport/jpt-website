@@ -46,7 +46,7 @@ const RadioInputBase: FC<RadioInputBaseProps> = ({
 
   const containerClass = cn(
     "flex w-full gap-4",
-    direction === "vertical" ? "flex-col px-10" : "flex-row flex-wrap",
+    direction === "vertical" ? "flex-col md:px-10" : "flex-row flex-wrap",
   );
 
   const radioInputClass = cn(
