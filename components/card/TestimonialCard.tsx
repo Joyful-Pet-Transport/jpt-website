@@ -130,13 +130,13 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             </>
           )}
         </div>
-        <div className="border-t border-[#5B5959]"></div>
+        {/* <div className="border-t border-[#5B5959]"></div> */}
         {/* Like button */}
-        <div className="flex justify-end">
+        {/* <div className="flex justify-end">
           <button>
             <FiThumbsUp className="text-gray-600" size={16} />
           </button>
-        </div>
+        </div> */}
       </div>
     );
   }
