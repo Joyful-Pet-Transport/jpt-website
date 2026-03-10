@@ -10,8 +10,8 @@ const RecognizedByMediaSection = () => {
   const [touchEnd, setTouchEnd] = useState(0);
 
   const mediaItems = [
-    "https://www.youtube.com/embed/guQ4NGkOevg",
-    "https://www.youtube.com/embed/hAY8na2bZy0",
+    "https://www.youtube.com/embed/guQ4NGkOevg?autoplay=1&mute=1",
+    "https://www.youtube.com/embed/hAY8na2bZy0?autoplay=1&mute=1",
   ];
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -104,6 +104,7 @@ const RecognizedByMediaSection = () => {
                       src={src}
                       width="560"
                       height="315"
+                      allow="autoplay; encrypted-media"
                       allowFullScreen
                     />
                   </div>
@@ -143,6 +144,7 @@ const RecognizedByMediaSection = () => {
                     src={src}
                     width="560"
                     height="315"
+                    allow="autoplay; encrypted-media"
                     allowFullScreen
                   />
                 </div>
