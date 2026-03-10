@@ -22,7 +22,7 @@ const WhatMakesUsDiff: FC = () => {
             { color: "bg-amber-100", text: "Nationwide, door-to-door service" },
           ].map(({ color, text }) => (
             <div key={text} className={`${color} rounded-2xl px-6 py-4`}>
-              <BodyText>{text}</BodyText>
+              <BodyText font="fredoka">{text}</BodyText>
             </div>
           ))}
           <div className="flex justify-center mt-6">
@@ -41,19 +41,29 @@ const WhatMakesUsDiff: FC = () => {
           style={{ minHeight: 500 }}
         >
           <div className="absolute -left-30 top-10 w-lg rounded-2xl bg-sky-400 py-6 pl-12">
-            <BodyText>We treat every pet as family</BodyText>
+            <BodyText font="fredoka" weight="semibold">
+              We treat every pet as family
+            </BodyText>
           </div>
           <div className="absolute -right-42 top-30 w-md rounded-2xl bg-orange-400 py-6 pl-36">
-            <BodyText>Safe and stress-free journeys</BodyText>
+            <BodyText font="fredoka" weight="semibold">
+              Safe and stress-free journeys
+            </BodyText>
           </div>
           <div className="absolute -left-64 top-52 w-lg rounded-2xl bg-neutral-100 py-6 pl-12">
-            <BodyText>Professional, loving handlers</BodyText>
+            <BodyText font="fredoka" weight="semibold">
+              Professional, loving handlers
+            </BodyText>
           </div>
           <div className="absolute -right-56 bottom-36 w-xl rounded-2xl bg-sky-600 py-6 pl-56">
-            <BodyText>Real-time updates & support</BodyText>
+            <BodyText font="fredoka" weight="semibold">
+              Real-time updates & support
+            </BodyText>
           </div>
           <div className="absolute -left-42 bottom-14 w-lg rounded-2xl bg-amber-100 p-3 py-6 pl-12">
-            <BodyText>Nationwide, door-to-door service</BodyText>
+            <BodyText font="fredoka" weight="semibold">
+              Nationwide, door-to-door service
+            </BodyText>
           </div>
           <div className="relative z-10">
             <Image
