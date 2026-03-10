@@ -14,8 +14,8 @@ const MissionVision: FC = () => {
             OUR MISSION
           </Heading>
           <BodyText className="text-center">
-            To make pet travel simple, stress-free, and accessible for all
-            furparents—whether traveling locally or across the globe.
+            To provide safe, reliable, and compassionate pet relocation services while ensuring every pet travels 
+            comfortably and every furparent experiences a smooth and worry-free process.
           </BodyText>
         </div>
 
@@ -24,8 +24,8 @@ const MissionVision: FC = () => {
             OUR VISION
           </Heading>
           <BodyText className="text-center">
-            To make pet travel simple, stress-free, and accessible for all
-            furparents—whether traveling locally or across the globe.
+            To become a trusted and recognized leader in pet transport services by delivering personalized, 
+            dependable, and high-quality relocation solutions for pets across the Philippines and around the world.
           </BodyText>
         </div>
       </div>

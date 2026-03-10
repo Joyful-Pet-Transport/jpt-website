@@ -20,13 +20,17 @@ const WhoWeAre: FC = () => {
               ensure that every pet&apos;s journey is handled with
               professionalism and heart.
             </BodyText>
+
             <BodyText>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit
-              amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
+              At Joyful Pet Transport, we understand that every pet relocation is unique, 
+              which is why we specialize in creating flexible solutions tailored to what 
+              is most convenient for our clients. From coordinating veterinary requirements 
+              and documentation to arranging flights and ground transport, we handle the 
+              complex logistics so furparents can have peace of mind. Our goal is to make 
+              the entire process as smooth and stress-free as possible for both pets and 
+              their owners, through clear communication, careful planning, and a genuine 
+              love for animals—treating every pet as if they were our own and ensuring 
+              they arrive safely, comfortably, and happily at their new destination. 🐾✈️💖
             </BodyText>
           </div>
 
