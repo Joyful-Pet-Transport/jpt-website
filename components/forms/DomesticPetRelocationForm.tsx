@@ -28,11 +28,934 @@ type PetDetailsProps = {
   multiple?: boolean;
 };
 
-const RelocationForm: FC = () => {
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
+// ─── RenderIcon ──────────────────────────────────────────────────────────────
+
+const RenderIcon: FC<{ path: string }> = ({ path }) => {
+  return (
+    <Image src={path} alt="Transport mode icon" width={200} height={200} />
+  );
+};
+
+// ─── Buttons ─────────────────────────────────────────────────────────────────
+
+type ButtonsProps = {
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
+  onSubmit: () => void;
+  loading: boolean;
+};
+
+const Buttons: FC<ButtonsProps> = ({ step, setStep, onSubmit, loading }) => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 630, behavior: "smooth" });
+  };
   const responsive = useResponsive();
-  const modal = useModal();
+  return (
+    <div className="flex w-full justify-between items-center">
+      <BodyText
+        size={responsive.isTabletOrMobile ? "normal" : "medium"}
+        weight="semibold"
+        className={step <= 1 ? "text-neutral-400! select-none" : "select-none"}
+        onPress={() => {
+          if (step !== 1) {
+            setStep((step - 1) as 0 | 1 | 2 | 3 | 4);
+            scrollToTop();
+          }
+        }}
+      >
+        BACK
+      </BodyText>
+      <DynamicButton
+        size={responsive.isTabletOrMobile ? "medium" : "default"}
+        onPress={() => {
+          if (step === 4) {
+            onSubmit();
+          } else {
+            setStep((step + 1) as 0 | 1 | 2 | 3 | 4);
+            scrollToTop();
+          }
+        }}
+      >
+        {step === 4 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
+      </DynamicButton>
+    </div>
+  );
+};
+
+// ─── Progress ────────────────────────────────────────────────────────────────
+
+const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 }> = ({ step }) => {
+  const percentage = (step / 4) * 100;
+
+  return (
+    <div className="w-full max-w-96 h-3 rounded-full bg-neutral-200 overflow-hidden">
+      <div
+        className="h-full rounded-full transition-all duration-300 ease-in-out"
+        style={{
+          width: `${percentage}%`,
+          background: "linear-gradient(to right, #FF905D, #41B2F6)",
+        }}
+      />
+    </div>
+  );
+};
+
+// ─── Disclaimer ──────────────────────────────────────────────────────────────
+
+const Disclaimer: FC<{ onAgree: () => void }> = ({ onAgree }) => {
+  return (
+    <FormContainer className="justify-center items-center">
+      <BodyText
+        size="large"
+        weight="semibold"
+        className="text-center uppercase"
+      >
+        privacy notice and consent statement
+      </BodyText>
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+        <BodyText className="text-center">
+          At <span className="italic font-bold">Joyful Pet Transport</span>, we
+          are committed to protecting your personal information.
+        </BodyText>
+        <BodyText className="text-center">
+          By proceeding with this form, you acknowledge and agree that all
+          information collected — including your personal details, contact
+          information, pet details, and travel documents — will be used solely
+          for the purpose of processing your pet's transport arrangements,
+          documentation, and compliance with local and international travel
+          regulations.
+        </BodyText>
+        <BodyText className="text-center">
+          All information provided will be handled with strict confidentiality
+          and in accordance with applicable data privacy laws. We do not share
+          your information with unauthorized third parties.
+        </BodyText>
+        <BodyText className="text-center">
+          By continuing, you voluntarily consent to the collection, use, and
+          processing of your data for pet transport services.
+        </BodyText>
+      </div>
+      <div className="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2">
+        <DynamicButton size="medium" onPress={onAgree}>
+          I AGREE
+        </DynamicButton>
+        <BodyText
+          size="xsmall"
+          className="text-center"
+          textColor="text-neutral-500"
+        >
+          By clicking this button, you confirm that you have read the Privacy
+          Notice and Consent Statement and consent to the collection and use of
+          your personal information for your pet's transport.
+        </BodyText>
+      </div>
+    </FormContainer>
+  );
+};
+
+// ─── OwnerDetails ─────────────────────────────────────────────────────────────
+
+type OwnerDetailsProps = {
+  control: any;
+  travelDate: string;
+  dateType: "specific" | "range";
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
+  onSubmit: () => void;
+  loading: boolean;
+};
+
+const OwnerDetails: FC<OwnerDetailsProps> = ({
+  control,
+  travelDate,
+  dateType,
+  step,
+  setStep,
+  onSubmit,
+  loading,
+}) => {
+  return (
+    <FormContainer>
+      <BodyText size="large" weight="semibold" className="text-center">
+        OWNER DETAILS
+      </BodyText>
+      <FormInput
+        name="owner_name"
+        label="OWNER'S NAME"
+        placeholder="Enter owner's name"
+        control={control}
+        required
+      />
+      <div className="flex gap-6 md:px-10">
+        <div className="flex flex-col justify-end items-center gap-4 pb-2">
+          <LuMapPin className="text-2xl text[#5B5959]" />
+          <div className="flex flex-col gap-2">
+            <div className="w-2 h-2 bg-gray-300 rounded-full" />
+            <div className="w-2 h-2 bg-gray-300 rounded-full" />
+            <div className="w-2 h-2 bg-gray-300 rounded-full" />
+          </div>
+          <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
+        </div>
+        <div className="flex flex-col flex-1 gap-6">
+          <FormInput
+            label="PICK-UP ADDRESS"
+            placeholder="Enter pick-up address"
+            name="pickup_address"
+            control={control}
+            required
+          />
+          <FormInput
+            label="DESTINATION ADDRESS"
+            placeholder="Enter destination Address"
+            name="destination"
+            control={control}
+            required
+          />
+        </div>
+      </div>
+      <RadioFormInput
+        name="contact_form"
+        label="WHERE CAN WE CONTACT YOU?"
+        control={control}
+        options={[
+          { label: "Facebook Messenger", value: "facebook" },
+          { label: "WhatsApp", value: "whatsapp" },
+          { label: "Viber", value: "viber" },
+          { label: "Telegram", value: "telegram" },
+        ]}
+        required
+      />
+      <div className="flex flex-col md:flex-row w-full gap-4">
+        <FormInput
+          name="account_name"
+          label="ACCOUNT NAME"
+          placeholder="Enter account name"
+          control={control}
+          required
+          className="w-full"
+        />
+        <FormInput
+          name="account_link"
+          label="LINK"
+          placeholder="Enter link"
+          className="w-full"
+          control={control}
+        />
+      </div>
+      <FormInput
+        name="contact_number"
+        label="CONTACT NUMBER"
+        placeholder="Enter contact number"
+        control={control}
+        required
+      />
+      <FormInput
+        name="email_address"
+        label="ACTIVE EMAIL ADDRESS"
+        placeholder="Enter active email address"
+        control={control}
+        required
+      />
+      <RadioFormInput
+        name="travel_date"
+        label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
+        control={control}
+        options={[
+          { label: "Yes", value: "yes" },
+          { label: "No", value: "no" },
+        ]}
+        required
+      />
+      <DateFormInput
+        name="date"
+        label={
+          travelDate
+            ? travelDate === "yes"
+              ? "SPECIFIC TRAVEL DATE"
+              : "ESTIMATED TRAVEL DATE"
+            : "TRAVEL DATE"
+        }
+        control={control}
+        dateType={dateType}
+        disabled={!travelDate}
+        required
+      />
+      <Buttons
+        step={step}
+        setStep={setStep}
+        onSubmit={onSubmit}
+        loading={loading}
+      />
+    </FormContainer>
+  );
+};
+
+// ─── ModeOfTransport ──────────────────────────────────────────────────────────
+
+type ModeOfTransportProps = {
+  control: any;
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
+  onSubmit: () => void;
+  loading: boolean;
+  type?: string;
+};
+
+const ModeOfTransport: FC<ModeOfTransportProps> = ({
+  control,
+  step,
+  setStep,
+  onSubmit,
+  loading,
+  type,
+}) => {
+  return (
+    <FormContainer className="max-w-3xl!">
+      <IconSelectFormInput
+        label="CHOOSE THE MODE OF TRANSPORT"
+        name="mode_of_transport"
+        control={control}
+        options={[
+          {
+            label: "Land",
+            value: "land",
+            icon: <RenderIcon path="/images/icons/transport/car.png" />,
+          },
+          {
+            label: "Air",
+            value: "air",
+            icon: <RenderIcon path="/images/icons/transport/airplane.png" />,
+          },
+          {
+            label: "Sea",
+            value: "sea",
+            icon: <RenderIcon path="/images/icons/transport/ship.png" />,
+          },
+        ]}
+      />
+      <Buttons
+        step={step}
+        setStep={setStep}
+        onSubmit={onSubmit}
+        loading={loading}
+      />
+    </FormContainer>
+  );
+};
+
+// ─── PetIndexDetails ──────────────────────────────────────────────────────────
+
+type PetIndexDetailsProps = PetDetailsProps & {
+  control: any;
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
+  onSubmit: () => void;
+  loading: boolean;
+};
+
+const PetIndexDetails: FC<PetIndexDetailsProps> = ({
+  index,
+  remove,
+  single,
+  last,
+  multiple,
+  control,
+  step,
+  setStep,
+  onSubmit,
+  loading,
+}) => {
+  return (
+    <div className="flex flex-col gap-20 w-full">
+      <FormContainer className={multiple ? "gap-6!" : ""}>
+        <div className="flex flex-row justify-center items-center gap-4">
+          <BodyText size="large" weight="semibold" className="text-center">
+            PET {index !== 0 && index + 1} DETAILS
+          </BodyText>
+          {index > 0 && last && (
+            <button
+              type="button"
+              aria-label="Remove pet"
+              onClick={() => remove(index)}
+            >
+              <FaTrashCan className="text-orange-400 text-xl" />
+            </button>
+          )}
+        </div>
+
+        {multiple ? (
+          <div className={`flex flex-col ${multiple ? "gap-6" : "gap-12"}`}>
+            <div className="flex flex-col md:flex-row w-full gap-4">
+              <FormInput
+                name={`pets.${index}.pet_name`}
+                label="PET'S NAME"
+                placeholder="Enter pet's name"
+                control={control}
+                className="w-full"
+                required
+              />
+              <FormInput
+                name={`pets.${index}.breed`}
+                label="BREED"
+                placeholder="Enter pet's breed"
+                control={control}
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="flex flex-col md:flex-row w-full gap-4">
+              <FormInput
+                name={`pets.${index}.sex`}
+                label="SEX"
+                placeholder="Enter pet's gender (or sex)"
+                control={control}
+                className="w-full"
+                required
+              />
+              <DateFormInput
+                name={`pets.${index}.pet_birthday`}
+                label="DATE OF BIRTH"
+                placeholder="Enter pet's birthday"
+                control={control}
+                className="w-full"
+                enableYearSelect
+                required
+              />
+            </div>
+            <div className="flex flex-col md:flex-row w-full gap-4">
+              <FormInput
+                name={`pets.${index}.pet_weight`}
+                label="PET'S WEIGHT"
+                placeholder="Enter pet's estimated weight"
+                control={control}
+                className="w-full"
+                required
+              />
+              <FormInput
+                name={`pets.${index}.pet_age`}
+                placeholder="Enter pet's age"
+                label="AGE"
+                control={control}
+                className="w-full"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            <FormInput
+              name={`pets.${index}.pet_name`}
+              label="PET'S NAME"
+              placeholder="Enter pet's name"
+              control={control}
+              required
+            />
+            <div className="flex flex-col md:flex-row w-full gap-6">
+              <FormInput
+                name={`pets.${index}.breed`}
+                label="BREED"
+                placeholder="Enter pet's breed"
+                control={control}
+                className="w-full"
+                required
+              />
+              <FormInput
+                name={`pets.${index}.sex`}
+                label="SEX"
+                placeholder="Enter pet's gender (or sex)"
+                control={control}
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="flex flex-col md:flex-row w-full gap-6">
+              <DateFormInput
+                name={`pets.${index}.pet_birthday`}
+                label="DATE OF BIRTH"
+                control={control}
+                placeholder="Enter pet's birthday"
+                className="w-full"
+                enableYearSelect
+                required
+              />
+              <FormInput
+                name={`pets.${index}.pet_age`}
+                label="AGE"
+                control={control}
+                placeholder="Enter pet's age"
+                className="w-full"
+              />
+            </div>
+            <FormInput
+              name={`pets.${index}.pet_weight`}
+              label="PET'S WEIGHT"
+              control={control}
+              placeholder="Enter pet's estimated weight"
+              required
+            />
+          </div>
+        )}
+
+        <FormInput
+          name={`pets.${index}.pet_condition`}
+          label="MEDICAL CONDITION"
+          placeholder="Enter pets' medical condition that we should be aware of"
+          control={control}
+          keyboardType="paragraph"
+          widthFull
+        />
+        <FormInput
+          name={`pets.${index}.special_instructions`}
+          label="SPECIAL INSTRUCTIONS"
+          placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
+          control={control}
+          keyboardType="paragraph"
+          widthFull
+        />
+        <ImageFormInput
+          name={`pets.${index}.pet_image`}
+          label="UPLOAD PET PHOTO"
+          control={control}
+          widthFull
+          required
+        />
+        {single && (
+          <Buttons
+            step={step}
+            setStep={setStep}
+            onSubmit={onSubmit}
+            loading={loading}
+          />
+        )}
+      </FormContainer>
+    </div>
+  );
+};
+
+// ─── PetDetails ───────────────────────────────────────────────────────────────
+
+type PetDetailsStepProps = {
+  control: any;
+  fields: any[];
+  append: (value: any) => void;
+  remove: (index: number) => void;
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
+  onSubmit: () => void;
+  loading: boolean;
+};
+
+const PetDetails: FC<PetDetailsStepProps> = ({
+  control,
+  fields,
+  append,
+  remove,
+  step,
+  setStep,
+  onSubmit,
+  loading,
+}) => {
+  return (
+    <div className="flex flex-col gap-6 w-full">
+      <div
+        className={`grid ${fields.length > 1 && "lg:grid-cols-2"} gap-4 w-full`}
+      >
+        {fields.map((field, index) => (
+          <PetIndexDetails
+            key={field.id}
+            index={index}
+            remove={remove}
+            single={fields.length === 1}
+            last={index + 1 === fields.length}
+            multiple={fields.length > 1}
+            control={control}
+            step={step}
+            setStep={setStep}
+            onSubmit={onSubmit}
+            loading={loading}
+          />
+        ))}
+      </div>
+      {fields.length !== 1 && (
+        <Buttons
+          step={step}
+          setStep={setStep}
+          onSubmit={onSubmit}
+          loading={loading}
+        />
+      )}
+      <div className="w-full flex flex-col gap-4 justify-center items-center">
+        <BodyText className="text-center max-w-96">
+          If you want to add more pets to travel, click the 'Add More Pets'
+          button
+        </BodyText>
+        <DynamicButton
+          type="orange"
+          onPress={() =>
+            append({
+              pet_name: "",
+              breed: "",
+              sex: "",
+              pet_birthday: "",
+              pet_age: "",
+              pet_weight: "",
+              pet_condition: "",
+              special_instructions: "",
+              pet_image: [],
+            })
+          }
+        >
+          ADD MORE PETS
+        </DynamicButton>
+      </div>
+    </div>
+  );
+};
+
+// ─── Review ───────────────────────────────────────────────────────────────────
+
+type ReviewProps = {
+  control: any;
+  fields: any[];
+  travelDate: string;
+  dateType: "specific" | "range";
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4) => void;
+  onSubmit: () => void;
+  loading: boolean;
+};
+
+const Review: FC<ReviewProps> = ({
+  control,
+  fields,
+  travelDate,
+  dateType,
+  step,
+  setStep,
+  onSubmit,
+  loading,
+}) => {
+  const responsive = useResponsive();
+
+  return (
+    <FormContainer>
+      <BodyText className="text-center" size="large" weight="semibold">
+        REVIEW FORM
+      </BodyText>
+      <div
+        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+      >
+        <div className="flex flex-col gap-12">
+          <BodyText size="large" weight="semibold">
+            DESTINATION
+          </BodyText>
+          <div className="flex gap-6 md:pl-10">
+            <div className="flex flex-col justify-end items-center gap-4 pb-2">
+              <LuMapPin className="text-2xl text[#5B5959]" />
+              <div className="flex flex-col gap-2">
+                <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                <div className="w-2 h-2 bg-gray-300 rounded-full" />
+              </div>
+              <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
+            </div>
+            <div className="flex flex-col flex-1 gap-6">
+              <FormInput
+                label="PICK-UP ADDRESS"
+                placeholder="Enter pick-up address"
+                name="pickup_address"
+                control={control}
+                required
+                disabled
+              />
+              <FormInput
+                label="DESTINATION ADDRESS"
+                placeholder="Enter destination Address"
+                name="destination"
+                control={control}
+                required
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-12">
+          <BodyText size="large" weight="semibold">
+            TRAVEL DETAILS
+          </BodyText>
+          <RadioFormInput
+            name="travel_date"
+            label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
+            control={control}
+            options={[
+              { label: "Yes", value: "yes" },
+              { label: "No", value: "no" },
+            ]}
+            required
+            disabled
+          />
+          <DateFormInput
+            name="date"
+            label={
+              travelDate
+                ? travelDate === "yes"
+                  ? "SPECIFIC TRAVEL DATE"
+                  : "ESTIMATED TRAVEL DATE"
+                : "TRAVEL DATE"
+            }
+            control={control}
+            dateType={dateType}
+            widthFull
+            disabled
+            required
+          />
+          <IconSelectFormInput
+            label="CHOOSE THE MODE OF TRANSPORT"
+            name="mode_of_transport"
+            control={control}
+            onlySelected
+            disabled
+            required
+            noSelectedLabel="No mode of transport selected"
+            options={[
+              {
+                label: "Land",
+                value: "land",
+                icon: <RenderIcon path="/images/icons/transport/car.png" />,
+              },
+              {
+                label: "Air",
+                value: "air",
+                icon: (
+                  <RenderIcon path="/images/icons/transport/airplane.png" />
+                ),
+              },
+              {
+                label: "Sea",
+                value: "sea",
+                icon: <RenderIcon path="/images/icons/transport/ship.png" />,
+              },
+            ]}
+          />
+        </div>
+      </div>
+
+      <BodyText className="text-center" size="large" weight="semibold">
+        DESTINATION
+      </BodyText>
+      <BodyText className="uppercase" size="medium" weight="semibold">
+        What are the full addresses of the origin and destination?
+      </BodyText>
+      <FormInput
+        name="origin_full_address"
+        label="ORIGIN FULL ADDRESS*"
+        placeholder="Enter the full address"
+        control={control}
+        keyboardType="paragraph"
+        widthFull
+        required
+      />
+      <FormInput
+        name="destination_full_address"
+        label="DESTINATION FULL ADDRESS*"
+        placeholder="Enter the full address"
+        control={control}
+        keyboardType="paragraph"
+        widthFull
+        required
+      />
+
+      <BodyText className="text-center" size="large" weight="semibold">
+        OWNER DETAILS
+      </BodyText>
+      <div
+        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+      >
+        <div className="flex flex-col gap-12">
+          <FormInput
+            name="owner_name"
+            label="OWNER'S NAME"
+            placeholder="Enter owner's name"
+            control={control}
+            widthFull
+            disabled
+            required
+          />
+          <RadioFormInput
+            name="contact_form"
+            label="WHERE CAN WE CONTACT YOU?"
+            control={control}
+            disabled
+            options={[
+              { label: "Facebook Messenger", value: "facebook" },
+              { label: "WhatsApp", value: "whatsapp" },
+              { label: "Viber", value: "viber" },
+              { label: "Telegram", value: "telegram" },
+            ]}
+            required
+          />
+          <FormInput
+            name="contact_number"
+            label="CONTACT NUMBER"
+            placeholder="Enter contact number"
+            control={control}
+            widthFull
+            disabled
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-12">
+          <FormInput
+            name="account_name"
+            label="ACCOUNT NAME"
+            placeholder="Enter account name"
+            control={control}
+            widthFull
+            disabled
+            required
+            className="w-full"
+          />
+          <FormInput
+            name="account_link"
+            label="LINK"
+            placeholder="Enter link"
+            className="w-full"
+            control={control}
+            widthFull
+            disabled
+          />
+          <FormInput
+            name="email_address"
+            label="ACTIVE EMAIL ADDRESS"
+            placeholder="Enter active email address"
+            control={control}
+            widthFull
+            disabled
+            required
+          />
+        </div>
+      </div>
+
+      {fields.map((field, index) => (
+        <div className="flex flex-col gap-12" key={field.id}>
+          <BodyText className="text-center" size="large" weight="semibold">
+            PET {index !== 0 && index + 1} DETAILS
+          </BodyText>
+          <div
+            className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+          >
+            <div className="flex flex-col gap-12">
+              <FormInput
+                name={`pets.${index}.pet_name`}
+                label="PET'S NAME"
+                placeholder="Enter pet's name"
+                control={control}
+                widthFull
+                disabled
+                className="w-full"
+                required
+              />
+              <FormInput
+                name={`pets.${index}.breed`}
+                label="BREED"
+                placeholder="Enter pet's breed"
+                control={control}
+                widthFull
+                disabled
+                className="w-full"
+                required
+              />
+              <FormInput
+                name={`pets.${index}.pet_age`}
+                placeholder="Enter pet's age"
+                label="AGE"
+                control={control}
+                widthFull
+                disabled
+                className="w-full"
+              />
+            </div>
+            <div className="flex flex-col gap-12">
+              <FormInput
+                name={`pets.${index}.sex`}
+                label="SEX"
+                placeholder="Enter pet's gender (or sex)"
+                control={control}
+                widthFull
+                disabled
+                className="w-full"
+                required
+              />
+              <DateFormInput
+                name={`pets.${index}.pet_birthday`}
+                label="DATE OF BIRTH"
+                placeholder="Enter pet's birthday"
+                control={control}
+                widthFull
+                disabled
+                className="w-full"
+                enableYearSelect
+                required
+              />
+              <FormInput
+                name={`pets.${index}.pet_weight`}
+                label="PET'S WEIGHT"
+                control={control}
+                widthFull
+                disabled
+                placeholder="Enter pet's estimated weight"
+                required
+              />
+            </div>
+          </div>
+          <FormInput
+            name={`pets.${index}.pet_condition`}
+            label="MEDICAL CONDITION"
+            placeholder="Enter pets' medical condition that we should be aware of"
+            control={control}
+            disabled
+            keyboardType="paragraph"
+            widthFull
+          />
+          <FormInput
+            name={`pets.${index}.special_instructions`}
+            label="SPECIAL INSTRUCTIONS"
+            placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
+            control={control}
+            disabled
+            keyboardType="paragraph"
+            widthFull
+          />
+          <ImageFormInput
+            name={`pets.${index}.pet_image`}
+            label="UPLOAD PET PHOTO"
+            control={control}
+            disabled
+            widthFull
+            required
+          />
+        </div>
+      ))}
+
+      <Buttons
+        step={step}
+        setStep={setStep}
+        onSubmit={onSubmit}
+        loading={loading}
+      />
+    </FormContainer>
+  );
+};
+
+// ─── RelocationForm ───────────────────────────────────────────────────────────
+
+type RelocationFormProps = {
+  type?: string;
+};
+
+const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
+  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const modal = useModal();
   const router = useRouter();
 
   const createPetDetails = useMutation(
@@ -49,20 +972,16 @@ const RelocationForm: FC = () => {
     resolver: zodResolver(DomesticRelocationFormSchema),
     defaultValues: {
       owner_name: "",
-
       pickup_address: "",
       destination: "",
-
       contact_form: "",
       account_name: "",
       account_link: "",
       contact_number: "",
       email_address: "",
-
       travel_date: "",
       date: "",
-      mode_of_transport: "",
-
+      mode_of_transport: type || "",
       pets: [
         {
           pet_name: "",
@@ -76,946 +995,144 @@ const RelocationForm: FC = () => {
           pet_image: [],
         },
       ],
-
       origin_full_address: "",
       destination_full_address: "",
     },
   });
 
   const control = createDomesticRelocationForm.control;
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "pets",
-  });
-
-  const travelDate = useWatch({
-    control,
-    name: "travel_date",
-  });
-
+  const { fields, append, remove } = useFieldArray({ control, name: "pets" });
+  const travelDate = useWatch({ control, name: "travel_date" });
   const dateType = travelDate === "yes" ? "specific" : "range";
 
-  const Buttons: FC = () => {
-    const scrollToTop = () => {
-      window.scrollTo({ top: 630, behavior: "smooth" });
-    };
+  const handleSubmit = () => {
+    createDomesticRelocationForm.handleSubmit(async (data) => {
+      try {
+        setLoading(true);
+        const petIds = [];
 
-    return (
-      <div className="flex w-full justify-between items-center">
-        <BodyText
-          size="medium"
-          weight="semibold"
-          className={
-            step <= 1 ? "text-neutral-400! select-none" : "select-none"
+        for (const pet of data.pets) {
+          let petImageId: string | undefined;
+
+          if (
+            pet.pet_image &&
+            pet.pet_image.length > 0 &&
+            pet.pet_image[0] instanceof File
+          ) {
+            const uploadUrl = await generateUploadUrl({});
+            const response = await fetch(uploadUrl, {
+              method: "POST",
+              headers: { "Content-Type": pet.pet_image[0].type },
+              body: pet.pet_image[0],
+            });
+
+            if (!response.ok) throw new Error("Failed to upload image");
+
+            const { storageId } = await response.json();
+            petImageId = storageId;
           }
-          onPress={() => {
-            if (step != 1) {
-              setStep((step - 1) as 1 | 2 | 3 | 4);
-              scrollToTop();
-            }
-          }}
-        >
-          BACK
-        </BodyText>
-        <DynamicButton
-          onPress={() => {
-            if (step == 4) {
-              createDomesticRelocationForm.handleSubmit(async (data) => {
-                try {
-                  setLoading(true);
-                  const petIds = [];
-                  for (const pet of data.pets) {
-                    let petImageId: string | undefined;
 
-                    if (
-                      pet.pet_image &&
-                      pet.pet_image.length > 0 &&
-                      pet.pet_image[0] instanceof File
-                    ) {
-                      const uploadUrl = await generateUploadUrl({});
+          const petData: any = {
+            pet_name: pet.pet_name,
+            breed: pet.breed,
+            sex: pet.sex,
+            pet_birthday: pet.pet_birthday,
+            pet_age: pet.pet_age,
+            pet_weight: pet.pet_weight,
+            pet_image: petImageId as any,
+          };
 
-                      const response = await fetch(uploadUrl, {
-                        method: "POST",
-                        headers: { "Content-Type": pet.pet_image[0].type },
-                        body: pet.pet_image[0],
-                      });
+          if (pet.pet_condition) petData.pet_condition = pet.pet_condition;
+          if (pet.special_instructions)
+            petData.special_instructions = pet.special_instructions;
 
-                      if (!response.ok) {
-                        throw new Error("Failed to upload image");
-                      }
+          const petId = await createPetDetails(petData);
+          petIds.push(petId);
+        }
 
-                      const { storageId } = await response.json();
-                      petImageId = storageId;
-                    }
+        const bookingData = {
+          owner_name: data.owner_name,
+          pickup_address: data.pickup_address,
+          destination: data.destination,
+          contact_form: data.contact_form,
+          account_name: data.account_name,
+          account_link: data.account_link,
+          contact_number: data.contact_number,
+          email_address: data.email_address,
+          travel_date: data.travel_date,
+          date: data.date,
+          mode_of_transport: data.mode_of_transport,
+          pets: petIds,
+          origin_full_address: data.origin_full_address,
+          destination_full_address: data.destination_full_address,
+        };
 
-                    const petData: any = {
-                      pet_name: pet.pet_name,
-                      breed: pet.breed,
-                      sex: pet.sex,
-                      pet_birthday: pet.pet_birthday,
-                      pet_age: pet.pet_age,
-                      pet_weight: pet.pet_weight,
-                      pet_image: petImageId as any,
-                    };
-
-                    if (pet.pet_condition) {
-                      petData.pet_condition = pet.pet_condition;
-                    }
-                    if (pet.special_instructions) {
-                      petData.special_instructions = pet.special_instructions;
-                    }
-
-                    const petId = await createPetDetails(petData);
-                    petIds.push(petId);
-                  }
-
-                  const bookingData = {
-                    owner_name: data.owner_name,
-
-                    pickup_address: data.pickup_address,
-                    destination: data.destination,
-
-                    contact_form: data.contact_form,
-                    account_name: data.account_name,
-                    account_link: data.account_link,
-                    contact_number: data.contact_number,
-                    email_address: data.email_address,
-
-                    travel_date: data.travel_date,
-                    date: data.date,
-                    mode_of_transport: data.mode_of_transport,
-
-                    pets: petIds,
-
-                    origin_full_address: data.origin_full_address,
-                    destination_full_address: data.destination_full_address,
-                  };
-
-                  const bookingId = await bookDomesticPetTransport(bookingData);
-                  console.log("Booking created successfully:", bookingId);
-                  createDomesticRelocationForm.reset();
-                  modal.setModalComponent(<BookedSuccessfullyModal />, "large");
-                  modal.setShown(true);
-                  setTimeout(() => {
-                    modal.setShown(false);
-                    router.push("/");
-                  }, 3000);
-                } catch (error) {
-                  console.error("Error creating booking:", error);
-                } finally {
-                  setLoading(false);
-                }
-              })();
-            } else {
-              setStep((step + 1) as 1 | 2 | 3 | 4);
-              scrollToTop();
-            }
-          }}
-        >
-          {step == 4 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
-        </DynamicButton>
-      </div>
-    );
+        const bookingId = await bookDomesticPetTransport(bookingData);
+        console.log("Booking created successfully:", bookingId);
+        createDomesticRelocationForm.reset();
+        modal.setModalComponent(<BookedSuccessfullyModal />, "large");
+        modal.setShown(true);
+        setTimeout(() => {
+          modal.setShown(false);
+          router.push("/");
+        }, 3000);
+      } catch (error) {
+        console.error("Error creating booking:", error);
+      } finally {
+        setLoading(false);
+      }
+    })();
   };
 
-  const RenderIcon: FC<{ path: string }> = ({ path }) => {
-    return (
-      <Image src={path} alt="Transport mode icon" width={200} height={200} />
-    );
-  };
-
-  const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 }> = ({ step }) => {
-    const percentage = (step / 4) * 100;
-
-    return (
-      <div className="w-full max-w-96 h-3 rounded-full bg-neutral-200 overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-300 ease-in-out"
-          style={{
-            width: `${percentage}%`,
-            background: "linear-gradient(to right, #FF905D, #41B2F6)",
-          }}
-        />
-      </div>
-    );
-  };
-
-  const Disclaimer: FC = () => {
-    return (
-      <FormContainer className="justify-center items-center">
-        <BodyText
-          size="large"
-          weight="semibold"
-          className="text-center uppercase"
-        >
-          privacy notice and consent statement
-        </BodyText>
-        <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-          <BodyText className="text-center">
-            At <span className="italic font-bold">Joyful Pet Transport</span>,
-            we are committed to protecting your personal information.
-          </BodyText>
-          <BodyText className="text-center">
-            By proceeding with this form, you acknowledge and agree that all
-            information collected — including your personal details, contact
-            information, pet details, and travel documents — will be used solely
-            for the purpose of processing your pet’s transport arrangements,
-            documentation, and compliance with local and international travel
-            regulations.
-          </BodyText>
-          <BodyText className="text-center">
-            All information provided will be handled with strict confidentiality
-            and in accordance with applicable data privacy laws. We do not share
-            your information with unauthorized third parties.
-          </BodyText>
-          <BodyText className="text-center">
-            By continuing, you voluntarily consent to the collection, use, and
-            processing of your data for pet transport services.
-          </BodyText>
-        </div>
-        <div className="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2">
-          <DynamicButton size="medium" onPress={() => setStep(1)}>
-            I AGREE
-          </DynamicButton>
-          <BodyText
-            size="xsmall"
-            className="text-center"
-            textColor="text-neutral-500"
-          >
-            By clicking this button, you confirm that you have read the Privacy
-            Notice and Consent Statement and consent to the collection and use
-            of your personal information for your pet’s transport.
-          </BodyText>
-        </div>
-      </FormContainer>
-    );
-  };
-
-  const OwnerDetails: FC = () => {
-    return (
-      <FormContainer>
-        <BodyText size="large" weight="semibold" className="text-center">
-          OWNER DETAILS
-        </BodyText>
-        <FormInput
-          name="owner_name"
-          label="OWNER'S NAME"
-          placeholder="Enter owner's name"
-          control={control}
-          required
-        />
-
-        <div className="flex gap-6 px-10">
-          <div className="flex flex-col justify-end items-center gap-4 pb-2">
-            <LuMapPin className="text-2xl text[#5B5959]" />
-            <div className="flex flex-col gap-2">
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-            </div>
-            <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
-          </div>
-          <div className="flex flex-col flex-1 gap-6">
-            <FormInput
-              label="PICK-UP ADDRESS"
-              placeholder="Enter pick-up address"
-              name="pickup_address"
-              control={control}
-              required
-            />
-            <FormInput
-              label="DESTINATION ADDRESS"
-              placeholder="Enter destination Address"
-              name="destination"
-              control={control}
-              required
-            />
-          </div>
-        </div>
-
-        <RadioFormInput
-          name="contact_form"
-          label="WHERE CAN WE CONTACT YOU?"
-          control={control}
-          options={[
-            {
-              label: "Facebook Messenger",
-              value: "facebook",
-            },
-            {
-              label: "WhatsApp",
-              value: "whatsapp",
-            },
-            {
-              label: "Viber",
-              value: "viber",
-            },
-            {
-              label: "Telegram",
-              value: "telegram",
-            },
-          ]}
-          required
-        />
-
-        <div className="flex w-full gap-4">
-          <FormInput
-            name="account_name"
-            label="ACCOUNT NAME"
-            placeholder="Enter account name"
-            control={control}
-            required
-            className="w-full"
-          />
-          <FormInput
-            name="account_link"
-            label="LINK"
-            placeholder="Enter link"
-            className="w-full"
-            control={control}
-          />
-        </div>
-        <FormInput
-          name="contact_number"
-          label="CONTACT NUMBER"
-          placeholder="Enter contact number"
-          control={control}
-          required
-        />
-        <FormInput
-          name="email_address"
-          label="ACTIVE EMAIL ADDRESS"
-          placeholder="Enter active email address"
-          control={control}
-          required
-        />
-        <RadioFormInput
-          name="travel_date"
-          label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
-          control={control}
-          options={[
-            { label: "Yes", value: "yes" },
-            { label: "No", value: "no" },
-          ]}
-          required
-        />
-        <DateFormInput
-          name="date"
-          label={
-            travelDate
-              ? travelDate === "yes"
-                ? "SPECIFIC TRAVEL DATE"
-                : "ESTIMATED TRAVEL DATE"
-              : "TRAVEL DATE"
-          }
-          control={control}
-          dateType={dateType}
-          disabled={!travelDate}
-          required
-        />
-
-        <Buttons />
-      </FormContainer>
-    );
-  };
-
-  const ModeOfTransport: FC = () => {
-    return (
-      <FormContainer className="max-w-3xl!">
-        <IconSelectFormInput
-          label="CHOOSE THE MODE OF TRANSPORT"
-          name="mode_of_transport"
-          control={control}
-          options={[
-            {
-              label: "Land",
-              value: "land",
-              icon: <RenderIcon path="/images/icons/transport/car.png" />,
-            },
-            {
-              label: "Air",
-              value: "air",
-              icon: <RenderIcon path="/images/icons/transport/airplane.png" />,
-            },
-            {
-              label: "Sea",
-              value: "sea",
-              icon: <RenderIcon path="/images/icons/transport/ship.png" />,
-            },
-          ]}
-        />
-        <Buttons />
-      </FormContainer>
-    );
-  };
-
-  const PetDetails: FC = () => {
-    const PetIndexDetails: FC<PetDetailsProps> = ({
-      index,
-      remove,
-      single,
-      last,
-      multiple,
-    }) => {
-      return (
-        <div className="flex flex-col gap-20 w-full">
-          <FormContainer className={multiple ? "gap-6!" : ""}>
-            <div className="flex flex-row justify-center items-center gap-4">
-              <BodyText size="large" weight="semibold" className="text-center">
-                PET {index !== 0 && index + 1} DETAILS
-              </BodyText>
-              {index > 0 && last && (
-                <button
-                  type="button"
-                  aria-label="Remove pet"
-                  onClick={() => remove(index)}
-                >
-                  <FaTrashCan className="text-orange-400 text-xl" />
-                </button>
-              )}
-            </div>
-
-            {multiple ? (
-              <div className={`flex flex-col ${multiple ? "gap-6" : "gap-12"}`}>
-                <div className="flex w-full gap-4">
-                  <FormInput
-                    name={`pets.${index}.pet_name`}
-                    label="PET'S NAME"
-                    placeholder="Enter pet's name"
-                    control={control}
-                    className="w-full"
-                    required
-                  />
-                  <FormInput
-                    name={`pets.${index}.breed`}
-                    label="BREED"
-                    placeholder="Enter pet's breed"
-                    control={control}
-                    className="w-full"
-                    required
-                  />
-                </div>
-
-                <div className="flex w-full gap-4">
-                  <FormInput
-                    name={`pets.${index}.sex`}
-                    label="SEX"
-                    placeholder="Enter pet's gender (or sex)"
-                    control={control}
-                    className="w-full"
-                    required
-                  />
-                  <DateFormInput
-                    name={`pets.${index}.pet_birthday`}
-                    label="DATE OF BIRTH"
-                    placeholder="Enter pet's birthday"
-                    control={control}
-                    className="w-full"
-                    enableYearSelect
-                    required
-                  />
-                </div>
-                <div className="flex w-full gap-4">
-                  <FormInput
-                    name={`pets.${index}.pet_weight`}
-                    label="PET'S WEIGHT"
-                    placeholder="Enter pet's estimated weight"
-                    control={control}
-                    className="w-full"
-                    required
-                  />
-                  <FormInput
-                    name={`pets.${index}.pet_age`}
-                    placeholder="Enter pet's age"
-                    label="AGE"
-                    control={control}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-12">
-                <FormInput
-                  name={`pets.${index}.pet_name`}
-                  label="PET'S NAME"
-                  placeholder="Enter pet's name"
-                  control={control}
-                  required
-                />
-
-                <div className="flex w-full gap-4">
-                  <FormInput
-                    name={`pets.${index}.breed`}
-                    label="BREED"
-                    placeholder="Enter pet's breed"
-                    control={control}
-                    className="w-full"
-                    required
-                  />
-                  <FormInput
-                    name={`pets.${index}.sex`}
-                    label="SEX"
-                    placeholder="Enter pet's gender (or sex)"
-                    control={control}
-                    className="w-full"
-                    required
-                  />
-                </div>
-
-                <div className="flex w-full gap-4">
-                  <DateFormInput
-                    name={`pets.${index}.pet_birthday`}
-                    label="DATE OF BIRTH"
-                    control={control}
-                    placeholder="Enter pet's birthday"
-                    className="w-full"
-                    enableYearSelect
-                    required
-                  />
-                  <FormInput
-                    name={`pets.${index}.pet_age`}
-                    label="AGE"
-                    control={control}
-                    placeholder="Enter pet's age"
-                    className="w-full"
-                  />
-                </div>
-
-                <FormInput
-                  name={`pets.${index}.pet_weight`}
-                  label="PET'S WEIGHT"
-                  control={control}
-                  placeholder="Enter pet's estimated weight"
-                  required
-                />
-              </div>
-            )}
-
-            <FormInput
-              name={`pets.${index}.pet_condition`}
-              label="MEDICAL CONDITION"
-              placeholder="Enter pets’ medical condition that we should be aware of"
-              control={control}
-              keyboardType="paragraph"
-              widthFull
-            />
-
-            <FormInput
-              name={`pets.${index}.special_instructions`}
-              label="SPECIAL INSTRUCTIONS"
-              placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
-              control={control}
-              keyboardType="paragraph"
-              widthFull
-            />
-
-            <ImageFormInput
-              name={`pets.${index}.pet_image`}
-              label="UPLOAD PET PHOTO"
-              control={control}
-              widthFull
-              required
-            />
-            {single && <Buttons />}
-          </FormContainer>
-        </div>
-      );
-    };
-
-    return (
-      <div className="flex flex-col gap-20 w-full">
-        <div
-          className={`grid ${fields.length > 1 && "grid-cols-2"} gap-4 w-full`}
-        >
-          {fields.map((field, index) => (
-            <PetIndexDetails
-              key={field.id}
-              index={index}
-              remove={remove}
-              single={fields.length === 1}
-              last={index + 1 === fields.length}
-              multiple={fields.length > 1}
-            />
-          ))}
-        </div>
-        {fields.length !== 1 && <Buttons />}
-
-        <div className="w-full flex flex-col gap-4 justify-center items-center">
-          <BodyText className="text-center max-w-96">
-            If you want to add more pets to travel, click the ‘Add More Pets’
-            button
-          </BodyText>
-          <DynamicButton
-            type="orange"
-            onPress={() =>
-              append({
-                pet_name: "",
-                breed: "",
-                sex: "",
-                pet_birthday: "",
-                pet_age: "",
-                pet_weight: "",
-                pet_condition: "",
-                special_instructions: "",
-                pet_image: [],
-              })
-            }
-          >
-            ADD MORE PETS
-          </DynamicButton>
-        </div>
-      </div>
-    );
-  };
-
-  const Review: FC = () => {
-    return (
-      <FormContainer>
-        <BodyText className="text-center" size="large" weight="semibold">
-          REVIEW FORM
-        </BodyText>
-        <div
-          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
-        >
-          <div className="flex flex-col gap-12">
-            <BodyText size="large" weight="semibold">
-              DESTINATION
-            </BodyText>
-            <div className="flex gap-6 pl-10">
-              <div className="flex flex-col justify-end items-center gap-4 pb-2">
-                <LuMapPin className="text-2xl text[#5B5959]" />
-                <div className="flex flex-col gap-2">
-                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                </div>
-                <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
-              </div>
-              <div className="flex flex-col flex-1 gap-6">
-                <FormInput
-                  label="PICK-UP ADDRESS"
-                  placeholder="Enter pick-up address"
-                  name="pickup_address"
-                  control={control}
-                  required
-                  disabled
-                />
-                <FormInput
-                  label="DESTINATION ADDRESS"
-                  placeholder="Enter destination Address"
-                  name="destination"
-                  control={control}
-                  required
-                  disabled
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-12">
-            <BodyText size="large" weight="semibold">
-              TRAVEL DETAILS
-            </BodyText>
-
-            <RadioFormInput
-              name="travel_date"
-              label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
-              control={control}
-              options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
-              ]}
-              required
-              disabled
-            />
-            <DateFormInput
-              name="date"
-              label={
-                travelDate
-                  ? travelDate === "yes"
-                    ? "SPECIFIC TRAVEL DATE"
-                    : "ESTIMATED TRAVEL DATE"
-                  : "TRAVEL DATE"
-              }
-              control={control}
-              dateType={dateType}
-              widthFull
-              disabled
-              required
-            />
-            <IconSelectFormInput
-              label="CHOOSE THE MODE OF TRANSPORT"
-              name="mode_of_transport"
-              control={control}
-              onlySelected
-              disabled
-              required
-              noSelectedLabel="No mode of transport selected"
-              options={[
-                {
-                  label: "Land",
-                  value: "land",
-                  icon: <RenderIcon path="/images/icons/transport/car.png" />,
-                },
-                {
-                  label: "Air",
-                  value: "air",
-                  icon: (
-                    <RenderIcon path="/images/icons/transport/airplane.png" />
-                  ),
-                },
-                {
-                  label: "Sea",
-                  value: "sea",
-                  icon: <RenderIcon path="/images/icons/transport/ship.png" />,
-                },
-              ]}
-            />
-          </div>
-        </div>
-        <BodyText className="text-center" size="large" weight="semibold">
-          DESTINATION
-        </BodyText>
-        <BodyText className="uppercase" size="medium" weight="semibold">
-          What are the full addresses of the origin and destination?
-        </BodyText>
-        <FormInput
-          name="origin_full_address"
-          label="ORIGIN FULL ADDRESS*"
-          placeholder="Enter the full address"
-          control={control}
-          keyboardType="paragraph"
-          widthFull
-          required
-        />
-        <FormInput
-          name="destination_full_address"
-          label="DESTINATION FULL ADDRESS*"
-          placeholder="Enter the full address"
-          control={control}
-          keyboardType="paragraph"
-          widthFull
-          required
-        />
-        <BodyText className="text-center" size="large" weight="semibold">
-          OWNER DETAILS
-        </BodyText>
-        <div
-          className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
-        >
-          <div className="flex flex-col gap-12">
-            <FormInput
-              name="owner_name"
-              label="OWNER'S NAME"
-              placeholder="Enter owner's name"
-              control={control}
-              widthFull
-              disabled
-              required
-            />
-            <RadioFormInput
-              name="contact_form"
-              label="WHERE CAN WE CONTACT YOU?"
-              control={control}
-              disabled
-              options={[
-                {
-                  label: "Facebook Messenger",
-                  value: "facebook",
-                },
-                {
-                  label: "WhatsApp",
-                  value: "whatsapp",
-                },
-                {
-                  label: "Viber",
-                  value: "viber",
-                },
-                {
-                  label: "Telegram",
-                  value: "telegram",
-                },
-              ]}
-              required
-            />
-            <FormInput
-              name="contact_number"
-              label="CONTACT NUMBER"
-              placeholder="Enter contact number"
-              control={control}
-              widthFull
-              disabled
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-12">
-            <FormInput
-              name="account_name"
-              label="ACCOUNT NAME"
-              placeholder="Enter account name"
-              control={control}
-              widthFull
-              disabled
-              required
-              className="w-full"
-            />
-            <FormInput
-              name="account_link"
-              label="LINK"
-              placeholder="Enter link"
-              className="w-full"
-              control={control}
-              widthFull
-              disabled
-            />
-            <FormInput
-              name="email_address"
-              label="ACTIVE EMAIL ADDRESS"
-              placeholder="Enter active email address"
-              control={control}
-              widthFull
-              disabled
-              required
-            />
-          </div>
-        </div>
-        {fields.map((field, index) => (
-          <div className="flex flex-col gap-12" key={field.id}>
-            <BodyText className="text-center" size="large" weight="semibold">
-              PET {index !== 0 && index + 1} DETAILS
-            </BodyText>
-            <div
-              className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
-            >
-              <div className="flex flex-col gap-12">
-                <FormInput
-                  name={`pets.${index}.pet_name`}
-                  label="PET'S NAME"
-                  placeholder="Enter pet's name"
-                  control={control}
-                  widthFull
-                  disabled
-                  className="w-full"
-                  required
-                />
-                <FormInput
-                  name={`pets.${index}.breed`}
-                  label="BREED"
-                  placeholder="Enter pet's breed"
-                  control={control}
-                  widthFull
-                  disabled
-                  className="w-full"
-                  required
-                />
-                <FormInput
-                  name={`pets.${index}.pet_age`}
-                  placeholder="Enter pet's age"
-                  label="AGE"
-                  control={control}
-                  widthFull
-                  disabled
-                  className="w-full"
-                />
-              </div>
-              <div className="flex flex-col gap-12">
-                <FormInput
-                  name={`pets.${index}.sex`}
-                  label="SEX"
-                  placeholder="Enter pet's gender (or sex)"
-                  control={control}
-                  widthFull
-                  disabled
-                  className="w-full"
-                  required
-                />
-                <DateFormInput
-                  name={`pets.${index}.pet_birthday`}
-                  label="DATE OF BIRTH"
-                  placeholder="Enter pet's birthday"
-                  control={control}
-                  widthFull
-                  disabled
-                  className="w-full"
-                  enableYearSelect
-                  required
-                />
-                <FormInput
-                  name={`pets.${index}.pet_weight`}
-                  label="PET'S WEIGHT"
-                  control={control}
-                  widthFull
-                  disabled
-                  placeholder="Enter pet's estimated weight"
-                  required
-                />
-              </div>
-            </div>
-            <FormInput
-              name={`pets.${index}.pet_condition`}
-              label="MEDICAL CONDITION"
-              placeholder="Enter pets’ medical condition that we should be aware of"
-              control={control}
-              disabled
-              keyboardType="paragraph"
-              widthFull
-            />
-
-            <FormInput
-              name={`pets.${index}.special_instructions`}
-              label="SPECIAL INSTRUCTIONS"
-              placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
-              control={control}
-              disabled
-              keyboardType="paragraph"
-              widthFull
-            />
-
-            <ImageFormInput
-              name={`pets.${index}.pet_image`}
-              label="UPLOAD PET PHOTO"
-              control={control}
-              disabled
-              widthFull
-              required
-            />
-          </div>
-        ))}
-        <Buttons />
-      </FormContainer>
-    );
-  };
-
-  const RenderForm: FC = () => {
-    if (step === 0) {
-      return <Disclaimer />;
-    }
-
-    if (step === 1) {
-      return <OwnerDetails />;
-    }
-
-    if (step === 2) {
-      return <ModeOfTransport />;
-    }
-
-    if (step === 3) {
-      return <PetDetails />;
-    }
-
-    return <Review />;
-  };
+  const sharedButtonProps = { step, setStep, onSubmit: handleSubmit, loading };
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
-      <RenderForm />
+      {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
+      {step === 1 && (
+        <OwnerDetails
+          control={control}
+          travelDate={travelDate}
+          dateType={dateType}
+          {...sharedButtonProps}
+        />
+      )}
+      {step === 2 && (
+        <ModeOfTransport control={control} type={type} {...sharedButtonProps} />
+      )}
+      {step === 3 && (
+        <PetDetails
+          control={control}
+          fields={fields}
+          append={append}
+          remove={remove}
+          {...sharedButtonProps}
+        />
+      )}
+      {step === 4 && (
+        <Review
+          control={control}
+          fields={fields}
+          travelDate={travelDate}
+          dateType={dateType}
+          {...sharedButtonProps}
+        />
+      )}
       <Progress step={step} />
     </div>
   );
 };
 
-const DomesticPetRelocationForm: FC = () => {
-  return <RelocationForm />;
+// ─── DomesticPetRelocationForm ────────────────────────────────────────────────
+
+type DomesticPetRelocationFormProps = {
+  type?: string;
+};
+
+const DomesticPetRelocationForm: FC<DomesticPetRelocationFormProps> = ({
+  type,
+}) => {
+  return <RelocationForm type={type} />;
 };
 
 export default DomesticPetRelocationForm;

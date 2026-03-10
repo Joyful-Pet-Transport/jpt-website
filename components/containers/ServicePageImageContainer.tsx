@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FC } from "react";
 import BodyText from "../elements/text/BodyText";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 
 type ServicePageImageContainerProps = {
   title: string;
@@ -16,7 +17,7 @@ const ServicePageImageContainer: FC<ServicePageImageContainerProps> = (
     <div className="flex max-w-110 flex-col items-center gap-4">
       <div className="flex rounded-full border-6 border-dashed p-2 border-[#055D9F] overflow-hidden">
         <div
-          className="relative flex w-100 h-100 rounded-full border-8 border-[#F37E48] justify-center items-center overflow-hidden"
+          className="relative flex rounded-full border-8 border-[#F37E48] justify-center items-center overflow-hidden"
           onClick={props.onPress}
         >
           <Image

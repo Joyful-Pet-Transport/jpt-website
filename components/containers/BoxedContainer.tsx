@@ -13,12 +13,12 @@ const BoxedContainer: FC<BoxedContainerProps> = ({
   if (medium) {
     return (
       <div
-        className={`${className} flex flex-col w-full py-16 gap-16 px-2
+        className={`flex flex-col w-full gap-16 px-4 py-8 md:py-0
           md:max-w-5xl 
           lg:max-w-6xl 
           xl:max-w-7xl 
           2xl:max-w-360
-          mx-auto`}
+          mx-auto ${className}`}
       >
         {children}
       </div>
@@ -26,12 +26,12 @@ const BoxedContainer: FC<BoxedContainerProps> = ({
   }
   return (
     <div
-      className={`${className} flex flex-col w-full py-16 gap-16 px-2
+      className={`flex flex-col w-full gap-16 px-4 py-8 md:py-0
 					md:max-w-3xl 
 					lg:max-w-5xl 
 					xl:max-w-6xl 
 					2xl:max-w-7xl 
-					mx-auto`}
+					mx-auto ${className}`}
     >
       {children}
     </div>

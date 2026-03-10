@@ -36,7 +36,7 @@ const BookingProcessContent: FC = () => {
   }
 
   return (
-    <div className="flex w-full gap-0 h-[300px]">
+    <div className="flex w-full gap-0 min-h-[300px]">
       {bookingProcess?.map(({ _id, step, title, description, icon }) => (
         <BookingProcessCardContainer
           key={_id}

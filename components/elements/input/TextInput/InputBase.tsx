@@ -21,7 +21,7 @@ export type InputBaseProps = {
   label: string;
   whiteLabel?: boolean;
   placeholder?: string;
-  initialValue?: string;
+  value?: string;
   validation?: string;
   keyboardType?: KeyboardType;
   disabled?: boolean;
@@ -34,7 +34,7 @@ const InputBase: FC<InputBaseProps> = ({
   label,
   whiteLabel = false,
   placeholder = "",
-  initialValue = "",
+  value = "", // renamed from initialValue
   validation,
   keyboardType = "text",
   disabled = false,
@@ -42,14 +42,10 @@ const InputBase: FC<InputBaseProps> = ({
   widthFull,
   onChange,
 }) => {
-  const [value, setValue] = useState(initialValue);
-
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newValue = e.target.value;
-    setValue(newValue);
-    onChange?.(newValue);
+    onChange?.(e.target.value);
   };
 
   const inputClassName = cn(

@@ -15,28 +15,14 @@ const OurServiceContents: FC = () => {
     return <Loader />;
   }
 
-  if (mobile) {
-    return (
-      <div className="w-full flex flex-col gap-4">
-        {services?.map(({ _id, title, description, image }) => (
-          <ServiceCardContainer
-            key={_id}
-            title={title}
-            description={description}
-            image={image}
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full flex gap-4">
-      {services?.map(({ _id, title, description, image }) => (
+    <div className={`w-full flex gap-6 ${mobile && "flex-col"}`}>
+      {services?.map(({ _id, title, description, slug, image }) => (
         <ServiceCardContainer
           key={_id}
           title={title}
           description={description}
+          slug={slug!}
           image={image}
         />
       ))}

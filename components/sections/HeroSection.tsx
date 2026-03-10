@@ -5,11 +5,12 @@ import BoxedContainer from "../containers/BoxedContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import Image from "next/image";
 import { useIsMobile, useIsTablet } from "@/utils/hooks/useWindowsDimensions";
+import { useRouter } from "next/navigation";
 
 const HeroSection: FC = () => {
   const mobile = useIsMobile();
   const tablet = useIsTablet();
-
+  const router = useRouter();
   if (mobile) {
     return (
       <BoxedContainer>
@@ -28,8 +29,17 @@ const HeroSection: FC = () => {
               peace of mind from departure to arrival.
             </BodyText>
             <div className="flex flex-row gap-4 items-center justify-center">
-              <DynamicButton size="medium">BOOK NOW</DynamicButton>
-              <DynamicButton type="outline" size="medium">
+              <DynamicButton
+                size="medium"
+                onPress={() => router.push("/our-services")}
+              >
+                BOOK NOW
+              </DynamicButton>
+              <DynamicButton
+                type="outline"
+                size="medium"
+                onPress={() => router.push("/about-us")}
+              >
                 LEARN MORE
               </DynamicButton>
             </div>

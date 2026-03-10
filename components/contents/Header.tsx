@@ -107,7 +107,10 @@ const HeaderItem: FC<HeaderItemProps> = ({ item }) => {
     setIsOpen((prev) => !prev);
   };
   return (
-    <div className="relative flex flex-col items-center gap-2" ref={dropdownRef}>
+    <div
+      className="relative flex flex-col items-center gap-2"
+      ref={dropdownRef}
+    >
       <div className="flex flex-row gap-2 items-center">
         <BodyText
           key={item.path}
@@ -170,7 +173,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
     if (responsive.isTabletOrMobile) {
       return (
         <div className="h-22 relative mx-4 rounded-3xl mt-4 bg-[#EAEAEA] flex items-center z-150">
-          <div className="w-full h-full px-8 flex justify-between items-center">
+          <div className="w-full h-full px-4 flex justify-between items-center">
             {/* Logo */}
             <div className="flex flex-1 gap-4 justify-between">
               <div
@@ -244,7 +247,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                 JOYFUL PET TRANSPORT
               </BodyText>
             </div>
-            </div>
+          </div>
 
           {/* Navigation */}
           <div className="flex gap-4 items-center justify-center z-50">
@@ -273,13 +276,11 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
               : "opacity-0 pointer-events-none"
           }`}
         >
-          
           <div
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => modal.setShown(false)}
           />
 
-          
           <nav
             className={`relative w-[92%] max-w-md rounded-3xl bg-[#EAEAEA] shadow-2xl transition-all duration-300 ${
               modal.shown ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
@@ -300,7 +301,6 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
             </div>
           </nav>
         </div>
-
       </div>
     );
   };
@@ -308,7 +308,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   if (isNotHomePage && !disableLayout) {
     return (
       <div
-        className={`relative flex flex-col h-140 bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4" : "mx-8 mt-8"}`}
+        className={`relative flex flex-col bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4 h-64" : "mx-8 mt-8 h-140"}`}
       >
         <HeaderBar />
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl md:rounded-t-4xl pointer-events-none">

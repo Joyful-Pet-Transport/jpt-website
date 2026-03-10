@@ -9,7 +9,7 @@ const GrayCardContainer: FC<PropsWithChildren<{ className?: string }>> = ({
 
   return (
     <div
-      className={`rounded-xl bg-white justify-center items-center ${mobile ? "min-w-full" : "min-w-[500px]"} p-8 ${className}`}
+      className={`rounded-3xl bg-white justify-center items-center ${mobile ? "min-w-full p-6" : "min-w-[500px] p-8"} ${className}`}
     >
       {children}
     </div>

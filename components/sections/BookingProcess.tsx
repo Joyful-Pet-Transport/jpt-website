@@ -33,7 +33,7 @@ const BookingProcessSection: FC = () => {
   if (mobile) {
     return (
       <div className="pb-16 flex flex-col w-full">
-        <div className=" flex flex-row items-end w-full">
+        <div className=" flex flex-row items-end w-full pl-4">
           <Heading font="fredoka" className="w-100">
             Our Joyful 4-Step Pet <br /> Transport Booking Process
           </Heading>
@@ -50,6 +50,7 @@ const BookingProcessSection: FC = () => {
       </div>
     );
   }
+
   return (
     <div className="flex pb-16 flex-col items-start w-full">
       <div className="px-16 flex flex-row items-end justify-between w-full relative">

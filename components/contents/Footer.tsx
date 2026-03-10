@@ -145,7 +145,9 @@ const Footer: FC = () => {
               size="small"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push("/our-services/domestic-pet-relocation/land")
+                router.push(
+                  "/our-services/domestic-pet-relocation/form?type=land",
+                )
               }
             >
               Land Travel
@@ -155,7 +157,9 @@ const Footer: FC = () => {
               size="small"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push("/our-services/domestic-pet-relocation/sea")
+                router.push(
+                  "/our-services/domestic-pet-relocation/form?type=sea",
+                )
               }
             >
               Sea Travel
@@ -165,7 +169,9 @@ const Footer: FC = () => {
               size="small"
               className="cursor-pointer hover:text-blue-600 transition"
               onPress={() =>
-                router.push("/our-services/domestic-pet-relocation/air")
+                router.push(
+                  "/our-services/domestic-pet-relocation/form?type=air",
+                )
               }
             >
               Air Travel
@@ -249,7 +255,7 @@ const Footer: FC = () => {
               DITO: +63 993 370 3770
             </button>
 
-            <span>SMART: N/A</span>
+            {/* <span>SMART: N/A</span> */}
 
             <button
               onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
@@ -279,7 +285,11 @@ const Footer: FC = () => {
   const Credits: FC = () => {
     return (
       <div className="flex gap-2 items-center justify-center">
-        <BodyText className="text-center" textColor="text-neutral-600">
+        <BodyText
+          size="small"
+          className="text-center"
+          textColor="text-neutral-600"
+        >
           © 2026 Joyful Pet Transport | All rights reserved. |
         </BodyText>
         <AuthButton />
@@ -289,8 +299,8 @@ const Footer: FC = () => {
 
   if (responsive.isTabletOrMobile) {
     return (
-      <div className="flex flex-col justify-center mb-2 gap-2 mt-4">
-        <div className="bg-[#EAEAEA] rounded-4xl p-8 flex flex-col gap-6 relative mx-4">
+      <div className="flex flex-col justify-center mb-2 gap-1 mt-4">
+        <div className="bg-[#EAEAEA] rounded-4xl p-6 flex flex-col gap-6 relative mx-4">
           <Brand hideButton />
           <Navigation />
           <Services />

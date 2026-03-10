@@ -30,7 +30,7 @@ const ContactUsScreen = () => {
             rel="noopener noreferrer"
             className="text-sm font-light hover:text-blue-600 transition break-all"
           >
-            <BodyText className="text-center">
+            <BodyText size="small" className="text-center">
               joyfulpettransportreservations@gmail.com
             </BodyText>
           </a>
@@ -63,7 +63,7 @@ const ContactUsScreen = () => {
             team will be happy to help you.
           </BodyText>
         </div>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8">
           <div>
             <BodyText
               className="text-center"
@@ -84,13 +84,19 @@ const ContactUsScreen = () => {
                       icon={<IconContainer icon="messenger" colored />}
                       name="Messenger"
                       value="Joyful Pet Transport"
+                      onPress={() =>
+                        window.open("http://m.me/joyfulpettransport", "_blank")
+                      }
                     />
                     <InfoItemContainer
                       icon={<IconContainer icon="whatsapp" colored />}
                       name="WhatsApp"
                       value="Joyful Pet Transport"
+                      onPress={() =>
+                        window.open("https://wa.me/639289981020", "_blank")
+                      }
                     />
-                    <InfoItemContainer
+                    {/* <InfoItemContainer
                       icon={<IconContainer icon="telegram" colored />}
                       name="Telegram"
                       value="Joyful Pet Transport"
@@ -99,7 +105,7 @@ const ContactUsScreen = () => {
                       icon={<IconContainer icon="viber" colored />}
                       name="Viber"
                       value="Joyful Pet Transport"
-                    />
+                    /> */}
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col gap-6">
@@ -111,16 +117,34 @@ const ContactUsScreen = () => {
                       icon={<IconContainer icon="facebook" colored />}
                       name="Facebook"
                       value="Joyful Pet Transport"
+                      onPress={() =>
+                        window.open(
+                          "https://www.facebook.com/joyfulpettransport",
+                          "_blank",
+                        )
+                      }
                     />
                     <InfoItemContainer
                       icon={<IconContainer icon="instagram" colored />}
                       name="Instagram"
                       value="Joyful Pet Transport"
+                      onPress={() =>
+                        window.open(
+                          "https://www.instagram.com/joyfulpettransport",
+                          "_blank",
+                        )
+                      }
                     />
                     <InfoItemContainer
                       icon={<IconContainer icon="tiktok" colored />}
                       name="Tiktok"
                       value="Joyful Pet Transport"
+                      onPress={() =>
+                        window.open(
+                          "https://www.tiktok.com/@joyfulpettransport",
+                          "_blank",
+                        )
+                      }
                     />
                   </div>
                 </div>
