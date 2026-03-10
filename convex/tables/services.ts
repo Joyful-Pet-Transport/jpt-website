@@ -7,10 +7,11 @@ export const get = query({
 
     const servicesWithUrls = await Promise.all(
       services.map(async (service) => {
-        let imageUrl = service.image;
-        if (service.image) {
+        let imageUrl = "/images/logo/logo.png";
+
+        if (service.image && !service.image.startsWith("/")) {
           imageUrl =
-            (await ctx.storage.getUrl(service.image)) ||
+            (await ctx.storage.getUrl(service.image)) ??
             "/images/logo/logo.png";
         }
 
@@ -18,7 +19,7 @@ export const get = query({
           ...service,
           image: imageUrl,
         };
-      })
+      }),
     );
 
     return servicesWithUrls;
