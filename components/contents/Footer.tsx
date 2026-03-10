@@ -214,7 +214,7 @@ const Footer: FC = () => {
           <BodyText weight="thin" size="small">
             Email Address:
           </BodyText>
-          <div className="pl-6">
+          <div className="md:pl-6">
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(
                 "I would like to Inquire",
