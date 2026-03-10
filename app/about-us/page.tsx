@@ -14,16 +14,20 @@ const AboutUsScreen = () => {
         items={[{ label: "Home", path: "/" }, { label: "About Us" }]}
       />
       <BoxedContainer medium className="flex flex-col gap-12">
-        <div className="flex flex-col justify-center items-center">
-          <Heading font="fredoka" className="text-center">
-            JOYFUL PET TRANSPORT
-          </Heading>
-          <BodyText size="large" weight="semibold" className="text-center pt-6">
-            Transporting Pets Has Never Been This Easy
-          </BodyText>
-          <BodyText size="large" weight="semibold" className="text-center">
-            Trusted by Hundreds of Furparents
-          </BodyText>
+        <div className="flex flex-col justify-center items-center gap-12">
+          <div className="flex flex-col">
+            <Heading font="fredoka" className="text-center">
+              JOYFUL PET TRANSPORT
+            </Heading>
+
+            <BodyText className="text-center">
+              Transporting Pets Has Never Been This Easy
+            </BodyText>
+
+            <BodyText className="text-center">
+              Trusted by Hundreds of Furparents
+            </BodyText>
+          </div>
           <WhoWeAre />
           <MissionVision />
           <WhatMakesUsDiff />
