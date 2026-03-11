@@ -21,14 +21,16 @@ const OurServicesScreen = () => {
       />
       <BoxedContainer medium className="flex flex-col gap-12">
         <div className="flex flex-col justify-center items-center max-w-2xl mx-auto">
-          <Heading font="fredoka" className="text-center">Our Services</Heading>
+          <Heading font="fredoka" className="text-center">
+            Our Services
+          </Heading>
           <BodyText className="text-center">
             Explore our pet relocation services with smooth, a walkthrough to
             our service to make every journey safe and stress-free.
           </BodyText>
         </div>
 
-        <div className="w-full flex flex-row flex-wrap gap-6 justify-between">
+        <div className="w-full flex flex-row flex-wrap gap-6 items-center justify-center md:justify-between">
           {services?.map(({ _id, title, description, image, slug }) => (
             <ServicePageImageContainer
               key={_id}

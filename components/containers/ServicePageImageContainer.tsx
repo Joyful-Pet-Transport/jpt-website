@@ -14,7 +14,7 @@ const ServicePageImageContainer: FC<ServicePageImageContainerProps> = (
   props,
 ) => {
   return (
-    <div className="flex max-w-110 flex-col items-center gap-4">
+    <div className="flex flex-1 min-w-64 max-w-96 flex-col items-center gap-4">
       <div className="flex rounded-full border-6 border-dashed p-2 border-[#055D9F] overflow-hidden">
         <div
           className="relative flex rounded-full border-8 border-[#F37E48] justify-center items-center overflow-hidden"
@@ -39,7 +39,9 @@ const ServicePageImageContainer: FC<ServicePageImageContainerProps> = (
           </div>
         </div>
       </div>
-      <BodyText className="text-center">{props.description}</BodyText>
+      <div className="h-32">
+        <BodyText className="text-center">{props.description}</BodyText>
+      </div>
     </div>
   );
 };
