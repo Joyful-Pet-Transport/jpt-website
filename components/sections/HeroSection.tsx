@@ -44,12 +44,12 @@ const HeroSection: FC = () => {
       <div className="flex flex-col gap-24">
         {/* section 1 */}
         <div className="relative h-[70vh] flex w-full">
-          <div className="absolute top-10 -right-20 z-10">
+          <div className="absolute top-0 -right-20 z-10">
             <Image
               src={"/images/element/hero1.png"}
               alt="Pet transportation hero image"
-              width={500}
-              height={650}
+              width={650}
+              height={700}
             />
           </div>
           <BoxedContainer>
