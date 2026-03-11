@@ -10,6 +10,8 @@ import Breadcrumbs from "@/components/elements/breadcrumbs/Breadcrumbs";
 import { FC } from "react";
 import ContactUs from "@/components/forms/ContactUsForm";
 import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
+import { shareNumber } from "@/components/contents/Footer";
+import Image from "next/image";
 
 const ContactUsScreen = () => {
   const mobile = useIsMobile();
@@ -58,94 +60,184 @@ const ContactUsScreen = () => {
       <BoxedContainer medium className="flex justify-center">
         <div className="items-center justify-center flex flex-col gap-6">
           <Heading font="fredoka">Contact Us</Heading>
-          <BodyText>
+          <BodyText className="text-center">
             Have a question or need assistance? Reach out to us directly and our
             team will be happy to help you.
           </BodyText>
         </div>
         <div className="grid lg:grid-cols-2 gap-8">
           <div>
-            <BodyText
-              className="text-center"
-              font="poppins"
-              weight="semibold"
-              size="medium"
-            >
-              Reach Us Anytime
-            </BodyText>
+            <div className="flex flex-col gap-4">
+              <BodyText
+                font="fredoka"
+                weight="semibold"
+                size="medium"
+                className="text-center"
+              >
+                Reach Us Anytime
+              </BodyText>
+              <BodyText
+                font="poppins"
+                weight="semibold"
+                className="text-center"
+              >
+                You may reach us through any of the platforms listed below.
+              </BodyText>
+            </div>
             <div className="flex flex-1 flex-col gap-8 pt-4">
               <div className="flex gap-4 w-full flex-row">
                 <div className="flex flex-1 flex-col gap-6">
-                  <BodyText font="poppins" weight="semibold">
+                  <BodyText font="fredoka" weight="semibold">
                     Messaging Apps
                   </BodyText>
                   <div className="flex flex-col gap-4">
-                    <InfoItemContainer
-                      icon={<IconContainer icon="messenger" colored />}
-                      name="Messenger"
-                      value="Joyful Pet Transport"
-                      onPress={() =>
-                        window.open("http://m.me/joyfulpettransport", "_blank")
-                      }
-                    />
-                    <InfoItemContainer
-                      icon={<IconContainer icon="whatsapp" colored />}
-                      name="WhatsApp"
-                      value="Joyful Pet Transport"
-                      onPress={() =>
-                        window.open("https://wa.me/639289981020", "_blank")
-                      }
-                    />
-                    {/* <InfoItemContainer
-                      icon={<IconContainer icon="telegram" colored />}
-                      name="Telegram"
-                      value="Joyful Pet Transport"
-                    />
-                    <InfoItemContainer
-                      icon={<IconContainer icon="viber" colored />}
-                      name="Viber"
-                      value="Joyful Pet Transport"
-                    /> */}
+                    <BodyText font="fredoka" weight="semibold">
+                      Joyful Pet Transport
+                    </BodyText>
+                    <div className="flex gap-2 md:gap-4">
+                      <IconContainer
+                        icon="messenger"
+                        colored
+                        onPress={() =>
+                          window.open(
+                            "http://m.me/joyfulpettransport",
+                            "_blank",
+                          )
+                        }
+                      />
+                      <IconContainer
+                        icon="whatsapp"
+                        colored
+                        onPress={() =>
+                          window.open("https://wa.me/639289981020", "_blank")
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col gap-6">
-                  <BodyText font="poppins" weight="semibold">
+                  <BodyText font="fredoka" weight="semibold">
                     Social Media
                   </BodyText>
                   <div className="flex flex-col gap-4">
-                    <InfoItemContainer
-                      icon={<IconContainer icon="facebook" colored />}
-                      name="Facebook"
-                      value="Joyful Pet Transport"
-                      onPress={() =>
-                        window.open(
-                          "https://www.facebook.com/joyfulpettransport",
-                          "_blank",
-                        )
-                      }
-                    />
-                    <InfoItemContainer
-                      icon={<IconContainer icon="instagram" colored />}
-                      name="Instagram"
-                      value="Joyful Pet Transport"
-                      onPress={() =>
-                        window.open(
-                          "https://www.instagram.com/joyfulpettransport",
-                          "_blank",
-                        )
-                      }
-                    />
-                    <InfoItemContainer
-                      icon={<IconContainer icon="tiktok" colored />}
-                      name="Tiktok"
-                      value="Joyful Pet Transport"
-                      onPress={() =>
-                        window.open(
-                          "https://www.tiktok.com/@joyfulpettransport",
-                          "_blank",
-                        )
-                      }
-                    />
+                    <BodyText font="fredoka" weight="semibold">
+                      Joyful Pet Transport
+                    </BodyText>
+                    <div className="flex gap-2 md:gap-4">
+                      <IconContainer
+                        icon="facebook"
+                        colored
+                        onPress={() =>
+                          window.open(
+                            "https://www.facebook.com/joyfulpettransport",
+                            "_blank",
+                          )
+                        }
+                      />
+                      <IconContainer
+                        icon="instagram"
+                        colored
+                        onPress={() =>
+                          window.open(
+                            "https://www.instagram.com/joyfulpettransport",
+                            "_blank",
+                          )
+                        }
+                      />
+                      <IconContainer
+                        icon="tiktok"
+                        colored
+                        onPress={() =>
+                          window.open(
+                            "https://www.tiktok.com/@joyfulpettransport",
+                            "_blank",
+                          )
+                        }
+                      />
+                      <IconContainer
+                        icon="youtube"
+                        colored
+                        onPress={() =>
+                          window.open(
+                            "https://www.youtube.com/channel/UCxF1iwT7pyEHydsYOpuo6_g",
+                            "_blank",
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="justify-center items-center flex py-12">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <Image
+                    src="/images/icons/call-2.svg"
+                    width={32}
+                    height={32}
+                    alt="Call Icon"
+                  />
+                  <BodyText weight="semibold">
+                    Want to Talk? Please Call Us
+                  </BodyText>
+                </div>
+
+                <div className="flex flex-col gap-2 text-sm font-light">
+                  <button
+                    onClick={() => shareNumber("GOMO", "+63 976 630 8124")}
+                    className="text-left hover:text-blue-600 flex gap-2"
+                  >
+                    <BodyText
+                      size="small"
+                      font="fredoka"
+                      weight="semibold"
+                      className="w-16"
+                    >
+                      GOMO:
+                    </BodyText>
+                    <span>+63 976 630 8124</span>
+                  </button>
+
+                  <button
+                    onClick={() => shareNumber("DITO", "+63 993 370 3770")}
+                    className="text-left hover:text-blue-600 flex gap-2"
+                  >
+                    <BodyText
+                      size="small"
+                      font="fredoka"
+                      weight="semibold"
+                      className="w-16"
+                    >
+                      DITO:
+                    </BodyText>
+                    <span>+63 993 370 3770</span>
+                  </button>
+
+                  <div className="text-left hover:text-blue-600 flex gap-2">
+                    <BodyText
+                      size="small"
+                      font="fredoka"
+                      weight="semibold"
+                      className="w-16"
+                    >
+                      GLOBE:
+                    </BodyText>
+                    <span>
+                      <span
+                        onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
+                        className="whitespace-nowrap"
+                      >
+                        +63 956 810 1871
+                      </span>
+                      {" / "}
+                      <span
+                        onClick={() => shareNumber("GLOBE", "+63 966 940 6263")}
+                        className="whitespace-nowrap"
+                      >
+                        +63 966 940 6263
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -154,7 +246,7 @@ const ContactUsScreen = () => {
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
               <BodyText
-                font="poppins"
+                font="fredoka"
                 weight="semibold"
                 size="medium"
                 className="text-center"

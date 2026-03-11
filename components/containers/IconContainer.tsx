@@ -4,6 +4,7 @@ import Image from "next/image";
 type IconContainerProps = {
   icon: string;
   colored?: boolean;
+  onPress?: () => void;
 };
 
 const IconContainer: FC<IconContainerProps> = (props) => {
@@ -11,7 +12,15 @@ const IconContainer: FC<IconContainerProps> = (props) => {
     ? `/images/icons/colored/${props.icon}.svg`
     : `/images/icons/${props.icon}.svg`;
 
-  return <Image src={path} alt={props.icon} height={34} width={34} />;
+  return (
+    <Image
+      onClick={props.onPress}
+      src={path}
+      alt={props.icon}
+      height={34}
+      width={34}
+    />
+  );
 };
 
 export default IconContainer;

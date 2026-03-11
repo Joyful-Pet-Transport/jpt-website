@@ -13,6 +13,19 @@ import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
 import { useGetCurrentUser } from "@/utils/hooks/useGetCurrentUser";
 import AuthButton from "./AuthButtons";
 
+export const shareNumber = async (label: string, number: string) => {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Contact Number",
+        text: `${label}: ${number}`,
+      });
+    } catch (err) {
+      console.error("Share cancelled", err);
+    }
+  }
+};
+
 const Footer: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -192,19 +205,6 @@ const Footer: FC = () => {
   };
 
   const ContactUs = () => {
-    const shareNumber = async (label: string, number: string) => {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: "Contact Number",
-            text: `${label}: ${number}`,
-          });
-        } catch (err) {
-          console.error("Share cancelled", err);
-        }
-      }
-    };
-
     return (
       <div className="flex flex-col gap-6 w-full">
         <BodyText weight="semibold">CONTACT US NOW!</BodyText>
@@ -258,16 +258,6 @@ const Footer: FC = () => {
               <span className="w-16">DITO:</span>
               <span>+63 993 370 3770</span>
             </button>
-
-            {/* <button
-              onClick={() => shareNumber("SMART", "")}
-              className="text-left hover:text-blue-600 flex gap-2"
-            >
-              <span className="w-16">SMART:</span>
-              <span>+</span>
-            </button> */}
-
-            {/* <span>SMART: N/A</span> */}
 
             <div className="text-left hover:text-blue-600 flex gap-2">
               <span className="min-w-16">GLOBE:</span>

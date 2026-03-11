@@ -12,7 +12,7 @@ const WhoWeAre: FC = () => {
       <BoxedContainer>
         <div className="flex flex-col-reverse items-center gap-10 lg:flex-row lg:gap-16">
           <div className="w-full lg:w-1/2 flex flex-col gap-6">
-            <Heading weight="semibold" size="medium">
+            <Heading font="fredoka" weight="semibold" size="medium">
               WHO WE ARE
             </Heading>
             <BodyText>

@@ -8,7 +8,7 @@ const WhatMakesUsDiff: FC = () => {
   return (
     <BoxedContainer className="py-12 mt-32">
       <div className="flex flex-col items-center justify-center w-full gap-12 md:gap-24">
-        <Heading weight="semibold" size="medium">
+        <Heading font="fredoka" weight="semibold" size="medium">
           WHAT MAKES US DIFFERENT
         </Heading>
 
