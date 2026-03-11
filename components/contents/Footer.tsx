@@ -237,31 +237,44 @@ const Footer: FC = () => {
               height={32}
               alt="Call Icon"
             />
-            <BodyText weight="semibold">Want to Talk? Please Call Us</BodyText>
+            <BodyText weight="semibold">
+              Want to Talk? <br></br>Please Call Us
+            </BodyText>
           </div>
 
           <div className="flex flex-col gap-2 text-sm font-light">
             <button
               onClick={() => shareNumber("GOMO", "+63 976 630 8124")}
-              className="text-left hover:text-blue-600"
+              className="text-left hover:text-blue-600 flex gap-2"
             >
-              GOMO: +63 976 630 8124
+              <span className="w-16">GOMO:</span>
+              <span>+63 976 630 8124</span>
             </button>
 
             <button
               onClick={() => shareNumber("DITO", "+63 993 370 3770")}
-              className="text-left hover:text-blue-600"
+              className="text-left hover:text-blue-600 flex gap-2"
             >
-              DITO: +63 993 370 3770
+              <span className="w-16">DITO:</span>
+              <span>+63 993 370 3770</span>
+            </button>
+
+            <button
+              onClick={() => shareNumber("SMART", "")}
+              className="text-left hover:text-blue-600 flex gap-2"
+            >
+              <span className="w-16">SMART:</span>
+              <span>+</span>
             </button>
 
             {/* <span>SMART: N/A</span> */}
 
             <button
               onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
-              className="text-left hover:text-blue-600"
+              className="text-left hover:text-blue-600 flex gap-2"
             >
-              GLOBE: +63 956 810 1871
+              <span className="w-16">GLOBE:</span>
+              <span>+63 956 810 1871 / +63 966 940 6263</span>
             </button>
           </div>
         </div>
