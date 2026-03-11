@@ -45,7 +45,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
         {/* Header with name/date and stars */}
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
-            <div className="rounded-full overflow-hidden border-2 border-white w-10 h-10">
+            <div className="rounded-full overflow-hidden border-2 border-white min-w-10 min-h-10">
               {review.reviewerPhotoUrl ? (
                 <Image
                   priority
@@ -66,7 +66,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
                 className="capitalize text-gray-800"
                 weight="semibold"
                 font="fredoka"
-                size="medium"
+                size={mobile ? "normal" : "medium"}
               >
                 {truncateText(review?.name ?? "Anonymous", 15)}
               </BodyText>
