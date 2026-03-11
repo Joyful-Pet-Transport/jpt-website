@@ -259,23 +259,34 @@ const Footer: FC = () => {
               <span>+63 993 370 3770</span>
             </button>
 
-            <button
+            {/* <button
               onClick={() => shareNumber("SMART", "")}
               className="text-left hover:text-blue-600 flex gap-2"
             >
               <span className="w-16">SMART:</span>
               <span>+</span>
-            </button>
+            </button> */}
 
             {/* <span>SMART: N/A</span> */}
 
-            <button
-              onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
-              className="text-left hover:text-blue-600 flex gap-2"
-            >
-              <span className="w-16">GLOBE:</span>
-              <span>+63 956 810 1871 / +63 966 940 6263</span>
-            </button>
+            <div className="text-left hover:text-blue-600 flex gap-2">
+              <span className="min-w-16">GLOBE:</span>
+              <span>
+                <span
+                  onClick={() => shareNumber("GLOBE", "+63 956 810 1871")}
+                  className="whitespace-nowrap"
+                >
+                  +63 956 810 1871
+                </span>
+                {" / "}
+                <span
+                  onClick={() => shareNumber("GLOBE", "+63 966 940 6263")}
+                  className="whitespace-nowrap"
+                >
+                  +63 966 940 6263
+                </span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
