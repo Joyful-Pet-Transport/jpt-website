@@ -35,7 +35,7 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
   const styleClass: string = `
     ${responsive.isTabletOrMobile ? "py-4" : "py-8"}
     ${!removeBg ? (responsive.isTabletOrMobile ? "mx-4" : "mx-8") : ""}
-    ${!removeBg ? "bg-white rounded-b-4xl" : ""}
+    ${!removeBg ? "bg-white pb-16 rounded-b-4xl" : ""}
   `;
 
   return (

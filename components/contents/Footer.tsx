@@ -259,13 +259,13 @@ const Footer: FC = () => {
               <span>+63 993 370 3770</span>
             </button>
 
-            <button
+            {/* <button
               onClick={() => shareNumber("SMART", "")}
               className="text-left hover:text-blue-600 flex gap-2"
             >
               <span className="w-16">SMART:</span>
               <span>+</span>
-            </button>
+            </button> */}
 
             {/* <span>SMART: N/A</span> */}
 
