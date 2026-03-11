@@ -24,10 +24,10 @@ const ContactUsSection: FC = () => {
           <div className={`mb-6 ${mobile || tablet ? "text-center" : ""}`}>
             <Heading font="fredoka">Feel free to contact us</Heading>
             <BodyText className="mt-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut ali...
+              Have questions about your pet’s journey? We’re here to help! Feel
+              free to reach out to us anytime. Our team is happy to assist you
+              and make your pet’s relocation as smooth and stress-free as
+              possible.
             </BodyText>
           </div>
           <div className="flex flex-col gap-4">
