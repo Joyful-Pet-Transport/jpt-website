@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BoxedContainer from "../containers/BoxedContainer";
 import Heading from "../elements/text/Heading";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
@@ -8,11 +8,29 @@ const RecognizedByMediaSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const iframeRefs = useRef<(HTMLIFrameElement | null)[]>([]);
 
   const mediaItems = [
-    "https://www.youtube.com/embed/guQ4NGkOevg?autoplay=1&mute=1",
-    "https://www.youtube.com/embed/hAY8na2bZy0?autoplay=1&mute=1",
+    "https://www.youtube.com/embed/guQ4NGkOevg?autoplay=1&mute=1&enablejsapi=1&playsinline=1",
+    "https://www.youtube.com/embed/hAY8na2bZy0?autoplay=1&mute=1&enablejsapi=1&playsinline=1",
   ];
+
+  useEffect(() => {
+    iframeRefs.current.forEach((iframe, index) => {
+      if (!iframe || index === currentIndex) return;
+
+      iframe.contentWindow?.postMessage(
+        JSON.stringify({
+          event: "command",
+          func: "pauseVideo",
+          args: [],
+        }),
+        "*",
+      );
+    });
+
+    iframeRefs.current[currentIndex]?.focus();
+  }, [currentIndex]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
@@ -100,8 +118,12 @@ const RecognizedByMediaSection = () => {
                 {mediaItems.map((src, index) => (
                   <div key={index} className="w-full shrink-0 aspect-video">
                     <iframe
+                      ref={(element) => {
+                        iframeRefs.current[index] = element;
+                      }}
                       className="w-full h-full"
                       src={src}
+                      title={`Recognized media video ${index + 1}`}
                       width="560"
                       height="315"
                       allow="autoplay; encrypted-media"
@@ -140,8 +162,12 @@ const RecognizedByMediaSection = () => {
               {mediaItems.map((src, index) => (
                 <div key={index} className="w-full shrink-0 aspect-video">
                   <iframe
+                    ref={(element) => {
+                      iframeRefs.current[index] = element;
+                    }}
                     className="w-full h-full"
                     src={src}
+                    title={`Recognized media video ${index + 1}`}
                     width="560"
                     height="315"
                     allow="autoplay; encrypted-media"
