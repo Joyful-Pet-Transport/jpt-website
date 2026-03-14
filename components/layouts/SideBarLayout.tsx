@@ -43,7 +43,7 @@ const SideBarLayout: FC<SideBarLayoutProps> = ({ isOpen }) => {
     <aside
       className={`
         ${isOpen ? "w-72" : "w-18"}
-        transition-[width] duration-200 ease-in-out
+        transition-[width] duration-200 ease-in-out bg-white
         flex flex-col items-center shrink-0 overflow-hidden
         py-4 px-3 gap-1
       `}
