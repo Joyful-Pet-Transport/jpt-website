@@ -6,6 +6,7 @@ import BodyText from "../elements/text/BodyText";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { PiSignOutBold } from "react-icons/pi";
 import Image from "next/image";
+import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 
 interface NavBarLayoutProps {
   onToggleSidebar: () => void;
@@ -13,6 +14,7 @@ interface NavBarLayoutProps {
 
 const NavBarLayout: FC<NavBarLayoutProps> = ({ onToggleSidebar }) => {
   const { signOut } = useAuthActions();
+  const responsive = useResponsive();
 
   return (
     <header className="h-18 bg-blue-400 flex items-center justify-between px-5 shrink-0 z-10">
@@ -39,11 +41,13 @@ const NavBarLayout: FC<NavBarLayoutProps> = ({ onToggleSidebar }) => {
           Joyful Pet Transport
         </BodyText>
       </div>
-      <PiSignOutBold
-        size={22}
-        className="text-white"
-        onClick={() => void signOut()}
-      />
+      {!responsive.isTabletOrMobile && (
+        <PiSignOutBold
+          size={22}
+          className="text-white"
+          onClick={() => void signOut()}
+        />
+      )}
     </header>
   );
 };

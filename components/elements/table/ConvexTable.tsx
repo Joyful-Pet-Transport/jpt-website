@@ -74,7 +74,7 @@ const ConvexTable: FC<ConvexTableProps> = ({
       {/* Search */}
       {searchable && (
         <div className="flex justify-end">
-          <div className="relative w-full max-w-xs">
+          <div className="relative w-full lg:max-w-xs shadow-sm rounded-lg">
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
               width="14"
@@ -262,7 +262,7 @@ const ConvexTable: FC<ConvexTableProps> = ({
             <button
               onClick={handlePrev}
               disabled={!hasPrev}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-neutral-200 rounded-lg text-neutral-600 hover:bg-blue-50 hover:border-blue-200 active:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-100"
+              className="flex shadow-sm items-center gap-1.5 px-3 py-1.5 text-sm border border-blue-100 rounded-lg text-neutral-600 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-100"
             >
               <svg
                 width="12"
@@ -281,7 +281,7 @@ const ConvexTable: FC<ConvexTableProps> = ({
             <button
               onClick={handleNext}
               disabled={!hasNext}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-neutral-200 rounded-lg text-neutral-600 hover:bg-blue-50 hover:border-blue-200 active:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-100"
+              className="flex shadow-sm items-center gap-1.5 px-3 py-1.5 text-sm border border-blue-100 rounded-lg text-neutral-600 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-100"
             >
               <BodyText size="small">Next</BodyText>
               <svg
