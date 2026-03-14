@@ -131,7 +131,7 @@ const RecognizedByMediaSection = () => {
 
   return (
     <BoxedContainer className="pb-12">
-      <Heading font="fredoka" className="text-center">
+      <Heading font="fredoka" className="text-center uppercase">
         Recognized by Trusted Media
       </Heading>
 

@@ -18,6 +18,9 @@ const InfoItemContainer: FC<InfoItemContainerProps> = (props) => {
       >
         {props.icon}
         <div className="flex flex-col">
+          <BodyText size="xsmall" weight="bold">
+            {props.name}
+          </BodyText>
           <BodyText font="fredoka" weight="normal" size="small">
             {props.value}
           </BodyText>

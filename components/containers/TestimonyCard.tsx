@@ -25,7 +25,7 @@ const TestimonyCard: FC<TestimonyCardProps> = ({ review }) => {
         <div className="flex items-center justify-between text-yellow-400">
           <div className="flex gap-1">
             {Array.from({ length: review.stars }).map((_, i) => (
-              <FaStar key={i} />
+              <FaStar key={i} size={18} />
             ))}
           </div>
           <Link
@@ -76,7 +76,7 @@ const TestimonyCard: FC<TestimonyCardProps> = ({ review }) => {
       <div className="flex items-center justify-between text-yellow-400">
         <div className="flex gap-1">
           {Array.from({ length: review.stars }).map((_, i) => (
-            <FaStar key={i} />
+            <FaStar key={i} size={20} />
           ))}
         </div>
         <Link
