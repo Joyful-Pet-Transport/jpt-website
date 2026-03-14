@@ -14,7 +14,9 @@ export default defineSchema({
     phoneVerificationTime: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
     roleId: v.optional(v.id("roles")),
-  }).index("email", ["email"]),
+  })
+    .index("email", ["email"])
+    .index("by_name", ["name"]),
 
   roles: defineTable({
     name: v.string(),
@@ -142,5 +144,7 @@ export default defineSchema({
     name: v.string(),
     code: v.string(),
     available: v.boolean(),
-  }).index("by_code", ["code"]),
+  })
+    .index("by_code", ["code"])
+    .index("by_name", ["name"]),
 });

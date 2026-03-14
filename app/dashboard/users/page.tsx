@@ -1,8 +1,8 @@
 "use client";
 
-import BoxedContainer from "@/components/containers/BoxedContainer";
 import BaseTable from "@/components/elements/table/BaseTable";
-import Heading from "@/components/elements/text/Heading";
+import ConvexTable from "@/components/elements/table/ConvexTable";
+import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import { api } from "@/convex/_generated/api";
 import { Role } from "@/models/role";
 import { useQuery } from "convex/react";
@@ -11,9 +11,11 @@ const UsersPage = () => {
   const users = useQuery(api.tables.users.get);
 
   return (
-    <BoxedContainer>
-      <Heading size="medium">Users</Heading>
-      <BaseTable
+    <DashboardHeading title="users">
+      <ConvexTable
+        query={api.tables.users.getPaginated}
+        pagination={10}
+        searchable={true}
         headers={[
           { label: "Name", key: "name" },
           { label: "Email", key: "email" },
@@ -25,10 +27,8 @@ const UsersPage = () => {
             },
           },
         ]}
-        hasActions={false}
-        data={users}
       />
-    </BoxedContainer>
+    </DashboardHeading>
   );
 };
 
