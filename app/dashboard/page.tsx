@@ -48,7 +48,10 @@ const DashboardPage = () => {
               key: "pet_details",
               label: "Pets",
               parse: (value: Pet[]) =>
-                value.map((pet) => pet.pet_name).join(", "),
+                value
+                  ?.filter((pet): pet is Pet => pet != null)
+                  .map((pet) => pet.pet_name)
+                  .join(", ") ?? "",
             },
           ]}
           heading="International Pet Relocation Bookings"
