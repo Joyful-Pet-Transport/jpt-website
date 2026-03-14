@@ -13,7 +13,7 @@ import FormInput from "../elements/input/TextInput/FormInput";
 import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
 import { FaTrashCan } from "react-icons/fa6";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import useModal from "@/utils/hooks/useModal";
 import BookedSuccessfullyModal from "../modals/BookedSuccessfullyModal";
@@ -32,16 +32,26 @@ type PetDetailsProps = {
   multiple?: boolean;
 };
 
-const countryOptions = getCountryListData().map((country) => ({
-  label: country.name
-    .replace(/\s*[\(\[].*?[\)\]]/g, "")
-    .replace(/\*/g, "")
-    .trim(),
-  value: country.code,
-}));
+// ─── Country Data Hook ───────────────────────────────────────────────────────────
 
-const philippinesCode =
-  countryOptions.find((c) => c.label === "Philippines")?.value ?? "PH";
+const useCountryData = () => {
+  const availableCountries =
+    useQuery(api.tables.available_countries.getAvailable)?.map((country) => ({
+      label: country.name,
+      value: country.code,
+    })) ?? [];
+
+  const allCountries =
+    useQuery(api.tables.available_countries.getAll)?.map((country) => ({
+      label: country.name,
+      value: country.code,
+    })) ?? [];
+
+  const philippinesCode =
+    allCountries.find((c) => c.label === "Philippines")?.value ?? "PH";
+
+  return { availableCountries, allCountries, philippinesCode };
+};
 
 // ─── Buttons ────────────────────────────────────────────────────────────────
 
@@ -170,6 +180,8 @@ type DestinationProps = {
   setStep: (s: 0 | 1 | 2 | 3 | 4 | 5) => void;
   onSubmit: () => void;
   loading: boolean;
+  availableCountries: { label: string; value: string }[];
+  allCountries: { label: string; value: string }[];
 };
 
 const Destination: FC<DestinationProps> = ({
@@ -179,7 +191,14 @@ const Destination: FC<DestinationProps> = ({
   setStep,
   onSubmit,
   loading,
+  availableCountries,
+  allCountries,
 }) => {
+  const destinationOptions =
+    type === "export"
+      ? availableCountries.filter((country) => country.value !== "PH")
+      : availableCountries;
+
   return (
     <FormContainer>
       <BodyText size="large" weight="semibold" className="text-center">
@@ -203,7 +222,7 @@ const Destination: FC<DestinationProps> = ({
             label="ORIGIN COUNTRY"
             name="origin_country"
             control={control}
-            options={countryOptions}
+            options={allCountries}
             disabled={type === "export"}
             required
           />
@@ -211,7 +230,7 @@ const Destination: FC<DestinationProps> = ({
             label="DESTINATION"
             name="destination"
             control={control}
-            options={countryOptions}
+            options={destinationOptions}
             disabled={type === "import"}
             required
           />
@@ -661,6 +680,8 @@ type ReviewProps = {
   setStep: (s: 0 | 1 | 2 | 3 | 4 | 5) => void;
   onSubmit: () => void;
   loading: boolean;
+  availableCountries: { label: string; value: string }[];
+  allCountries: { label: string; value: string }[];
 };
 
 const Review: FC<ReviewProps> = ({
@@ -672,6 +693,8 @@ const Review: FC<ReviewProps> = ({
   setStep,
   onSubmit,
   loading,
+  availableCountries,
+  allCountries,
 }) => {
   const responsive = useResponsive();
 
@@ -699,7 +722,7 @@ const Review: FC<ReviewProps> = ({
                 label="ORIGIN COUNTRY"
                 name="origin_country"
                 control={control}
-                options={countryOptions}
+                options={allCountries}
                 disabled
                 required
               />
@@ -707,7 +730,7 @@ const Review: FC<ReviewProps> = ({
                 label="DESTINATION"
                 name="destination"
                 control={control}
-                options={countryOptions}
+                options={availableCountries}
                 disabled
                 required
               />
@@ -974,6 +997,8 @@ const Review: FC<ReviewProps> = ({
 // ─── RelocationForm ──────────────────────────────────────────────────────────
 
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
+  const { availableCountries, allCountries, philippinesCode } =
+    useCountryData();
   const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
@@ -1113,7 +1138,13 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     <div className="flex flex-col w-full items-center gap-8">
       {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
       {step === 1 && (
-        <Destination control={control} type={type} {...sharedButtonProps} />
+        <Destination
+          control={control}
+          type={type}
+          availableCountries={availableCountries}
+          allCountries={allCountries}
+          {...sharedButtonProps}
+        />
       )}
       {step === 2 && (
         <TravelDetails
@@ -1139,6 +1170,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           fields={fields}
           travelDate={travelDate}
           dateType={dateType}
+          availableCountries={availableCountries}
+          allCountries={allCountries}
           {...sharedButtonProps}
         />
       )}
