@@ -65,7 +65,7 @@ const DomesticPetRelocation = () => {
       <Breadcrumbs
         items={[
           { label: "Our Services", path: "/our-services" },
-          { label: "International Pet Relocation" },
+          { label: "Domestic Pet Relocation" },
         ]}
       />
       <BoxedContainer>

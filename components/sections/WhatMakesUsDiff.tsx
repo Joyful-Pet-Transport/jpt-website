@@ -14,6 +14,14 @@ const WhatMakesUsDiff: FC = () => {
 
         {/* Mobile: stacked list */}
         <div className="flex flex-col gap-4 w-full md:hidden">
+          <div className="flex justify-center mt-6">
+            <Image
+              src={"/images/element/Logowborder.png"}
+              alt="Joyful Pet Transport"
+              width={300}
+              height={300}
+            />
+          </div>
           {[
             { color: "bg-sky-400", text: "We treat every pet as family" },
             { color: "bg-orange-400", text: "Safe and stress-free journeys" },
@@ -25,14 +33,6 @@ const WhatMakesUsDiff: FC = () => {
               <BodyText font="fredoka">{text}</BodyText>
             </div>
           ))}
-          <div className="flex justify-center mt-6">
-            <Image
-              src={"/images/element/Logowborder.png"}
-              alt="Joyful Pet Transport"
-              width={300}
-              height={300}
-            />
-          </div>
         </div>
 
         {/* Desktop: overlapping layout */}
