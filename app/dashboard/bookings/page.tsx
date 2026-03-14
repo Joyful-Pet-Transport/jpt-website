@@ -1,6 +1,7 @@
 "use client";
 
 import BaseTable from "@/components/elements/table/BaseTable";
+import ConvexTable from "@/components/elements/table/ConvexTable";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import { api } from "@/convex/_generated/api";
 import { Pet } from "@/models/pet";
@@ -150,6 +151,19 @@ const BookingsPage = () => {
 
   return (
     <DashboardHeading title="bookings">
+      <ConvexTable
+        query={api.tables.bookings.getPaginated}
+        headers={[
+          { key: "booking_label", label: "Type" },
+          { key: "status", label: "Status" },
+          {
+            key: "updated_at",
+            label: "Updated On",
+            parse: (value: string) =>
+              dayjs(value).format("MMM DD, YYYY hh:mm A"),
+          },
+        ]}
+      />
       <InternationalPetTransportTable />
       <DomesticPetTransportTable />
       <RabiesSerologyTest />

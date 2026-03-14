@@ -766,6 +766,10 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             petImageId = storageId;
           }
 
+          if (!petImageId) {
+            throw new Error("Pet image upload is required");
+          }
+
           const petData: any = {
             pet_name: pet.pet_name,
             breed: pet.breed,
@@ -773,7 +777,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             pet_birthday: pet.pet_birthday,
             pet_age: pet.pet_age,
             pet_weight: pet.pet_weight,
-            pet_image: petImageId as any,
+            pet_image: petImageId,
           };
 
           if (pet.pet_condition) petData.pet_condition = pet.pet_condition;
@@ -812,6 +816,9 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         }, 3000);
       } catch (error) {
         console.error("Error creating booking:", error);
+        alert(
+          `Error: ${error instanceof Error ? error.message : "Failed to create booking"}`,
+        );
       } finally {
         setLoading(false);
       }

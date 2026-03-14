@@ -38,11 +38,20 @@ export const bookInternationalPetTransport = mutation({
         contact_number: args.contact_number,
         email_address: args.email_address,
         pets: args.pets,
-
         origin_full_address: args.origin_full_address,
         destination_full_address: args.destination_full_address,
       },
     );
+
+    // Create booking entry to track status
+    await ctx.db.insert("bookings", {
+      booking_id: String(newBookingInternationalPetTransport),
+      booking_type: "international_pet_transport",
+      booking_label: "International Pet Transport",
+      status: "pending",
+      updated_at: Date.now(),
+    });
+
     return newBookingInternationalPetTransport;
   },
 });

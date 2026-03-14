@@ -11,6 +11,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { PiIslandFill } from "react-icons/pi";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
+import { MdOutlinePermMedia } from "react-icons/md";
 
 interface SideBarLayoutProps {
   isOpen: boolean;
@@ -32,6 +33,11 @@ const sidebarItems = [
   },
   { label: "Countries", route: "/dashboard/countries", icon: PiIslandFill },
   { label: "Users", route: "/dashboard/users", icon: HiOutlineUsers },
+  {
+    label: "Media Library",
+    route: "/dashboard/media",
+    icon: MdOutlinePermMedia,
+  },
   { label: "Logout", route: "/dashboard/users", icon: PiSignOutBold },
 ];
 

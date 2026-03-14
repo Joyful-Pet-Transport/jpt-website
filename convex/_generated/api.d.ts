@@ -10,8 +10,10 @@
 
 import type * as auth from "../auth.js";
 import type * as cron from "../cron.js";
+import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as mutations_available_countries from "../mutations/available_countries.js";
+import type * as mutations_bookings from "../mutations/bookings.js";
 import type * as mutations_contact_us from "../mutations/contact_us.js";
 import type * as mutations_domestic_pet_transport from "../mutations/domestic_pet_transport.js";
 import type * as mutations_google_reviews from "../mutations/google_reviews.js";
@@ -20,6 +22,7 @@ import type * as mutations_pet_details from "../mutations/pet_details.js";
 import type * as mutations_rabies_serology_test from "../mutations/rabies_serology_test.js";
 import type * as tables_available_countries from "../tables/available_countries.js";
 import type * as tables_booking_process from "../tables/booking_process.js";
+import type * as tables_bookings from "../tables/bookings.js";
 import type * as tables_contact_us from "../tables/contact_us.js";
 import type * as tables_domestic_pet_transport from "../tables/domestic_pet_transport.js";
 import type * as tables_frequently_asked_questions from "../tables/frequently_asked_questions.js";
@@ -41,8 +44,10 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   cron: typeof cron;
+  files: typeof files;
   http: typeof http;
   "mutations/available_countries": typeof mutations_available_countries;
+  "mutations/bookings": typeof mutations_bookings;
   "mutations/contact_us": typeof mutations_contact_us;
   "mutations/domestic_pet_transport": typeof mutations_domestic_pet_transport;
   "mutations/google_reviews": typeof mutations_google_reviews;
@@ -51,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   "mutations/rabies_serology_test": typeof mutations_rabies_serology_test;
   "tables/available_countries": typeof tables_available_countries;
   "tables/booking_process": typeof tables_booking_process;
+  "tables/bookings": typeof tables_bookings;
   "tables/contact_us": typeof tables_contact_us;
   "tables/domestic_pet_transport": typeof tables_domestic_pet_transport;
   "tables/frequently_asked_questions": typeof tables_frequently_asked_questions;

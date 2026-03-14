@@ -21,18 +21,25 @@ export const bookRabiesSerologyTest = mutation({
       "rabies_serology_test",
       {
         owner_name: args.owner_name,
-
         contact_form: args.contact_form,
         account_name: args.account_name,
         account_link: args.account_link,
         contact_number: args.contact_number,
         email_address: args.email_address,
-
         date: args.date,
-
         pets: args.pets,
       },
     );
+
+    // Create booking entry to track status
+    await ctx.db.insert("bookings", {
+      booking_id: String(newBookingRabiesSerologyTest),
+      booking_type: "rabies_serology_test",
+      booking_label: "Rabies Serology Test",
+      status: "pending",
+      updated_at: Date.now(),
+    });
+
     return newBookingRabiesSerologyTest;
   },
 });
