@@ -12,6 +12,7 @@ import { PiIslandFill } from "react-icons/pi";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { MdOutlinePermMedia } from "react-icons/md";
+import { LuMessageCircleQuestion } from "react-icons/lu";
 
 interface SideBarLayoutProps {
   isOpen: boolean;
@@ -30,6 +31,11 @@ const sidebarItems = [
     label: "Reports",
     route: "/dashboard/reports",
     icon: HiOutlinePresentationChartLine,
+  },
+  {
+    label: "Inquiries",
+    route: "/dashboard/inquiries",
+    icon: LuMessageCircleQuestion,
   },
   { label: "Countries", route: "/dashboard/countries", icon: PiIslandFill },
   { label: "Users", route: "/dashboard/users", icon: HiOutlineUsers },
