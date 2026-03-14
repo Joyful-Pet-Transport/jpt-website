@@ -30,27 +30,31 @@ export const bookDomesticPetTransport = mutation({
       "domestic_pet_transport",
       {
         owner_name: args.owner_name,
-
         pickup_address: args.pickup_address,
         destination: args.destination,
-
         contact_form: args.contact_form,
         account_name: args.account_name,
         account_link: args.account_link,
         contact_number: args.contact_number,
         email_address: args.email_address,
-
         travel_date: args.travel_date,
         date: args.date,
-
         mode_of_transport: args.mode_of_transport,
-
         pets: args.pets,
-
         origin_full_address: args.origin_full_address,
         destination_full_address: args.destination_full_address,
       },
     );
+
+    // Create booking entry to track status
+    await ctx.db.insert("bookings", {
+      booking_id: String(newBookingDomesticPetTransport),
+      booking_type: "domestic_pet_transport",
+      booking_label: "Domestic Pet Transport",
+      status: "pending",
+      updated_at: Date.now(),
+    });
+
     return newBookingDomesticPetTransport;
   },
 });

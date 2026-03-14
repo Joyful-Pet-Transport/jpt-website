@@ -55,6 +55,7 @@ const RabiesSerologyTestScreen = () => {
           </BodyText>
         </div>
         <DynamicButton
+          size="medium"
           onPress={() => router.push("/our-services/rabies-serology-test/form")}
           className="self-center justify-end mt-auto"
         >
@@ -69,7 +70,7 @@ const RabiesSerologyTestScreen = () => {
       <Breadcrumbs
         items={[
           { label: "Our Services", path: "/our-services" },
-          { label: "Pet Serology Test" },
+          { label: "Rabies Serology Test" },
         ]}
       />
       <BoxedContainer>

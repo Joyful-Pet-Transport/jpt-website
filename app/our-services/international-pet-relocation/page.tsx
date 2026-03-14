@@ -54,6 +54,7 @@ const InternalPetRelocationScreen = () => {
           <BodyText>4. We assist you until your pet is safely home.</BodyText>
         </div>
         <DynamicButton
+          size="medium"
           onPress={() =>
             router.push("/our-services/international-pet-relocation/import")
           }
@@ -102,6 +103,7 @@ const InternalPetRelocationScreen = () => {
           </BodyText>
         </div>
         <DynamicButton
+          size="medium"
           onPress={() =>
             router.push("/our-services/international-pet-relocation/export")
           }

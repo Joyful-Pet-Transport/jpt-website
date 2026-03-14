@@ -147,4 +147,12 @@ export default defineSchema({
   })
     .index("by_code", ["code"])
     .index("by_name", ["name"]),
+
+  bookings: defineTable({
+    booking_id: v.optional(v.string()),
+    booking_label: v.optional(v.string()),
+    booking_type: v.optional(v.string()),
+    status: v.string(),
+    updated_at: v.optional(v.number()),
+  }),
 });

@@ -15,7 +15,7 @@ const TestimonialsScreen = () => {
       />
       <BoxedContainer medium>
         <div className="flex flex-col justify-center items-center max-w-2xl mx-auto">
-          <Heading font="fredoka" className="text-center">
+          <Heading font="fredoka" className="text-center uppercase">
             What Our Client Says?
           </Heading>
           <BodyText className="text-center">
