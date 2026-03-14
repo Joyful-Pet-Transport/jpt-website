@@ -11,7 +11,7 @@ const DashboardHeading: FC<PropsWithChildren<DashboardHeadingProps>> = ({
   title,
 }) => {
   return (
-    <BoxedContainer>
+    <BoxedContainer className="gap-8!">
       <Heading className="capitalize" size="medium">
         {title}
       </Heading>

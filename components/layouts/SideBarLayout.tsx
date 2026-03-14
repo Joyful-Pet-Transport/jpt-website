@@ -7,6 +7,7 @@ import {
 } from "react-icons/hi2";
 import BodyText from "../elements/text/BodyText";
 import { useRouter, usePathname } from "next/navigation";
+import { PiIslandFill } from "react-icons/pi";
 
 interface SideBarLayoutProps {
   isOpen: boolean;
@@ -27,6 +28,11 @@ const sidebarItems = [
     label: "Reports",
     route: "/dashboard/reports",
     icon: HiOutlinePresentationChartLine,
+  },
+  {
+    label: "Countries",
+    route: "/dashboard/countries",
+    icon: PiIslandFill,
   },
   {
     label: "Users",

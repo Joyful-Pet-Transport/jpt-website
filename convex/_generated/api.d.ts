@@ -11,6 +11,7 @@
 import type * as auth from "../auth.js";
 import type * as cron from "../cron.js";
 import type * as http from "../http.js";
+import type * as mutations_available_countries from "../mutations/available_countries.js";
 import type * as mutations_contact_us from "../mutations/contact_us.js";
 import type * as mutations_domestic_pet_transport from "../mutations/domestic_pet_transport.js";
 import type * as mutations_google_reviews from "../mutations/google_reviews.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   cron: typeof cron;
   http: typeof http;
+  "mutations/available_countries": typeof mutations_available_countries;
   "mutations/contact_us": typeof mutations_contact_us;
   "mutations/domestic_pet_transport": typeof mutations_domestic_pet_transport;
   "mutations/google_reviews": typeof mutations_google_reviews;
