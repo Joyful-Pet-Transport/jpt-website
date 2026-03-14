@@ -79,8 +79,15 @@ const HeroSection: FC = () => {
                   arrival.
                 </BodyText>
                 <div className="flex flex-row gap-6">
-                  <DynamicButton>BOOK NOW</DynamicButton>
-                  <DynamicButton type="outline">LEARN MORE</DynamicButton>
+                  <DynamicButton onPress={() => router.push("/our-services")}>
+                    BOOK NOW
+                  </DynamicButton>
+                  <DynamicButton
+                    type="outline"
+                    onPress={() => router.push("/about-us")}
+                  >
+                    LEARN MORE
+                  </DynamicButton>
                 </div>
               </div>
               <div className="flex flex-col gap-4 w-full"></div>
@@ -119,8 +126,15 @@ const HeroSection: FC = () => {
                 complete peace of mind from departure to arrival.
               </BodyText>
               <div className="flex flex-row gap-6">
-                <DynamicButton>BOOK NOW</DynamicButton>
-                <DynamicButton type="outline">LEARN MORE</DynamicButton>
+                <DynamicButton onPress={() => router.push("/our-services")}>
+                  BOOK NOW
+                </DynamicButton>
+                <DynamicButton
+                  type="outline"
+                  onPress={() => router.push("/about-us")}
+                >
+                  LEARN MORE
+                </DynamicButton>
               </div>
             </div>
             <div className="flex flex-col gap-4 w-full"></div>
