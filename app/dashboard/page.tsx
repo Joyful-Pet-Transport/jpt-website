@@ -14,35 +14,6 @@ import dayjs from "dayjs";
 import { FC } from "react";
 
 const DashboardPage = () => {
-  const { user } = useGetCurrentUser();
-  const responsive = useResponsive();
-  const UserTable: FC = () => {
-    const users = useQuery(api.tables.users.get);
-
-    if (user?.role?.slug != "admin") return;
-
-    return (
-      <div>
-        <BaseTable
-          headers={[
-            { label: "Name", key: "name" },
-            { label: "Email", key: "email" },
-            {
-              label: "Role",
-              key: "role",
-              parse: (value: Role) => {
-                return value.name;
-              },
-            },
-          ]}
-          heading="Users"
-          hasActions={false}
-          data={users}
-        />
-      </div>
-    );
-  };
-
   const InternationalPetTransportTable: FC = () => {
     const booking = useQuery(api.tables.international_pet_transport.get);
     return (
@@ -234,21 +205,14 @@ const DashboardPage = () => {
   };
 
   return (
-    <PageWrapperContainer removeBg disableLayout>
-      <div
-        className={`flex flex-col min-h-screen bg-neutral-100 rounded-4xl ${responsive.isTabletOrMobile ? "mx-4" : "mx-8"}`}
-      >
-        <BoxedContainer className="py-10!">
-          <Heading size="medium">Dashboard</Heading>
-          <UserTable />
-          <InternationalPetTransportTable />
-          <DomesticPetTransportTable />
-          <RabiesSerologyTest />
-          <PetsTable />
-          <InquiryTable />
-        </BoxedContainer>
-      </div>
-    </PageWrapperContainer>
+    <BoxedContainer>
+      <Heading size="medium">Dashboard</Heading>
+      <InternationalPetTransportTable />
+      <DomesticPetTransportTable />
+      <RabiesSerologyTest />
+      <PetsTable />
+      <InquiryTable />
+    </BoxedContainer>
   );
 };
 
