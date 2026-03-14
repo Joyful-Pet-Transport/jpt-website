@@ -56,7 +56,7 @@ const HeroSection: FC = () => {
         <div className="relative h-[70vh] flex w-full">
           <div className="absolute top-0 -right-20 z-10">
             <Image
-              src={"/images/element/hero1.png"}
+              src={"/images/element/hero3.png"}
               alt="Pet transportation hero image"
               width={650}
               height={700}
@@ -97,7 +97,7 @@ const HeroSection: FC = () => {
       <div className="relative h-[70vh] flex w-full">
         <div className="absolute -top-28 -right-[110px] z-10">
           <Image
-            src={"/images/element/hero1.png"}
+            src={"/images/element/hero3.png"}
             alt="Pet transportation hero image"
             width={800}
             height={900}
