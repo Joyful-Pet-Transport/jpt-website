@@ -10,23 +10,46 @@ const RecognizedByMediaSection = () => {
   const [touchEnd, setTouchEnd] = useState(0);
   const iframeRefs = useRef<(HTMLIFrameElement | null)[]>([]);
 
-  const mediaItems = [
-    "https://www.youtube.com/embed/guQ4NGkOevg?autoplay=1&mute=1&enablejsapi=1&playsinline=1",
-    "https://www.youtube.com/embed/hAY8na2bZy0?autoplay=1&mute=1&enablejsapi=1&playsinline=1",
-  ];
+  const mediaVideoIds = ["guQ4NGkOevg", "hAY8na2bZy0"];
+
+  const getEmbedUrl = (videoId: string) => {
+    const params = new URLSearchParams({
+      autoplay: "0",
+      controls: "1",
+      enablejsapi: "1",
+      playsinline: isMobile ? "0" : "1",
+      rel: "0",
+      modestbranding: "1",
+      iv_load_policy: "3",
+      loop: "1",
+      playlist: videoId,
+    });
+
+    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+  };
+
+  const mediaItems = mediaVideoIds.map(getEmbedUrl);
+
+  const sendPlayerCommand = (
+    iframe: HTMLIFrameElement | null,
+    func: string,
+    args: unknown[] = [],
+  ) => {
+    iframe?.contentWindow?.postMessage(
+      JSON.stringify({
+        event: "command",
+        func,
+        args,
+      }),
+      "*",
+    );
+  };
 
   useEffect(() => {
     iframeRefs.current.forEach((iframe, index) => {
       if (!iframe || index === currentIndex) return;
 
-      iframe.contentWindow?.postMessage(
-        JSON.stringify({
-          event: "command",
-          func: "pauseVideo",
-          args: [],
-        }),
-        "*",
-      );
+      sendPlayerCommand(iframe, "pauseVideo");
     });
 
     iframeRefs.current[currentIndex]?.focus();
