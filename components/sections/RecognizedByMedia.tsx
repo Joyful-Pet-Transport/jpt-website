@@ -91,19 +91,26 @@ const RecognizedByMediaSection = () => {
 
   const ArrowButton = ({ direction }: { direction: "prev" | "next" }) => (
     <button
+      type="button"
       onClick={direction === "prev" ? goToPrev : goToNext}
       disabled={
         direction === "prev"
           ? currentIndex === 0
           : currentIndex === mediaItems.length - 1
       }
-      className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-md disabled:opacity-30 transition-opacity hover:bg-gray-50"
+      className="relative z-10 shrink-0 w-12 h-12 sm:w-10 sm:h-10 grid place-items-center rounded-full bg-white shadow-md disabled:opacity-30 transition-opacity hover:bg-gray-50 active:scale-95 touch-manipulation"
       aria-label={direction === "prev" ? "Previous" : "Next"}
     >
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
         {direction === "prev" ? (
           <path
-            d="M13 4L7 10L13 16"
+            d="M14.5 6.5L8.5 12L14.5 17.5"
             stroke="#929292"
             strokeWidth="2"
             strokeLinecap="round"
@@ -111,7 +118,7 @@ const RecognizedByMediaSection = () => {
           />
         ) : (
           <path
-            d="M7 4L13 10L7 16"
+            d="M9.5 6.5L15.5 12L9.5 17.5"
             stroke="#929292"
             strokeWidth="2"
             strokeLinecap="round"
@@ -130,10 +137,10 @@ const RecognizedByMediaSection = () => {
 
       {/* Desktop/Tablet: arrows flanking the video */}
       {!isMobile ? (
-        <div className="relative flex items-center gap-4">
-          <ArrowButton direction="prev" />
-          <div className="flex-1">
-            <div className="overflow-hidden rounded-3xl">
+        <div className="space-y-4">
+          <div className="relative flex items-center gap-4">
+            <ArrowButton direction="prev" />
+            <div className="flex-1 overflow-hidden rounded-3xl">
               <div
                 className="flex transition-transform duration-300 ease-out"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -156,18 +163,19 @@ const RecognizedByMediaSection = () => {
                 ))}
               </div>
             </div>
-            <div className="flex justify-center gap-2 mt-4">
-              {mediaItems.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"}`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
+            <ArrowButton direction="next" />
           </div>
-          <ArrowButton direction="next" />
+
+          <div className="flex justify-center gap-2">
+            {mediaItems.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`w-2 h-2 rounded-full transition-all ${index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"}`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         /* Mobile: swipeable video, dots + arrows below */
@@ -202,14 +210,14 @@ const RecognizedByMediaSection = () => {
           </div>
 
           {/* Dots + arrows below on mobile */}
-          <div className="flex items-center justify-center gap-4 mt-4">
+          <div className="relative z-10 flex items-center justify-center gap-5 mt-5">
             <ArrowButton direction="prev" />
             <div className="flex gap-2">
               {mediaItems.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"}`}
+                  className={`w-2 h-2 rounded-full transition-all ${index === currentIndex ? "bg-[#929292]" : "bg-[#D9D9D9]"}`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
