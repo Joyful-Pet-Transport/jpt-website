@@ -17,7 +17,7 @@ const RecognizedByMediaSection = () => {
       autoplay: "0",
       controls: "1",
       enablejsapi: "1",
-      playsinline: isMobile ? "0" : "1",
+      playsinline: "1",
       rel: "0",
       modestbranding: "1",
       iv_load_policy: "3",
