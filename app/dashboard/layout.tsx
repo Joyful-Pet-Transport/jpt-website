@@ -1,11 +1,12 @@
 "use client";
 
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { useGetCurrentUser } from "@/utils/hooks/useGetCurrentUser";
 import { useAuthToken } from "@convex-dev/auth/react";
 import { useRouter } from "next/navigation";
 import { FC, PropsWithChildren, useEffect } from "react";
 
-const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
+const DashboardLayoutScreen: FC<PropsWithChildren> = ({ children }) => {
   const token = useAuthToken();
   const { user, isLoading } = useGetCurrentUser();
   const router = useRouter();
@@ -22,7 +23,7 @@ const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [user, isLoading, token ?? null]);
 
-  return <>{children}</>;
+  return <DashboardLayout>{children}</DashboardLayout>;
 };
 
-export default DashboardLayout;
+export default DashboardLayoutScreen;

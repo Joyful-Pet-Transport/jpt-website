@@ -113,7 +113,7 @@ const ColumnTogglePanel: FC<{
   if (toggleable.length === 0) return null;
 
   return (
-    <div className="absolute right-0 top-full mt-1 z-50 bg-white border-2 border-neutral-400 rounded-xl p-3 min-w-[180px]">
+    <div className="absolute right-0 top-full mt-1 z-50 bg-white border border-neutral-400 rounded-xl p-3 min-w-[180px]">
       <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2 pb-2 border-b-2 border-neutral-400">
         Columns
       </p>
@@ -262,7 +262,7 @@ const BaseTable: FC<TableProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowColPanel((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 border-2 border-neutral-400 rounded-xl hover:bg-neutral-50 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-400 rounded-xl hover:bg-neutral-50 transition"
             >
               <ColumnsIcon />
               <BodyText>Columns</BodyText>
@@ -285,7 +285,7 @@ const BaseTable: FC<TableProps> = ({
 
       {/* ── Table ── */}
       <div
-        className={`w-full overflow-hidden border-2 border-neutral-400 rounded-xl ${className ?? ""}`}
+        className={`w-full overflow-hidden border border-neutral-400 rounded-xl ${className ?? ""}`}
       >
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
@@ -303,7 +303,7 @@ const BaseTable: FC<TableProps> = ({
             </colgroup>
 
             <thead>
-              <tr className="border-b-2 border-neutral-400">
+              <tr className="border-b border-neutral-300">
                 {visibleHeaders.map((header: TableHeader) => {
                   const originalIdx = headers.indexOf(header);
                   const isActive = sort?.key === header.key;
@@ -429,7 +429,7 @@ const BaseTable: FC<TableProps> = ({
                                 key={actionIdx}
                                 onClick={act.onPress}
                                 title={act.label}
-                                className="flex items-center gap-1.5 px-2.5 py-1.5 border-2 border-neutral-400 rounded-xl"
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 border border-neutral-400 rounded-xl"
                               >
                                 {act.icon}
                                 <BodyText>{act.label}</BodyText>
@@ -456,14 +456,14 @@ const BaseTable: FC<TableProps> = ({
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={safePage === 1}
-              className="px-3 py-1.5 border-2 border-neutral-400 rounded-xl disabled:opacity-30 hover:bg-neutral-50 transition"
+              className="px-3 py-1.5 border border-neutral-400 rounded-xl disabled:opacity-30 hover:bg-neutral-50 transition"
             >
               <BodyText>Previous</BodyText>
             </button>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage === totalPages}
-              className="px-3 py-1.5 border-2 border-neutral-400 rounded-xl disabled:opacity-30 hover:bg-neutral-50 transition"
+              className="px-3 py-1.5 border border-neutral-400 rounded-xl disabled:opacity-30 hover:bg-neutral-50 transition"
             >
               <BodyText>Next</BodyText>
             </button>
