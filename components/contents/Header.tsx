@@ -189,7 +189,12 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                   className="w-auto h-16"
                 />
                 <div className="flex items-center">
-                  <BodyText weight="bold" font="luckiestGuy" textColor="000F3F">
+                  <BodyText
+                    weight="bold"
+                    font="luckiestGuy"
+                    textColor="000F3F"
+                    className="whitespace-nowrap"
+                  >
                     JOYFUL PET TRANSPORT
                   </BodyText>
                 </div>
@@ -243,6 +248,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                 weight="bold"
                 font="luckiestGuy"
                 textColor="text-[#000F3F]"
+                className="whitespace-nowrap"
               >
                 JOYFUL PET TRANSPORT
               </BodyText>

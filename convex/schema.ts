@@ -137,4 +137,10 @@ export default defineSchema({
 
     pets: v.optional(v.array(v.id("pet_details"))),
   }),
+
+  available_countries: defineTable({
+    name: v.string(),
+    code: v.string(),
+    available: v.boolean(),
+  }).index("by_code", ["code"]),
 });
