@@ -3,6 +3,7 @@
 import BoxedContainer from "@/components/containers/BoxedContainer";
 import PageWrapperContainer from "@/components/containers/PageWrapperContainer";
 import BaseTable from "@/components/elements/table/BaseTable";
+import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import Heading from "@/components/elements/text/Heading";
 import { api } from "@/convex/_generated/api";
 import { Pet } from "@/models/pet";
@@ -208,14 +209,13 @@ const DashboardPage = () => {
   };
 
   return (
-    <BoxedContainer>
-      <Heading size="medium">Dashboard</Heading>
+    <DashboardHeading title="Dashboard">
       <InternationalPetTransportTable />
       <DomesticPetTransportTable />
       <RabiesSerologyTest />
       <PetsTable />
       <InquiryTable />
-    </BoxedContainer>
+    </DashboardHeading>
   );
 };
 

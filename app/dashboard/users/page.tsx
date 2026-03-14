@@ -1,8 +1,7 @@
 "use client";
 
-import BoxedContainer from "@/components/containers/BoxedContainer";
 import BaseTable from "@/components/elements/table/BaseTable";
-import Heading from "@/components/elements/text/Heading";
+import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import { api } from "@/convex/_generated/api";
 import { Role } from "@/models/role";
 import { useQuery } from "convex/react";
@@ -11,8 +10,7 @@ const UsersPage = () => {
   const users = useQuery(api.tables.users.get);
 
   return (
-    <BoxedContainer>
-      <Heading size="medium">Users</Heading>
+    <DashboardHeading title="users">
       <BaseTable
         headers={[
           { label: "Name", key: "name" },
@@ -28,7 +26,7 @@ const UsersPage = () => {
         hasActions={false}
         data={users}
       />
-    </BoxedContainer>
+    </DashboardHeading>
   );
 };
 

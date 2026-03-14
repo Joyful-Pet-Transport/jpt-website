@@ -1,12 +1,7 @@
-import BoxedContainer from "@/components/containers/BoxedContainer";
-import Heading from "@/components/elements/text/Heading";
+import DashboardHeading from "@/components/elements/text/DashboardHeading";
 
 const ReportsPage = () => {
-  return (
-    <BoxedContainer>
-      <Heading size="medium">Reports</Heading>
-    </BoxedContainer>
-  );
+  return <DashboardHeading title="reports"></DashboardHeading>;
 };
 
 export default ReportsPage;

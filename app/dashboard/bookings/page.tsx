@@ -1,12 +1,7 @@
-import BoxedContainer from "@/components/containers/BoxedContainer";
-import Heading from "@/components/elements/text/Heading";
+import DashboardHeading from "@/components/elements/text/DashboardHeading";
 
 const BookingsPage = () => {
-  return (
-    <BoxedContainer>
-      <Heading size="medium">Bookings</Heading>
-    </BoxedContainer>
-  );
+  return <DashboardHeading title="bookings"></DashboardHeading>;
 };
 
 export default BookingsPage;
