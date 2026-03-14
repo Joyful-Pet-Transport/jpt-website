@@ -50,6 +50,7 @@ const DomesticPetRelocation = () => {
           </BodyText>
         </div>
         <DynamicButton
+          size="medium"
           onPress={() =>
             router.push("/our-services/domestic-pet-relocation/form")
           }

@@ -55,6 +55,7 @@ const RabiesSerologyTestScreen = () => {
           </BodyText>
         </div>
         <DynamicButton
+          size="medium"
           onPress={() => router.push("/our-services/rabies-serology-test/form")}
           className="self-center justify-end mt-auto"
         >

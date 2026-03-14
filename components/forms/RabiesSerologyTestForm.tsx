@@ -15,62 +15,8 @@ import FormInput from "../elements/input/TextInput/FormInput";
 import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
 import DateFormInput from "../elements/input/DateInput/DateFormInput";
 import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
-import { FaTrashCan } from "react-icons/fa6";
-
-type PetDetailsProps = {
-  index: number;
-  remove: (index: number) => void;
-  single?: boolean;
-  last?: boolean;
-  multiple?: boolean;
-};
-
-// ─── Buttons ─────────────────────────────────────────────────────────────────
-
-type ButtonsProps = {
-  step: number;
-  setStep: (s: 0 | 1 | 2 | 3) => void;
-  onSubmit: () => void;
-  loading: boolean;
-};
-
-const Buttons: FC<ButtonsProps> = ({ step, setStep, onSubmit, loading }) => {
-  const responsive = useResponsive();
-  const scrollToTop = () => {
-    window.scrollTo({ top: 630, behavior: "smooth" });
-  };
-
-  return (
-    <div className="flex w-full justify-between items-center">
-      <BodyText
-        size={responsive.isTabletOrMobile ? "normal" : "medium"}
-        weight="semibold"
-        className={step <= 1 ? "text-neutral-400! select-none" : "select-none"}
-        onPress={() => {
-          if (step !== 1) {
-            setStep((step - 1) as 0 | 1 | 2 | 3);
-            scrollToTop();
-          }
-        }}
-      >
-        BACK
-      </BodyText>
-      <DynamicButton
-        size={responsive.isTabletOrMobile ? "medium" : "default"}
-        onPress={() => {
-          if (step === 3) {
-            onSubmit();
-          } else {
-            setStep((step + 1) as 0 | 1 | 2 | 3);
-            scrollToTop();
-          }
-        }}
-      >
-        {step === 3 ? (loading ? "SUBMITTING" : "SUBMIT") : "NEXT"}
-      </DynamicButton>
-    </div>
-  );
-};
+import PetDetails from "./sections/PetDetails";
+import FormButtons from "./sections/Buttons";
 
 // ─── Progress ────────────────────────────────────────────────────────────────
 
@@ -222,281 +168,14 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
         dateType="specific"
         required
       />
-      <Buttons
+      <FormButtons
         step={step}
         setStep={setStep}
         onSubmit={onSubmit}
         loading={loading}
+        maxSteps={3}
       />
     </FormContainer>
-  );
-};
-
-// ─── PetIndexDetails ──────────────────────────────────────────────────────────
-
-type PetIndexDetailsProps = PetDetailsProps & {
-  control: any;
-  step: number;
-  setStep: (s: 0 | 1 | 2 | 3) => void;
-  onSubmit: () => void;
-  loading: boolean;
-};
-
-const PetIndexDetails: FC<PetIndexDetailsProps> = ({
-  index,
-  remove,
-  single,
-  last,
-  multiple,
-  control,
-  step,
-  setStep,
-  onSubmit,
-  loading,
-}) => {
-  return (
-    <div className="flex flex-col gap-20 w-full">
-      <FormContainer className={multiple ? "gap-6!" : ""}>
-        <div className="flex flex-row justify-center items-center gap-4">
-          <BodyText size="large" weight="semibold" className="text-center">
-            PET {index !== 0 && index + 1} DETAILS
-          </BodyText>
-          {index > 0 && last && (
-            <button
-              type="button"
-              aria-label="Remove pet"
-              onClick={() => remove(index)}
-            >
-              <FaTrashCan className="text-orange-400 text-xl" />
-            </button>
-          )}
-        </div>
-
-        {multiple ? (
-          <div className={`flex flex-col ${multiple ? "gap-6" : "gap-12"}`}>
-            <div className="flex flex-col md:flex-row w-full gap-4">
-              <FormInput
-                name={`pets.${index}.pet_name`}
-                label="PET'S NAME"
-                placeholder="Enter pet's name"
-                control={control}
-                className="w-full"
-                required
-              />
-              <FormInput
-                name={`pets.${index}.breed`}
-                label="BREED"
-                placeholder="Enter pet's breed"
-                control={control}
-                className="w-full"
-                required
-              />
-            </div>
-            <div className="flex flex-col md:flex-row w-full gap-4">
-              <FormInput
-                name={`pets.${index}.sex`}
-                label="SEX"
-                placeholder="Enter pet's gender (or sex)"
-                control={control}
-                className="w-full"
-                required
-              />
-              <DateFormInput
-                name={`pets.${index}.pet_birthday`}
-                label="DATE OF BIRTH"
-                placeholder="Enter pet's birthday"
-                control={control}
-                className="w-full"
-                enableYearSelect
-                required
-              />
-            </div>
-            <div className="flex flex-col md:flex-row w-full gap-4">
-              <FormInput
-                name={`pets.${index}.pet_weight`}
-                label="PET'S WEIGHT"
-                placeholder="Enter pet's estimated weight"
-                control={control}
-                className="w-full"
-                required
-              />
-              <FormInput
-                name={`pets.${index}.pet_age`}
-                placeholder="Enter pet's age"
-                label="AGE"
-                control={control}
-                className="w-full"
-              />
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-6">
-            <FormInput
-              name={`pets.${index}.pet_name`}
-              label="PET'S NAME"
-              placeholder="Enter pet's name"
-              control={control}
-              required
-            />
-            <div className="flex flex-col md:flex-row w-full gap-6">
-              <FormInput
-                name={`pets.${index}.breed`}
-                label="BREED"
-                placeholder="Enter pet's breed"
-                control={control}
-                className="w-full"
-                required
-              />
-              <FormInput
-                name={`pets.${index}.sex`}
-                label="SEX"
-                placeholder="Enter pet's gender (or sex)"
-                control={control}
-                className="w-full"
-                required
-              />
-            </div>
-            <div className="flex flex-col md:flex-row w-full gap-6">
-              <DateFormInput
-                name={`pets.${index}.pet_birthday`}
-                label="DATE OF BIRTH"
-                control={control}
-                placeholder="Enter pet's birthday"
-                className="w-full"
-                enableYearSelect
-                required
-              />
-              <FormInput
-                name={`pets.${index}.pet_age`}
-                label="AGE"
-                control={control}
-                placeholder="Enter pet's age"
-                className="w-full"
-              />
-            </div>
-            <FormInput
-              name={`pets.${index}.pet_weight`}
-              label="PET'S WEIGHT"
-              control={control}
-              placeholder="Enter pet's estimated weight"
-              required
-            />
-          </div>
-        )}
-
-        <FormInput
-          name={`pets.${index}.pet_condition`}
-          label="MEDICAL CONDITION"
-          placeholder="Enter pets' medical condition that we should be aware of"
-          control={control}
-          keyboardType="paragraph"
-          widthFull
-        />
-        <FormInput
-          name={`pets.${index}.special_instructions`}
-          label="SPECIAL INSTRUCTIONS"
-          placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
-          control={control}
-          keyboardType="paragraph"
-          widthFull
-        />
-        <ImageFormInput
-          name={`pets.${index}.pet_image`}
-          label="UPLOAD PET PHOTO"
-          control={control}
-          widthFull
-          required
-        />
-        {single && (
-          <Buttons
-            step={step}
-            setStep={setStep}
-            onSubmit={onSubmit}
-            loading={loading}
-          />
-        )}
-      </FormContainer>
-    </div>
-  );
-};
-
-// ─── PetDetails ───────────────────────────────────────────────────────────────
-
-type PetDetailsStepProps = {
-  control: any;
-  fields: any[];
-  append: (value: any) => void;
-  remove: (index: number) => void;
-  step: number;
-  setStep: (s: 0 | 1 | 2 | 3) => void;
-  onSubmit: () => void;
-  loading: boolean;
-};
-
-const PetDetails: FC<PetDetailsStepProps> = ({
-  control,
-  fields,
-  append,
-  remove,
-  step,
-  setStep,
-  onSubmit,
-  loading,
-}) => {
-  return (
-    <div className="flex flex-col gap-6 w-full">
-      <div
-        className={`grid ${fields.length > 1 && "grid-cols-2"} gap-4 w-full`}
-      >
-        {fields.map((field, index) => (
-          <PetIndexDetails
-            key={field.id}
-            index={index}
-            remove={remove}
-            single={fields.length === 1}
-            last={index + 1 === fields.length}
-            multiple={fields.length > 1}
-            control={control}
-            step={step}
-            setStep={setStep}
-            onSubmit={onSubmit}
-            loading={loading}
-          />
-        ))}
-      </div>
-      {fields.length !== 1 && (
-        <Buttons
-          step={step}
-          setStep={setStep}
-          onSubmit={onSubmit}
-          loading={loading}
-        />
-      )}
-      <div className="w-full flex flex-col gap-4 justify-center items-center">
-        <BodyText className="text-center max-w-96">
-          If you want to add more pets to travel, click the 'Add More Pets'
-          button
-        </BodyText>
-        <DynamicButton
-          type="orange"
-          onPress={() =>
-            append({
-              pet_name: "",
-              breed: "",
-              sex: "",
-              pet_birthday: "",
-              pet_age: "",
-              pet_weight: "",
-              pet_condition: "",
-              special_instructions: "",
-              pet_image: [],
-            })
-          }
-        >
-          ADD MORE PETS
-        </DynamicButton>
-      </div>
-    </div>
   );
 };
 
@@ -702,11 +381,12 @@ const Review: FC<ReviewProps> = ({
         </div>
       ))}
 
-      <Buttons
+      <FormButtons
         step={step}
         setStep={setStep}
         onSubmit={onSubmit}
         loading={loading}
+        maxSteps={3}
       />
     </FormContainer>
   );
@@ -832,7 +512,13 @@ const RabiesSerologyTestForm: FC = () => {
     })();
   };
 
-  const sharedButtonProps = { step, setStep, onSubmit: handleSubmit, loading };
+  const sharedButtonProps = {
+    step,
+    setStep,
+    onSubmit: handleSubmit,
+    loading,
+    maxSteps: 3,
+  };
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
