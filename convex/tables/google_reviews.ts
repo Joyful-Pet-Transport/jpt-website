@@ -1,5 +1,7 @@
-import { query, action } from "../_generated/server";
+import { query, action, QueryCtx } from "../_generated/server";
 import { api } from "../_generated/api";
+import { Id } from "../_generated/dataModel";
+import { v } from "convex/values";
 
 // TS declaration for Convex env vars
 declare const process: {
@@ -21,6 +23,17 @@ export const get = query({
       .collect();
 
     return reviews.sort((a, b) => b.stars - a.stars).slice(0, 30);
+  },
+});
+
+export async function getReviewId(ctx: QueryCtx, reviewId: Id<"google_reviews">) {
+  return await ctx.db.get(reviewId);
+}
+
+export const getReview = query({
+  args: { reviewId: v.id("google_reviews") },
+  handler: async (ctx, args) => {
+    return await getReviewId(ctx, args.reviewId);
   },
 });
 

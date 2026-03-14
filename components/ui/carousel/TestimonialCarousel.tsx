@@ -130,10 +130,7 @@ const TestimonialCarousel: FC<TestimonialCarouselProps> = ({
         style={{ touchAction: "none" }}
       >
         {duplicatedReviews?.map((data: GoogleReview, key) => (
-          <div
-            key={key}
-            className="flex-[0_0_auto] min-w-0 px-3 pointer-events-none"
-          >
+          <div key={key} className="flex-[0_0_auto] min-w-0 px-3">
             <TestimonyCard review={data} />
           </div>
         ))}

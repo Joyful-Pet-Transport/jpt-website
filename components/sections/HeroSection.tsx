@@ -16,7 +16,7 @@ const HeroSection: FC = () => {
       <BoxedContainer>
         <div className="flex justify-center items-center">
           <div className="flex flex-col gap-6">
-            <Heading font="fredoka" className="text-center">
+            <Heading font="fredoka" className="text-center uppercase">
               Transporting Pets Has Never Been This Easy
             </Heading>
             <BodyText className="text-center">
@@ -65,7 +65,7 @@ const HeroSection: FC = () => {
           <BoxedContainer>
             <div className="flex h-full justify-center items-center">
               <div className="flex flex-col gap-6 w-full">
-                <Heading font="fredoka">
+                <Heading font="fredoka" className="uppercase">
                   Transporting Pets Has Never Been This Easy
                 </Heading>
                 <BodyText>
@@ -113,7 +113,7 @@ const HeroSection: FC = () => {
         <BoxedContainer>
           <div className="flex h-full justify-center items-center">
             <div className="flex flex-col gap-6 w-full">
-              <Heading font="fredoka">
+              <Heading font="fredoka" className="uppercase">
                 Transporting Pets Has Never Been This Easy
               </Heading>
               <BodyText>

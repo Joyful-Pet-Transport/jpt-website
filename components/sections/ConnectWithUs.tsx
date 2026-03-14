@@ -10,7 +10,7 @@ const ConnectWithUs: FC = () => {
   const postServices = useQuery(api.tables.post_services.get);
   return (
     <BoxedContainer className="pb-12">
-      <Heading className="text-center" font="fredoka">
+      <Heading className="text-center uppercase" font="fredoka">
         Connect With Us On Our Social Media
       </Heading>
 

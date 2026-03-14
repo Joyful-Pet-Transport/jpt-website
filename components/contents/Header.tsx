@@ -314,7 +314,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   if (isNotHomePage && !disableLayout) {
     return (
       <div
-        className={`relative flex flex-col bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4 h-64" : "mx-8 mt-8 h-140"}`}
+        className={`relative flex flex-col bg-[#EAEAEA] rounded-t-4xl ${responsive.isTabletOrMobile ? "mx-4 mt-4 h-52" : "mx-8 mt-8 h-112"}`}
       >
         <HeaderBar />
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl md:rounded-t-4xl pointer-events-none">

@@ -22,7 +22,9 @@ const ContactUsSection: FC = () => {
           className={`flex flex-col ${mobile || tablet ? "w-full" : "flex-1"}`}
         >
           <div className={`mb-6 ${mobile || tablet ? "text-center" : ""}`}>
-            <Heading font="fredoka">Feel free to contact us</Heading>
+            <Heading font="fredoka" className="uppercase">
+              Feel free to contact us
+            </Heading>
             <BodyText className="mt-2">
               Have questions about your pet’s journey? We’re here to help! Feel
               free to reach out to us anytime. Our team is happy to assist you
@@ -49,7 +51,7 @@ const ContactUsSection: FC = () => {
             <InfoItemContainer
               icon={<IconContainer icon="clock" />}
               name="Business Hours"
-              value="Mon - Sat: 10AM - 7PM"
+              value="Monday - Saturday (10:00 AM - 7:00 PM PHT)"
             />
           </div>
         </div>

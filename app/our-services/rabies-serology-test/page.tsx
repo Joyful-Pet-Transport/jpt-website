@@ -70,7 +70,7 @@ const RabiesSerologyTestScreen = () => {
       <Breadcrumbs
         items={[
           { label: "Our Services", path: "/our-services" },
-          { label: "Pet Serology Test" },
+          { label: "Rabies Serology Test" },
         ]}
       />
       <BoxedContainer>
