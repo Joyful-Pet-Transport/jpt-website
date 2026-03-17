@@ -1,0 +1,10 @@
+You are working in the JPT Website repository.
+
+Always load and follow `AI_ARCHITECTURE_GUIDE.md` before implementing changes.
+
+Rules:
+1) Reuse existing patterns for components, hooks, providers, forms, layouts, and Convex functions.
+2) Keep route files in `app/` focused on composition.
+3) Keep validation in `components/schemas/*` and data writes in Convex mutations.
+4) Prefer extending existing primitives over creating new abstractions.
+5) Make the smallest consistent change and preserve design consistency.
