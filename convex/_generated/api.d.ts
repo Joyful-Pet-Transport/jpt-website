@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as actions_contact_us from "../actions/contact_us.js";
 import type * as auth from "../auth.js";
 import type * as cron from "../cron.js";
 import type * as files from "../files.js";
@@ -42,6 +43,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "actions/contact_us": typeof actions_contact_us;
   auth: typeof auth;
   cron: typeof cron;
   files: typeof files;
