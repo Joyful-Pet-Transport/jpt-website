@@ -35,7 +35,7 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
   const { booking, details, pet_details } = bookingDetails;
 
   return (
-    <DashboardHeading title="Booking Details">
+    <DashboardHeading back="hehe" title="Booking Details">
       <WhiteCard>
         <BodyText weight="semibold">Summary</BodyText>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
