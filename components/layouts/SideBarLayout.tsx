@@ -13,6 +13,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { MdOutlinePermMedia } from "react-icons/md";
 import { LuMessageCircleQuestion } from "react-icons/lu";
+import { MdOutlinePets } from "react-icons/md";
 
 interface SideBarLayoutProps {
   isOpen: boolean;
@@ -39,6 +40,7 @@ const sidebarItems = [
   },
   { label: "Countries", route: "/dashboard/countries", icon: PiIslandFill },
   { label: "Users", route: "/dashboard/users", icon: HiOutlineUsers },
+  { label: "Pets", route: "/dashboard/pets", icon: MdOutlinePets },
   {
     label: "Media Library",
     route: "/dashboard/media",
