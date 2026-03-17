@@ -37,9 +37,7 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
   return (
     <DashboardHeading title="Booking Details">
       <WhiteCard>
-        <BodyText size="small" weight="semibold">
-          Summary
-        </BodyText>
+        <BodyText weight="semibold">Summary</BodyText>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <BodyText size="small">Type: {booking.booking_label}</BodyText>
           <BodyText size="small">Status: {booking.status}</BodyText>
@@ -53,9 +51,7 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 
       {details ? (
         <WhiteCard>
-          <BodyText size="small" weight="semibold">
-            Booking Information
-          </BodyText>
+          <BodyText weight="semibold">Booking Information</BodyText>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             {Object.entries(details)
               .filter(
@@ -73,7 +69,7 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       )}
 
       <WhiteCard>
-        <BodyText size="small" weight="semibold" className="mb-3 text-blue-700">
+        <BodyText weight="semibold" className="mb-3 text-blue-700">
           Pet Details
         </BodyText>
 
