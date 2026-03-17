@@ -86,7 +86,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Info label="Status" value={booking.status} />
-          <Info label="Type" value={booking.booking_type.replaceAll("_", " ")} />
+          <Info
+            label="Type"
+            value={booking.booking_type?.replaceAll("_", " ") ?? "-"}
+          />
           <Info label="Booking ID" value={String(booking.booking_id)} />
           <Info
             label="Created"
@@ -100,7 +103,7 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
             Booking Information
           </BodyText>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             {Object.entries(details)
               .filter(
                 ([key]) => !["_id", "_creationTime", "pets"].includes(key),
@@ -134,8 +137,8 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
             return (
               <WhiteCard
                 key={pet._id}
-                onClick={() => router.push(`/dashboard/pets/${pet._id}`)}
-                className="cursor-pointer border border-transparent transition hover:border-blue-200 hover:shadow-md"
+                onPress={() => router.push(`/dashboard/pets/${pet._id}`)}
+                className="cursor-pointer border transition hover:border-blue-200 hover:shadow-md"
               >
                 <div className="relative mb-3 h-48 w-full overflow-hidden rounded-md bg-neutral-100">
                   <Image
@@ -169,7 +172,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 const Info = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
-      <BodyText size="xsmall" className="uppercase tracking-wide text-slate-500">
+      <BodyText
+        size="xsmall"
+        className="uppercase tracking-wide text-slate-500"
+      >
         {label}
       </BodyText>
       <BodyText size="small" className="break-words text-slate-900">
