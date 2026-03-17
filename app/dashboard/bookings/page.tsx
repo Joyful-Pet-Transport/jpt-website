@@ -8,8 +8,11 @@ import { Pet } from "@/models/pet";
 import { useQuery } from "convex/react";
 import dayjs from "dayjs";
 import { FC } from "react";
+import { Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const BookingsPage = () => {
+  const router = useRouter();
   const InternationalPetTransportTable: FC = () => {
     const booking = useQuery(api.tables.international_pet_transport.get);
     return (
@@ -159,8 +162,15 @@ const BookingsPage = () => {
           {
             key: "updated_at",
             label: "Updated On",
-            parse: (value: string) =>
+            parse: (value: number) =>
               dayjs(value).format("MMM DD, YYYY hh:mm A"),
+          },
+        ]}
+        actions={[
+          {
+            label: "View",
+            icon: <Eye className="h-4 w-4" />,
+            onPress: (row) => router.push(`/dashboard/bookings/${row._id}`),
           },
         ]}
       />
