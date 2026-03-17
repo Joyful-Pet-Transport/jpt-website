@@ -38,7 +38,9 @@ const sendEmail = async (payload: SendEmailPayload) => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Resend API request failed: ${response.status} ${errorText}`);
+    throw new Error(
+      `Resend API request failed: ${response.status} ${errorText}`,
+    );
   }
 };
 
