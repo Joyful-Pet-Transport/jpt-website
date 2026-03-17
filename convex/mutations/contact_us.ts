@@ -20,7 +20,7 @@ export const createContactUs = mutation({
 
     await ctx.scheduler.runAfter(
       0,
-      internal["actions/contact_us"].sendInquiryEmails,
+      internal.actions.contact_us.sendInquiryEmails,
       {
         first_name: args.first_name,
         last_name: args.last_name,
