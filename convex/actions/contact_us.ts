@@ -93,20 +93,21 @@ export const sendInquiryEmails = internalAction({
       `${appName} Team`,
     ].join("\n");
 
-    await sendEmail({
-      from: fromEmail,
-      to: [supportEmail],
-      subject: inquirySubject,
-      text: inquiryMessage,
-      reply_to: args.email,
-    });
+    // uncomment when resend is ready
+    // await sendEmail({
+    //   from: fromEmail,
+    //   to: [supportEmail],
+    //   subject: inquirySubject,
+    //   text: inquiryMessage,
+    //   reply_to: args.email,
+    // });
 
-    await sendEmail({
-      from: fromEmail,
-      to: [args.email],
-      subject: followUpSubject,
-      text: followUpMessage,
-      reply_to: supportEmail,
-    });
+    // await sendEmail({
+    //   from: fromEmail,
+    //   to: [args.email],
+    //   subject: followUpSubject,
+    //   text: followUpMessage,
+    //   reply_to: supportEmail,
+    // });
   },
 });
