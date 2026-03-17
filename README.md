@@ -156,6 +156,12 @@ npm run start
 npx convex deploy
 ```
 
+## 🤖 AI Development Guide
+
+For AI IDE agents and contributors, see [AI_ARCHITECTURE_GUIDE.md](./AI_ARCHITECTURE_GUIDE.md) for architecture, coding patterns, and implementation workflow conventions.
+
+Tool-specific auto-discovery files are also included: `AGENTS.md`, `.github/copilot-instructions.md`, `.cursorrules`, and `.windsurfrules`.
+
 ## 🤝 Contributing
 
 1. Fork the repository

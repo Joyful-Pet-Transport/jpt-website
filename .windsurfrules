@@ -1,0 +1,5 @@
+Project instruction for Windsurf agents:
+- Treat `AI_ARCHITECTURE_GUIDE.md` as the default architecture contract.
+- Follow existing folder boundaries and coding patterns documented in that guide.
+- Reuse providers/hooks/components/forms/containers before introducing new patterns.
+- Keep changes minimal, consistent, and aligned with current UI/UX conventions.
