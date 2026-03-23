@@ -171,7 +171,7 @@ const ContactUsScreen = () => {
             </div>
             <div className="justify-center items-center flex py-12">
               <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center gap-4">
                   <Image
                     src="/images/icons/call-2.svg"
                     width={32}
