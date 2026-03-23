@@ -19,7 +19,15 @@ export const bookInternationalPetTransport = mutation({
     pets: v.optional(v.array(v.id("pet_details"))),
 
     origin_full_address: v.string(),
+    origin_city: v.string(),
+    origin_state_province: v.string(),
+    origin_postal_code: v.string(),
+    origin_address_country: v.string(),
     destination_full_address: v.string(),
+    destination_city: v.string(),
+    destination_state_province: v.string(),
+    destination_postal_code: v.string(),
+    destination_address_country: v.string(),
   },
 
   handler: async (ctx, args) => {
@@ -39,7 +47,15 @@ export const bookInternationalPetTransport = mutation({
         email_address: args.email_address,
         pets: args.pets,
         origin_full_address: args.origin_full_address,
+        origin_city: args.origin_city,
+        origin_state_province: args.origin_state_province,
+        origin_postal_code: args.origin_postal_code,
+        origin_address_country: args.origin_address_country,
         destination_full_address: args.destination_full_address,
+        destination_city: args.destination_city,
+        destination_state_province: args.destination_state_province,
+        destination_postal_code: args.destination_postal_code,
+        destination_address_country: args.destination_address_country,
       },
     );
 

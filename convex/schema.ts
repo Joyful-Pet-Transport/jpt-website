@@ -98,7 +98,15 @@ export default defineSchema({
     email_address: v.string(),
 
     origin_full_address: v.string(),
+    origin_city: v.string(),
+    origin_state_province: v.string(),
+    origin_postal_code: v.string(),
+    origin_address_country: v.string(),
     destination_full_address: v.string(),
+    destination_city: v.string(),
+    destination_state_province: v.string(),
+    destination_postal_code: v.string(),
+    destination_address_country: v.string(),
 
     pets: v.optional(v.array(v.id("pet_details"))),
   }).index("by_pets", ["pets"]),

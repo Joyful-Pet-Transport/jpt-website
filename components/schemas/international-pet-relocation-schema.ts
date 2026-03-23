@@ -21,9 +21,31 @@ const InternationalRelocationFormSchema = z.object({
   origin_full_address: z
     .string()
     .min(1, "Please enter the origin full address"),
+  origin_city: z.string().min(1, "Please enter the origin city/district"),
+  origin_state_province: z
+    .string()
+    .min(1, "Please enter the origin state/province"),
+  origin_postal_code: z
+    .string()
+    .min(1, "Please enter the origin postal code"),
+  origin_address_country: z
+    .string()
+    .min(1, "Please enter the origin country"),
   destination_full_address: z
     .string()
     .min(1, "Please enter the destination full address"),
+  destination_city: z
+    .string()
+    .min(1, "Please enter the destination city/district"),
+  destination_state_province: z
+    .string()
+    .min(1, "Please enter the destination state/province"),
+  destination_postal_code: z
+    .string()
+    .min(1, "Please enter the destination postal code"),
+  destination_address_country: z
+    .string()
+    .min(1, "Please enter the destination country"),
 
   pets: z.array(PetDetailsSchema).min(1, "Please add at least one pet"),
 });
