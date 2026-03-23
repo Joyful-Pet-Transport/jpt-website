@@ -658,6 +658,7 @@ const Review: FC<ReviewProps> = ({
         control={control}
         widthFull
         required
+        disabled
       />
       <div
         className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
@@ -669,6 +670,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
         <FormInput
           name="origin_state_province"
@@ -677,6 +679,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
       </div>
       <div
@@ -689,6 +692,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
         <FormInput
           name="origin_address_country"
@@ -697,6 +701,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
       </div>
       <FormInput
@@ -706,6 +711,7 @@ const Review: FC<ReviewProps> = ({
         control={control}
         widthFull
         required
+        disabled
       />
       <div
         className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
@@ -717,6 +723,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
         <FormInput
           name="destination_state_province"
@@ -725,6 +732,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
       </div>
       <div
@@ -737,6 +745,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
         <FormInput
           name="destination_address_country"
@@ -745,6 +754,7 @@ const Review: FC<ReviewProps> = ({
           control={control}
           widthFull
           required
+          disabled
         />
       </div>
 
