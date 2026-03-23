@@ -2,6 +2,7 @@ import FormContainer from "@/components/containers/FormContainer";
 import DynamicButton from "@/components/elements/button/DynamicButton";
 import DateFormInput from "@/components/elements/input/DateInput/DateFormInput";
 import ImageFormInput from "@/components/elements/input/ImageInput/ImageFormInput";
+import SelectFormInput from "@/components/elements/input/SelectInput/SelectFormInput";
 import FormInput from "@/components/elements/input/TextInput/FormInput";
 import BodyText from "@/components/elements/text/BodyText";
 import {
@@ -97,6 +98,13 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
   loading,
   maxSteps,
 }) => {
+  const sexOptions = [
+    { label: "Female Intact", value: "female_intact" },
+    { label: "Female Neutered", value: "female_neutered" },
+    { label: "Male Intact", value: "male_intact" },
+    { label: "Male Neutered", value: "male_neutered" },
+  ];
+
   return (
     <div className="flex flex-col gap-20 w-full">
       <FormContainer className={multiple ? "gap-6!" : ""}>
@@ -136,11 +144,12 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
               />
             </div>
             <div className="flex flex-col md:flex-row w-full gap-4">
-              <FormInput
+              <SelectFormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
-                placeholder="Enter pet's gender (or sex)"
+                placeholder="Select sex"
                 control={control}
+                options={sexOptions}
                 className="w-full"
                 required
               />
@@ -187,11 +196,12 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
               />
             </div>
             <div className="flex flex-col md:flex-row w-full gap-6">
-              <FormInput
+              <SelectFormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
-                placeholder="Enter pet's gender (or sex)"
+                placeholder="Select sex"
                 control={control}
+                options={sexOptions}
                 className="w-full"
                 required
               />
