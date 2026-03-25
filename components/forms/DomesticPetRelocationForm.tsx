@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -550,17 +550,6 @@ const Review: FC<ReviewProps> = ({
                 required
               />
               <FormInput
-                name={`pets.${index}.pet_age`}
-                placeholder="Enter pet's age"
-                label="AGE"
-                control={control}
-                widthFull
-                disabled
-                className="w-full"
-              />
-            </div>
-            <div className="flex flex-col gap-12">
-              <FormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
                 placeholder="Enter pet's gender (or sex)"
@@ -570,6 +559,25 @@ const Review: FC<ReviewProps> = ({
                 className="w-full"
                 required
               />
+              <div className="flex gap-2">
+                <FormInput
+                  name={`pets.${index}.pet_age_years`}
+                  placeholder="Enter years"
+                  label="YEARS"
+                  control={control}
+                  required
+                  disabled
+                />
+                <BodyText className="text-neutral-500">&</BodyText>
+                <FormInput
+                  name={`pets.${index}.pet_age_months`}
+                  placeholder="Enter months"
+                  label="MONTHS"
+                  control={control}
+                  required
+                  disabled
+                />
+              </div>
               <DateFormInput
                 name={`pets.${index}.pet_birthday`}
                 label="DATE OF BIRTH"
@@ -639,7 +647,7 @@ type RelocationFormProps = {
 };
 
 const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
+  const [step, setStepState] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
   const router = useRouter();
@@ -674,7 +682,8 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
           breed: "",
           sex: "",
           pet_birthday: "",
-          pet_age: "",
+          pet_age_years: "",
+          pet_age_months: "",
           pet_weight: "",
           pet_condition: "",
           special_instructions: "",
@@ -690,6 +699,70 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
   const { fields, append, remove } = useFieldArray({ control, name: "pets" });
   const travelDate = useWatch({ control, name: "travel_date" });
   const dateType = travelDate === "yes" ? "specific" : "range";
+
+  const scrollToFirstError = useCallback(() => {
+    const firstError = document.querySelector("[data-error=true]");
+    if (firstError) {
+      firstError.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
+
+  const setStep = useCallback(
+    async (nextStep: 0 | 1 | 2 | 3 | 4) => {
+      if (nextStep <= step) {
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 1) {
+        // Validate pickup/destination
+        const routeFields = ["pickup_address" as const, "destination" as const];
+        const isRouteStepValid =
+          await createDomesticRelocationForm.trigger(routeFields);
+        if (!isRouteStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 2) {
+        // Validate travel details
+        const travelFields = [
+          "travel_date" as const,
+          "date" as const,
+          "mode_of_transport" as const,
+        ];
+        const isTravelStepValid =
+          await createDomesticRelocationForm.trigger(travelFields);
+        if (!isTravelStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 3) {
+        // Validate pet details
+        const isPetsStepValid =
+          await createDomesticRelocationForm.trigger("pets");
+        if (!isPetsStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      setStepState(nextStep);
+    },
+    [createDomesticRelocationForm, scrollToFirstError, step],
+  );
 
   const handleSubmit = () => {
     createDomesticRelocationForm.handleSubmit(async (data) => {
@@ -723,7 +796,7 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
             breed: pet.breed,
             sex: pet.sex,
             pet_birthday: pet.pet_birthday,
-            pet_age: pet.pet_age,
+            pet_age: `${pet.pet_age_years}y ${pet.pet_age_months}m`,
             pet_weight: pet.pet_weight,
             pet_image: petImageId as any,
           };
@@ -780,7 +853,7 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
-      {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
+      {step === 0 && <Disclaimer onAgree={() => setStepState(1)} />}
       {step === 1 && (
         <OwnerDetails
           control={control}

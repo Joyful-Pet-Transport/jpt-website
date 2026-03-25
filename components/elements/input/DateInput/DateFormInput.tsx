@@ -20,12 +20,14 @@ const DateFormInput: FC<DateFormInputProps> = ({
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <DateInputBase
-            {...inputProps}
-            initialValue={field.value ?? ""}
-            onChange={field.onChange}
-            validation={fieldState.error?.message}
-          />
+          <div data-error={!!fieldState.error}>
+            <DateInputBase
+              {...inputProps}
+              initialValue={field.value ?? ""}
+              onChange={field.onChange}
+              validation={fieldState.error?.message}
+            />
+          </div>
         )}
       />
     </div>
