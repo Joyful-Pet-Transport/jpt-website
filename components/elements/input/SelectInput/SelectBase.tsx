@@ -129,7 +129,7 @@ const SelectBase: FC<SelectBaseProps> = ({
           <SelectTrigger
             className={cn(
               baseClass,
-              "data-placeholder:text-neutral-600 text-base lg:text-lg",
+              "data-placeholder:text-neutral-600 bg-white text-base lg:text-lg",
             )}
             aria-invalid={!!validation}
           >

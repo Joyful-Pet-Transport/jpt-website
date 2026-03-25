@@ -2,6 +2,7 @@ import FormContainer from "@/components/containers/FormContainer";
 import DynamicButton from "@/components/elements/button/DynamicButton";
 import DateFormInput from "@/components/elements/input/DateInput/DateFormInput";
 import ImageFormInput from "@/components/elements/input/ImageInput/ImageFormInput";
+import SelectFormInput from "@/components/elements/input/SelectInput/SelectFormInput";
 import FormInput from "@/components/elements/input/TextInput/FormInput";
 import BodyText from "@/components/elements/text/BodyText";
 import { FC } from "react";
@@ -37,6 +38,36 @@ type PetIndexDetailsProps = PetDetailsProps & {
   maxSteps: number;
 };
 
+const PetAgeInputs: FC<{ index: number; control: any }> = ({
+  index,
+  control,
+}) => {
+  return (
+    <div className="flex flex-col gap-2 w-full">
+      <BodyText weight="semibold">AGE</BodyText>
+      <div className="flex items-center gap-2 w-full">
+        <FormInput
+          name={`pets.${index}.pet_age_years`}
+          label="YEARS"
+          placeholder="Enter years"
+          control={control}
+          keyboardType="number"
+          required
+        />
+        <BodyText className="text-neutral-500">&</BodyText>
+        <FormInput
+          name={`pets.${index}.pet_age_months`}
+          label="MONTHS"
+          placeholder="Enter months"
+          control={control}
+          keyboardType="number"
+          required
+        />
+      </div>
+    </div>
+  );
+};
+
 const PetIndexDetails: FC<PetIndexDetailsProps> = ({
   index,
   remove,
@@ -50,6 +81,13 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
   loading,
   maxSteps,
 }) => {
+  const sexOptions = [
+    { label: "Female Intact", value: "female_intact" },
+    { label: "Female Neutered", value: "female_neutered" },
+    { label: "Male Intact", value: "male_intact" },
+    { label: "Male Neutered", value: "male_neutered" },
+  ];
+
   return (
     <div className="flex flex-col gap-20 w-full">
       <FormContainer className={multiple ? "gap-6!" : ""}>
@@ -89,25 +127,15 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
               />
             </div>
             <div className="flex flex-col md:flex-row w-full gap-4">
-              <FormInput
+              <SelectFormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
-                placeholder="Enter pet's gender (or sex)"
+                placeholder="Select sex"
                 control={control}
+                options={sexOptions}
                 className="w-full"
                 required
               />
-              <DateFormInput
-                name={`pets.${index}.pet_birthday`}
-                label="DATE OF BIRTH"
-                placeholder="Enter pet's birthday"
-                control={control}
-                className="w-full"
-                enableYearSelect
-                required
-              />
-            </div>
-            <div className="flex flex-col md:flex-row w-full gap-4">
               <FormInput
                 name={`pets.${index}.pet_weight`}
                 label="PET'S WEIGHT"
@@ -116,25 +144,31 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
                 className="w-full"
                 required
               />
-              <FormInput
-                name={`pets.${index}.pet_age`}
-                placeholder="Enter pet's age"
-                label="AGE"
+            </div>
+            <div className="flex flex-col md:flex-row w-full gap-4">
+              <DateFormInput
+                name={`pets.${index}.pet_birthday`}
+                label="DATE OF BIRTH"
+                placeholder="Enter pet's birthday"
                 control={control}
                 className="w-full"
+                enableYearSelect
+                required
               />
+              <PetAgeInputs index={index} control={control} />
             </div>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
-            <FormInput
-              name={`pets.${index}.pet_name`}
-              label="PET'S NAME"
-              placeholder="Enter pet's name"
-              control={control}
-              required
-            />
             <div className="flex flex-col md:flex-row w-full gap-6">
+              <FormInput
+                name={`pets.${index}.pet_name`}
+                label="PET'S NAME"
+                placeholder="Enter pet's name"
+                control={control}
+                className="w-full"
+                required
+              />
               <FormInput
                 name={`pets.${index}.breed`}
                 label="BREED"
@@ -143,11 +177,22 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
                 className="w-full"
                 required
               />
-              <FormInput
+            </div>
+            <div className="flex flex-col md:flex-row w-full gap-6">
+              <SelectFormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
-                placeholder="Enter pet's gender (or sex)"
+                placeholder="Select sex"
                 control={control}
+                options={sexOptions}
+                className="w-full"
+                required
+              />
+              <FormInput
+                name={`pets.${index}.pet_weight`}
+                label="PET'S WEIGHT (ESTIMATED IS OKAY)"
+                control={control}
+                placeholder="Enter pet's estimated weight"
                 className="w-full"
                 required
               />
@@ -162,27 +207,14 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
                 enableYearSelect
                 required
               />
-              <FormInput
-                name={`pets.${index}.pet_age`}
-                label="AGE"
-                control={control}
-                placeholder="Enter pet's age"
-                className="w-full"
-              />
+              <PetAgeInputs index={index} control={control} />
             </div>
-            <FormInput
-              name={`pets.${index}.pet_weight`}
-              label="PET'S WEIGHT"
-              control={control}
-              placeholder="Enter pet's estimated weight"
-              required
-            />
           </div>
         )}
 
         <FormInput
           name={`pets.${index}.pet_condition`}
-          label="MEDICAL CONDITION"
+          label="MEDICAL CONDITION THAT WE SHOULD BE AWARE OF:"
           placeholder="Enter pets' medical condition that we should be aware of"
           control={control}
           keyboardType="paragraph"
@@ -190,7 +222,7 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
         />
         <FormInput
           name={`pets.${index}.special_instructions`}
-          label="SPECIAL INSTRUCTIONS"
+          label="PLEASE NOTE SPECIAL INSTRUCTIONS FOR YOUR PET:"
           placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
           control={control}
           keyboardType="paragraph"
@@ -198,7 +230,7 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
         />
         <ImageFormInput
           name={`pets.${index}.pet_image`}
-          label="UPLOAD PET PHOTO"
+          label="UPLOAD PET'S LATEST PHOTO"
           control={control}
           widthFull
           required
@@ -273,7 +305,8 @@ const PetDetails: FC<PetDetailsStepProps> = ({
               breed: "",
               sex: "",
               pet_birthday: "",
-              pet_age: "",
+              pet_age_years: "",
+              pet_age_months: "",
               pet_weight: "",
               pet_condition: "",
               special_instructions: "",

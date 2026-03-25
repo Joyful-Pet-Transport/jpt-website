@@ -1,8 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { getData as getCountryListData } from "country-list";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { FieldPath, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectFormInput from "../elements/input/SelectInput/SelectFormInput";
 import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
@@ -20,6 +20,7 @@ import InternationalRelocationFormSchema from "../schemas/international-pet-relo
 import { useRouter } from "next/navigation";
 import PetDetails from "./sections/PetDetails";
 import FormButtons from "./sections/Buttons";
+import z from "zod";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -48,8 +49,8 @@ const useCountryData = () => {
 
 // ─── Progress ───────────────────────────────────────────────────────────────
 
-const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
-  const percentage = (step / 5) * 100;
+const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 | 6 }> = ({ step }) => {
+  const percentage = (step / 6) * 100;
 
   return (
     <div className="w-full max-w-96 h-3 rounded-full bg-neutral-200 overflow-hidden">
@@ -63,6 +64,29 @@ const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 }> = ({ step }) => {
     </div>
   );
 };
+
+const internationalRelocationStepFields = {
+  1: ["origin_country", "destination"],
+  2: [
+    "origin_full_address",
+    "origin_city",
+    "origin_state_province",
+    "origin_postal_code",
+    "destination_full_address",
+    "destination_city",
+    "destination_state_province",
+    "destination_postal_code",
+  ],
+  3: ["companionship", "travel_date", "date"],
+  4: [
+    "owner_name",
+    "contact_number",
+    "contact_form",
+    "email_address",
+    "account_name",
+    "account_link",
+  ],
+} as const;
 
 // ─── Disclaimer ─────────────────────────────────────────────────────────────
 
@@ -123,7 +147,7 @@ type DestinationProps = {
   control: any;
   type: "import" | "export";
   step: number;
-  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5) => void;
+  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void;
   onSubmit: () => void;
   loading: boolean;
   availableCountries: { label: string; value: string }[];
@@ -173,7 +197,7 @@ const Destination: FC<DestinationProps> = ({
             required
           />
           <SelectFormInput
-            label="DESTINATION"
+            label="DESTINATION COUNTRY"
             name="destination"
             control={control}
             options={destinationOptions}
@@ -187,7 +211,119 @@ const Destination: FC<DestinationProps> = ({
         setStep={setStep}
         onSubmit={onSubmit}
         loading={loading}
-        maxSteps={5}
+        maxSteps={6}
+      />
+    </FormContainer>
+  );
+};
+
+// ─── DestinationFullAddress ─────────────────────────────────────────────────────────────
+
+type DestinationFullAddressProps = {
+  control: any;
+  step: number;
+  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void;
+  onSubmit: () => void;
+  loading: boolean;
+};
+
+const DestinationFullAddress: FC<DestinationFullAddressProps> = ({
+  control,
+  step,
+  setStep,
+  onSubmit,
+  loading,
+}) => {
+  return (
+    <FormContainer>
+      <BodyText size="large" weight="semibold" className="text-center">
+        DESTINATION (FULL ADDRESSES)
+      </BodyText>
+      <BodyText size="medium" weight="semibold" className="uppercase">
+        What are the full addresses of the origin and destination?
+      </BodyText>
+
+      <div className="flex flex-col gap-6">
+        <FormInput
+          name="origin_full_address"
+          label="ORIGIN FULL ADDRESS*"
+          placeholder="Enter Address"
+          control={control}
+          widthFull
+          required
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            name="origin_city"
+            label="CITY/DISTRICT"
+            placeholder="Enter City/District"
+            control={control}
+            widthFull
+            required
+          />
+          <FormInput
+            name="origin_state_province"
+            label="STATE/PROVINCE"
+            placeholder="Enter State/Province"
+            control={control}
+            widthFull
+            required
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            name="origin_postal_code"
+            label="POSTAL CODE"
+            placeholder="Enter Postal Code"
+            control={control}
+            widthFull
+            required
+          />
+        </div>
+
+        <FormInput
+          name="destination_full_address"
+          label="DESTINATION FULL ADDRESS*"
+          placeholder="Enter Address"
+          control={control}
+          widthFull
+          required
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            name="destination_city"
+            label="CITY/DISTRICT"
+            placeholder="Enter City/District"
+            control={control}
+            widthFull
+            required
+          />
+          <FormInput
+            name="destination_state_province"
+            label="STATE/PROVINCE"
+            placeholder="Enter State/Province"
+            control={control}
+            widthFull
+            required
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            name="destination_postal_code"
+            label="POSTAL CODE"
+            placeholder="Enter Postal Code"
+            control={control}
+            widthFull
+            required
+          />
+        </div>
+      </div>
+      <FormButtons
+        step={step}
+        setStep={setStep}
+        onSubmit={onSubmit}
+        loading={loading}
+        maxSteps={6}
       />
     </FormContainer>
   );
@@ -200,7 +336,7 @@ type TravelDetailsProps = {
   travelDate: string;
   dateType: "specific" | "range";
   step: number;
-  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5) => void;
+  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void;
   onSubmit: () => void;
   loading: boolean;
 };
@@ -219,49 +355,54 @@ const TravelDetails: FC<TravelDetailsProps> = ({
       <BodyText size="large" weight="semibold" className="text-center">
         TRAVEL DETAILS
       </BodyText>
-      <RadioFormInput
-        name="companionship"
-        label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
-        control={control}
-        options={[
-          {
-            label: "Travels WITH you (Accompanied or same flight)",
-            value: "with",
-          },
-          { label: "Travels ALONE (Cargo/ Customs release)", value: "alone" },
-        ]}
-        required
-      />
-      <RadioFormInput
-        name="travel_date"
-        label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
-        control={control}
-        options={[
-          { label: "Yes", value: "yes" },
-          { label: "No", value: "no" },
-        ]}
-        required
-      />
-      <DateFormInput
-        name="date"
-        label={
-          travelDate
-            ? travelDate === "yes"
-              ? "SPECIFIC TRAVEL DATE"
-              : "ESTIMATED TRAVEL DATE"
-            : "TRAVEL DATE"
-        }
-        control={control}
-        dateType={dateType}
-        disabled={!travelDate}
-        required
-      />
+      <div className="flex flex-col gap-4 w-full">
+        <RadioFormInput
+          name="companionship"
+          label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
+          control={control}
+          options={[
+            {
+              label: "Travels WITH you (Accompanied or same flight)",
+              value: "with",
+            },
+            {
+              label: "Travels ALONE (Cargo/ Customs release)",
+              value: "alone",
+            },
+          ]}
+          required
+        />
+        <RadioFormInput
+          name="travel_date"
+          label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
+          control={control}
+          options={[
+            { label: "Yes", value: "yes" },
+            { label: "No", value: "no" },
+          ]}
+          required
+        />
+        <DateFormInput
+          name="date"
+          label={
+            travelDate
+              ? travelDate === "yes"
+                ? "SPECIFIC TRAVEL DATE"
+                : "ESTIMATED TRAVEL DATE"
+              : "TRAVEL DATE"
+          }
+          control={control}
+          dateType={dateType}
+          disabled={!travelDate}
+          required
+        />
+      </div>
       <FormButtons
         step={step}
         setStep={setStep}
         onSubmit={onSubmit}
         loading={loading}
-        maxSteps={5}
+        maxSteps={6}
       />
     </FormContainer>
   );
@@ -272,7 +413,7 @@ const TravelDetails: FC<TravelDetailsProps> = ({
 type OwnerDetailsProps = {
   control: any;
   step: number;
-  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5) => void;
+  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void;
   onSubmit: () => void;
   loading: boolean;
 };
@@ -289,26 +430,43 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
       <BodyText size="large" weight="semibold" className="text-center">
         OWNER DETAILS
       </BodyText>
-      <FormInput
-        name="owner_name"
-        label="OWNER'S NAME"
-        placeholder="Enter owner's name"
-        control={control}
-        required
-      />
-      <RadioFormInput
-        name="contact_form"
-        label="WHERE CAN WE CONTACT YOU?"
-        control={control}
-        options={[
-          { label: "Facebook Messenger", value: "facebook" },
-          { label: "WhatsApp", value: "whatsapp" },
-          { label: "Viber", value: "viber" },
-          { label: "Telegram", value: "telegram" },
-        ]}
-        required
-      />
-      <div className="flex flex-col md:flex-row w-full gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormInput
+          name="owner_name"
+          label="OWNER'S NAME"
+          placeholder="Enter owner's name"
+          control={control}
+          required
+          className="w-full"
+        />
+        <FormInput
+          name="contact_number"
+          label="CONTACT NUMBER"
+          placeholder="Enter contact number"
+          control={control}
+          required
+          className="w-full"
+        />
+        <RadioFormInput
+          name="contact_form"
+          label="WHERE CAN WE CONTACT YOU?"
+          control={control}
+          options={[
+            { label: "Facebook Messenger", value: "facebook" },
+            { label: "WhatsApp", value: "whatsapp" },
+            { label: "Viber", value: "viber" },
+            { label: "Telegram", value: "telegram" },
+          ]}
+          required
+        />
+        <FormInput
+          name="email_address"
+          label="ACTIVE EMAIL ADDRESS"
+          placeholder="Enter active email address"
+          control={control}
+          required
+          className="w-full"
+        />
         <FormInput
           name="account_name"
           label="ACCOUNT NAME"
@@ -325,26 +483,12 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
           control={control}
         />
       </div>
-      <FormInput
-        name="contact_number"
-        label="CONTACT NUMBER"
-        placeholder="Enter contact number"
-        control={control}
-        required
-      />
-      <FormInput
-        name="email_address"
-        label="ACTIVE EMAIL ADDRESS"
-        placeholder="Enter active email address"
-        control={control}
-        required
-      />
       <FormButtons
         step={step}
         setStep={setStep}
         onSubmit={onSubmit}
         loading={loading}
-        maxSteps={5}
+        maxSteps={6}
       />
     </FormContainer>
   );
@@ -362,11 +506,43 @@ type ReviewProps = {
   travelDate: string;
   dateType: "specific" | "range";
   step: number;
-  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5) => void;
+  setStep: (s: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void;
   onSubmit: () => void;
   loading: boolean;
   availableCountries: { label: string; value: string }[];
   allCountries: { label: string; value: string }[];
+};
+
+const ReviewPetAgeInputs: FC<{ index: number; control: any }> = ({
+  index,
+  control,
+}) => {
+  return (
+    <div className="flex flex-col gap-2 w-full">
+      <BodyText weight="semibold">AGE</BodyText>
+      <div className="flex items-center gap-2 w-full">
+        <FormInput
+          name={`pets.${index}.pet_age_years`}
+          label="YEARS"
+          placeholder="Enter years"
+          control={control}
+          keyboardType="number"
+          disabled
+          required
+        />
+        <BodyText className="text-neutral-500">&</BodyText>
+        <FormInput
+          name={`pets.${index}.pet_age_months`}
+          label="MONTHS"
+          placeholder="Enter months"
+          control={control}
+          keyboardType="number"
+          disabled
+          required
+        />
+      </div>
+    </div>
+  );
 };
 
 const Review: FC<ReviewProps> = ({
@@ -386,41 +562,35 @@ const Review: FC<ReviewProps> = ({
   return (
     <FormContainer>
       <div
-        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
+        className={`grid pb-8 ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
       >
-        <div className="flex flex-col gap-6">
-          <BodyText size="large" weight="semibold">
+        <div className="flex flex-col gap-4">
+          <BodyText size="large" weight="semibold" className="text-center">
             DESTINATION
           </BodyText>
-          <div className="flex gap-6 md:pl-10">
-            <div className="flex flex-col justify-end items-center gap-4 pb-2">
-              <LuMapPin className="text-2xl text[#5B5959]" />
-              <div className="flex flex-col gap-2">
-                <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              </div>
-              <LuMapPinCheckInside className="text-2xl text-[#E86B31]" />
-            </div>
-            <div className="flex flex-col flex-1 gap-6">
-              <SelectFormInput
-                label="ORIGIN COUNTRY"
-                name="origin_country"
-                control={control}
-                options={allCountries}
-                disabled
-                required
-              />
-              <SelectFormInput
-                label="DESTINATION"
-                name="destination"
-                control={control}
-                options={availableCountries}
-                disabled
-                required
-              />
-            </div>
+          <div className="flex flex-col gap-4">
+            <SelectFormInput
+              label="ORIGIN COUNTRY"
+              name="origin_country"
+              control={control}
+              options={allCountries}
+              disabled
+              required
+            />
+            <SelectFormInput
+              label="DESTINATION"
+              name="destination"
+              control={control}
+              options={availableCountries}
+              disabled
+              required
+            />
           </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          <BodyText size="large" weight="semibold" className="text-center">
+            TRAVEL DETAILS
+          </BodyText>
           <RadioFormInput
             name="companionship"
             label="WILL YOUR PET TRAVEL WITH YOU OR ALONE?"
@@ -438,11 +608,6 @@ const Review: FC<ReviewProps> = ({
             required
             disabled
           />
-        </div>
-        <div className="flex flex-col gap-6">
-          <BodyText size="large" weight="semibold">
-            TRAVEL DETAILS
-          </BodyText>
           <RadioFormInput
             name="travel_date"
             label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
@@ -465,7 +630,6 @@ const Review: FC<ReviewProps> = ({
             }
             control={control}
             dateType={dateType}
-            widthFull
             disabled
             required
           />
@@ -481,21 +645,91 @@ const Review: FC<ReviewProps> = ({
       <FormInput
         name="origin_full_address"
         label="ORIGIN FULL ADDRESS*"
-        placeholder="Enter the full address"
+        placeholder="Enter Address"
         control={control}
-        keyboardType="paragraph"
         widthFull
         required
+        disabled
       />
+      <div
+        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
+      >
+        <FormInput
+          name="origin_city"
+          label="CITY/DISTRICT"
+          placeholder="Enter City/District"
+          control={control}
+          widthFull
+          required
+          disabled
+        />
+        <FormInput
+          name="origin_state_province"
+          label="STATE/PROVINCE"
+          placeholder="Enter State/Province"
+          control={control}
+          widthFull
+          required
+          disabled
+        />
+      </div>
+      <div
+        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
+      >
+        <FormInput
+          name="origin_postal_code"
+          label="POSTAL CODE"
+          placeholder="Enter Postal Code"
+          control={control}
+          widthFull
+          required
+          disabled
+        />
+      </div>
       <FormInput
         name="destination_full_address"
         label="DESTINATION FULL ADDRESS*"
-        placeholder="Enter the full address"
+        placeholder="Enter Address"
         control={control}
-        keyboardType="paragraph"
         widthFull
         required
+        disabled
       />
+      <div
+        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
+      >
+        <FormInput
+          name="destination_city"
+          label="CITY/DISTRICT"
+          placeholder="Enter City/District"
+          control={control}
+          widthFull
+          required
+          disabled
+        />
+        <FormInput
+          name="destination_state_province"
+          label="STATE/PROVINCE"
+          placeholder="Enter State/Province"
+          control={control}
+          widthFull
+          required
+          disabled
+        />
+      </div>
+      <div
+        className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
+      >
+        <FormInput
+          name="destination_postal_code"
+          label="POSTAL CODE"
+          placeholder="Enter Postal Code"
+          control={control}
+          widthFull
+          required
+          disabled
+        />
+      </div>
 
       <BodyText className="text-center" size="large" weight="semibold">
         OWNER DETAILS
@@ -526,6 +760,8 @@ const Review: FC<ReviewProps> = ({
             ]}
             required
           />
+        </div>
+        <div className="flex flex-col gap-6">
           <FormInput
             name="contact_number"
             label="CONTACT NUMBER"
@@ -534,27 +770,6 @@ const Review: FC<ReviewProps> = ({
             widthFull
             disabled
             required
-          />
-        </div>
-        <div className="flex flex-col gap-6">
-          <FormInput
-            name="account_name"
-            label="ACCOUNT NAME"
-            placeholder="Enter account name"
-            control={control}
-            widthFull
-            disabled
-            required
-            className="w-full"
-          />
-          <FormInput
-            name="account_link"
-            label="LINK"
-            placeholder="Enter link"
-            className="w-full"
-            control={control}
-            widthFull
-            disabled
           />
           <FormInput
             name="email_address"
@@ -568,15 +783,37 @@ const Review: FC<ReviewProps> = ({
         </div>
       </div>
 
+      <div
+        className={`grid pb-8 ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
+      >
+        <FormInput
+          name="account_name"
+          label="ACCOUNT NAME"
+          placeholder="Enter account name"
+          control={control}
+          widthFull
+          disabled
+          required
+          className="w-full"
+        />
+        <FormInput
+          name="account_link"
+          label="LINK"
+          placeholder="Enter link"
+          className="w-full"
+          control={control}
+          widthFull
+          disabled
+        />
+      </div>
+
       {fields.map((field, index) => (
         <div className="flex flex-col gap-6" key={field.id}>
           <BodyText className="text-center" size="large" weight="semibold">
             PET {index !== 0 && index + 1} DETAILS
           </BodyText>
-          <div
-            className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
-          >
-            <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row w-full gap-6">
               <FormInput
                 name={`pets.${index}.pet_name`}
                 label="PET'S NAME"
@@ -597,17 +834,8 @@ const Review: FC<ReviewProps> = ({
                 className="w-full"
                 required
               />
-              <FormInput
-                name={`pets.${index}.pet_age`}
-                placeholder="Enter pet's age"
-                label="AGE"
-                control={control}
-                widthFull
-                disabled
-                className="w-full"
-              />
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row w-full gap-6">
               <FormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
@@ -618,6 +846,18 @@ const Review: FC<ReviewProps> = ({
                 className="w-full"
                 required
               />
+              <FormInput
+                name={`pets.${index}.pet_weight`}
+                label="PET'S ESTIMATED WEIGHT"
+                control={control}
+                widthFull
+                disabled
+                placeholder="Enter pet's estimated weight"
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="flex flex-col md:flex-row w-full gap-6">
               <DateFormInput
                 name={`pets.${index}.pet_birthday`}
                 label="DATE OF BIRTH"
@@ -629,20 +869,12 @@ const Review: FC<ReviewProps> = ({
                 enableYearSelect
                 required
               />
-              <FormInput
-                name={`pets.${index}.pet_weight`}
-                label="PET'S WEIGHT"
-                control={control}
-                widthFull
-                disabled
-                placeholder="Enter pet's estimated weight"
-                required
-              />
+              <ReviewPetAgeInputs index={index} control={control} />
             </div>
           </div>
           <FormInput
             name={`pets.${index}.pet_condition`}
-            label="MEDICAL CONDITION"
+            label="MEDICAL CONDITION THAT WE SHOULD BE AWARE OF:"
             placeholder="Enter pets' medical condition that we should be aware of"
             control={control}
             disabled
@@ -651,7 +883,7 @@ const Review: FC<ReviewProps> = ({
           />
           <FormInput
             name={`pets.${index}.special_instructions`}
-            label="SPECIAL INSTRUCTIONS"
+            label="PLEASE NOTE SPECIAL INSTRUCTIONS FOR YOUR PET:"
             placeholder="E.g. Prefers male handlers, aggressive towards cats or other dogs, etc."
             control={control}
             disabled
@@ -674,7 +906,7 @@ const Review: FC<ReviewProps> = ({
         setStep={setStep}
         onSubmit={onSubmit}
         loading={loading}
-        maxSteps={5}
+        maxSteps={6}
       />
     </FormContainer>
   );
@@ -685,10 +917,13 @@ const Review: FC<ReviewProps> = ({
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const { availableCountries, allCountries, philippinesCode } =
     useCountryData();
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+  const [step, setCurrentStep] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
   const router = useRouter();
+  type InternationalRelocationFormValues = z.infer<
+    typeof InternationalRelocationFormSchema
+  >;
 
   const createPetDetails = useMutation(
     api.mutations.pet_details.createPetDetails,
@@ -700,37 +935,48 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     api.mutations.international_pet_transport.bookInternationalPetTransport,
   );
 
-  const createInternationalRelocationForm = useForm({
-    resolver: zodResolver(InternationalRelocationFormSchema),
-    defaultValues: {
-      origin_country: type === "export" ? philippinesCode : "",
-      destination: type === "import" ? philippinesCode : "",
-      companionship: "",
-      travel_date: "",
-      date: "",
-      owner_name: "",
-      contact_form: "",
-      account_name: "",
-      account_link: "",
-      contact_number: "",
-      email_address: "",
-      pets: [
-        {
-          pet_name: "",
-          breed: "",
-          sex: "",
-          pet_birthday: "",
-          pet_age: "",
-          pet_weight: "",
-          pet_condition: "",
-          special_instructions: "",
-          pet_image: [],
-        },
-      ],
-      origin_full_address: "",
-      destination_full_address: "",
-    },
-  });
+  const createInternationalRelocationForm =
+    useForm<InternationalRelocationFormValues>({
+      resolver: zodResolver(InternationalRelocationFormSchema),
+      mode: "onSubmit",
+      reValidateMode: "onChange",
+      shouldFocusError: true,
+      defaultValues: {
+        origin_country: type === "export" ? philippinesCode : "",
+        destination: type === "import" ? philippinesCode : "",
+        companionship: "",
+        travel_date: "",
+        date: "",
+        owner_name: "",
+        contact_form: "",
+        account_name: "",
+        account_link: "",
+        contact_number: "",
+        email_address: "",
+        pets: [
+          {
+            pet_name: "",
+            breed: "",
+            sex: "",
+            pet_birthday: "",
+            pet_age_years: "",
+            pet_age_months: "",
+            pet_weight: "",
+            pet_condition: "",
+            special_instructions: "",
+            pet_image: [],
+          },
+        ],
+        origin_full_address: "",
+        destination_full_address: "",
+        origin_city: "",
+        origin_state_province: "",
+        origin_postal_code: "",
+        destination_city: "",
+        destination_state_province: "",
+        destination_postal_code: "",
+      },
+    });
 
   const control = createInternationalRelocationForm.control;
 
@@ -739,7 +985,63 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const travelDate = useWatch({ control, name: "travel_date" });
   const dateType = travelDate === "yes" ? "specific" : "range";
 
-  const handleSubmit = () => {
+  const scrollToFirstError = useCallback(() => {
+    const firstError = document.querySelector("[data-error='true']");
+    if (firstError) {
+      firstError.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
+
+  const setStep = useCallback(
+    async (nextStep: 0 | 1 | 2 | 3 | 4 | 5 | 6) => {
+      if (nextStep <= step) {
+        setCurrentStep(nextStep);
+        return;
+      }
+
+      if (step === 5) {
+        const isPetsStepValid =
+          await createInternationalRelocationForm.trigger("pets");
+        if (!isPetsStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setCurrentStep(nextStep);
+        return;
+      }
+
+      const fieldsToValidate = internationalRelocationStepFields[
+        step as keyof typeof internationalRelocationStepFields
+      ] as unknown as
+        | FieldPath<InternationalRelocationFormValues>[]
+        | undefined;
+      if (!fieldsToValidate || fieldsToValidate.length === 0) {
+        setCurrentStep(nextStep);
+        return;
+      }
+
+      const isStepValid =
+        await createInternationalRelocationForm.trigger(fieldsToValidate);
+      if (!isStepValid) {
+        scrollToFirstError();
+        return;
+      }
+
+      setCurrentStep(nextStep);
+    },
+    [createInternationalRelocationForm, scrollToFirstError, step],
+  );
+
+  const handleSubmit = async () => {
+    const isValid = await createInternationalRelocationForm.trigger();
+    if (!isValid) {
+      scrollToFirstError();
+      return;
+    }
+
     createInternationalRelocationForm.handleSubmit(async (data) => {
       try {
         setLoading(true);
@@ -775,7 +1077,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             breed: pet.breed,
             sex: pet.sex,
             pet_birthday: pet.pet_birthday,
-            pet_age: pet.pet_age,
+            pet_age: `${pet.pet_age_years}y ${pet.pet_age_months}m`,
             pet_weight: pet.pet_weight,
             pet_image: petImageId,
           };
@@ -801,7 +1103,13 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           contact_number: data.contact_number,
           email_address: data.email_address,
           origin_full_address: data.origin_full_address,
+          origin_city: data.origin_city,
+          origin_state_province: data.origin_state_province,
+          origin_postal_code: data.origin_postal_code,
           destination_full_address: data.destination_full_address,
+          destination_city: data.destination_city,
+          destination_state_province: data.destination_state_province,
+          destination_postal_code: data.destination_postal_code,
           pets: petIds,
         };
 
@@ -830,12 +1138,12 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     setStep,
     onSubmit: handleSubmit,
     loading,
-    maxSteps: 5,
+    maxSteps: 6,
   };
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
-      {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
+      {step === 0 && <Disclaimer onAgree={() => setCurrentStep(1)} />}
       {step === 1 && (
         <Destination
           control={control}
@@ -846,6 +1154,9 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         />
       )}
       {step === 2 && (
+        <DestinationFullAddress control={control} {...sharedButtonProps} />
+      )}
+      {step === 3 && (
         <TravelDetails
           control={control}
           travelDate={travelDate}
@@ -853,8 +1164,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           {...sharedButtonProps}
         />
       )}
-      {step === 3 && <OwnerDetails control={control} {...sharedButtonProps} />}
-      {step === 4 && (
+      {step === 4 && <OwnerDetails control={control} {...sharedButtonProps} />}
+      {step === 5 && (
         <PetDetails
           control={control}
           fields={fields}
@@ -863,7 +1174,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           {...sharedButtonProps}
         />
       )}
-      {step === 5 && (
+      {step === 6 && (
         <Review
           control={control}
           fields={fields}

@@ -16,7 +16,7 @@ export const getPaginated = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    const q = ctx.db.query("bookings");
+    const q = ctx.db.query("bookings").order("desc");
 
     return await q.paginate(args.paginationOpts);
   },
@@ -47,7 +47,8 @@ export const getById = query({
           }
 
           const image =
-            (await ctx.storage.getUrl(pet.pet_image)) || "/images/logo/logo.png";
+            (await ctx.storage.getUrl(pet.pet_image)) ||
+            "/images/logo/logo.png";
 
           return {
             ...pet,
@@ -90,7 +91,9 @@ export const getById = query({
     }
 
     if (booking.booking_type === "rabies_serology_test") {
-      const details = await ctx.db.get(booking.booking_id as Id<"rabies_serology_test">);
+      const details = await ctx.db.get(
+        booking.booking_id as Id<"rabies_serology_test">,
+      );
 
       if (!details) {
         return { booking, details: null, pet_details: [] };

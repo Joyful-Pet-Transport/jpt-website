@@ -36,7 +36,7 @@ const ContactUsSection: FC = () => {
             <InfoItemContainer
               icon={<IconContainer icon="location2" />}
               name="Address"
-              value="B27 L9 Ph 3 Michaelangelo St, Avida Santa Catalina Brgy. Salawag, Dasmariñas, Cavite, Philippines"
+              value="Block 10 Lot 7 Woodpecker St. Avida Residences Salawag Dasmariñas 4114 Cavite"
             />
             <InfoItemContainer
               icon={<IconContainer icon="email" />}

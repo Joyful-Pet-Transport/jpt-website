@@ -174,9 +174,9 @@ const BookingsPage = () => {
           },
         ]}
       />
-      <InternationalPetTransportTable />
+      {/* <InternationalPetTransportTable />
       <DomesticPetTransportTable />
-      <RabiesSerologyTest />
+      <RabiesSerologyTest /> */}
     </DashboardHeading>
   );
 };

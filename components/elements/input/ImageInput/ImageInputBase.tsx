@@ -9,6 +9,7 @@ import {
   baseInputDisabledClass,
 } from "../InputClass";
 import { LuImageUp } from "react-icons/lu";
+import DynamicButton from "../../button/DynamicButton";
 
 export type ImageInputBaseProps = {
   label: string;
@@ -28,7 +29,7 @@ export type ImageInputBaseProps = {
 const ImageInputBase: FC<ImageInputBaseProps> = ({
   label,
   whiteLabel = false,
-  placeholder = "Click to upload images",
+  placeholder = "Drag and drop image here",
   initialValue = [],
   validation,
   multiple = false,
@@ -183,6 +184,26 @@ const ImageInputBase: FC<ImageInputBaseProps> = ({
           <BodyText textColor="text-neutral-600">
             {isDragging ? "Drop images here" : placeholder}
           </BodyText>
+          <BodyText font="fredoka" textColor="text-neutral-600">
+            or
+          </BodyText>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <DynamicButton
+              size="medium"
+              htmlType="button"
+              onPress={handleClick}
+              className="min-w-0 px-6"
+            >
+              BROWSE
+            </DynamicButton>
+          </div>
+          <BodyText font="fredoka" textColor="text-neutral-600">
+            Support JPEG, PNG, etc.
+          </BodyText>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -199,12 +220,12 @@ const ImageInputBase: FC<ImageInputBaseProps> = ({
             {previews.map((preview, index) => (
               <div
                 key={index}
-                className="relative group w-full h-80 rounded-md overflow-hidden border border-gray-300"
+                className="relative group w-full h-80 rounded-md overflow-hidden border border-gray-300 bg-neutral-100"
               >
                 <img
                   src={preview}
                   alt={`Preview ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 {!disabled && (
                   <button

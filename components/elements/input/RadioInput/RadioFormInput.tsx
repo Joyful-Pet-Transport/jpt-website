@@ -20,12 +20,14 @@ const RadioFormInput: FC<RadioFormInputProps> = ({
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <RadioInputBase
-            {...inputProps}
-            initialValue={field.value ?? ""}
-            onChange={field.onChange}
-            validation={fieldState.error?.message}
-          />
+          <div data-error={!!fieldState.error}>
+            <RadioInputBase
+              {...inputProps}
+              initialValue={field.value ?? ""}
+              onChange={field.onChange}
+              validation={fieldState.error?.message}
+            />
+          </div>
         )}
       />
     </div>

@@ -3,7 +3,7 @@
  * Components add validation and disabled state classes on top of this.
  */
 export const BaseInputClass =
-  "px-3 py-2 rounded-md border text-sm w-full focus:outline-none focus:ring-2 bg-neutral-200";
+  "px-3 py-2 rounded-md border text-sm w-full focus:outline-none focus:ring-2 bg-white";
 
 export const baseInputValidationClass = {
   invalid: "border-red-500 focus:ring-red-300",
