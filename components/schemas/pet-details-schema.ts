@@ -5,8 +5,14 @@ const PetDetailsSchema = z.object({
   breed: z.string().min(3, "Please enter your pet's breed"),
   sex: z.string().min(1, "Please select your pet's sex"),
   pet_birthday: z.string().min(3, "Please select your pet's date of birth"),
-  pet_age_years: z.string().min(1, "Please enter your pet's age in years"),
-  pet_age_months: z.string().min(1, "Please enter your pet's age in months"),
+  pet_age_years: z
+    .string()
+    .regex(/^\d+$/, "Age in years must be a number")
+    .min(1, "Please enter your pet's age in years"),
+  pet_age_months: z
+    .string()
+    .regex(/^([0-9]|1[0-2])$/, "Age in months must be between 0 and 12")
+    .min(1, "Please enter your pet's age in months"),
   pet_weight: z.string().min(1, "Please enter your pet's weight"),
   pet_condition: z.string().optional(),
   special_instructions: z.string().optional(),

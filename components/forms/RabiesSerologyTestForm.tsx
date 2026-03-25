@@ -309,15 +309,23 @@ const Review: FC<ReviewProps> = ({
                 className="w-full"
                 required
               />
-              <FormInput
-                name={`pets.${index}.pet_age`}
-                placeholder="Enter pet's age"
-                label="AGE"
-                control={control}
-                widthFull
-                disabled
-                className="w-full"
-              />
+              <div className="flex gap-2">
+                <FormInput
+                  name={`pets.${index}.pet_age_years`}
+                  placeholder="Enter years"
+                  label="YEARS"
+                  control={control}
+                  required
+                />
+                <BodyText className="text-neutral-500">&</BodyText>
+                <FormInput
+                  name={`pets.${index}.pet_age_months`}
+                  placeholder="Enter months"
+                  label="MONTHS"
+                  control={control}
+                  required
+                />
+              </div>
             </div>
             <div className="flex flex-col gap-6">
               <FormInput
@@ -426,7 +434,8 @@ const RabiesSerologyTestForm: FC = () => {
           breed: "",
           sex: "",
           pet_birthday: "",
-          pet_age: "",
+          pet_age_years: "",
+          pet_age_months: "",
           pet_weight: "",
           pet_condition: "",
           special_instructions: "",
@@ -471,7 +480,7 @@ const RabiesSerologyTestForm: FC = () => {
             breed: pet.breed,
             sex: pet.sex,
             pet_birthday: pet.pet_birthday,
-            pet_age: pet.pet_age,
+            pet_age: `${pet.pet_age_years}y ${pet.pet_age_months}m`,
             pet_weight: pet.pet_weight,
             pet_image: petImageId as any,
           };

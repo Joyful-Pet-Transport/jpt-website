@@ -72,12 +72,10 @@ const internationalRelocationStepFields = {
     "origin_city",
     "origin_state_province",
     "origin_postal_code",
-    "origin_address_country",
     "destination_full_address",
     "destination_city",
     "destination_state_province",
     "destination_postal_code",
-    "destination_address_country",
   ],
   3: ["companionship", "travel_date", "date"],
   4: [
@@ -281,14 +279,6 @@ const DestinationFullAddress: FC<DestinationFullAddressProps> = ({
             widthFull
             required
           />
-          <FormInput
-            name="origin_address_country"
-            label="COUNTRY"
-            placeholder="Enter Country"
-            control={control}
-            widthFull
-            required
-          />
         </div>
 
         <FormInput
@@ -322,14 +312,6 @@ const DestinationFullAddress: FC<DestinationFullAddressProps> = ({
             name="destination_postal_code"
             label="POSTAL CODE"
             placeholder="Enter Postal Code"
-            control={control}
-            widthFull
-            required
-          />
-          <FormInput
-            name="destination_address_country"
-            label="COUNTRY"
-            placeholder="Enter Country"
             control={control}
             widthFull
             required
@@ -544,6 +526,7 @@ const ReviewPetAgeInputs: FC<{ index: number; control: any }> = ({
           label="YEARS"
           placeholder="Enter years"
           control={control}
+          keyboardType="number"
           disabled
           required
         />
@@ -553,6 +536,7 @@ const ReviewPetAgeInputs: FC<{ index: number; control: any }> = ({
           label="MONTHS"
           placeholder="Enter months"
           control={control}
+          keyboardType="number"
           disabled
           required
         />
@@ -701,15 +685,6 @@ const Review: FC<ReviewProps> = ({
           required
           disabled
         />
-        <FormInput
-          name="origin_address_country"
-          label="COUNTRY"
-          placeholder="Enter Country"
-          control={control}
-          widthFull
-          required
-          disabled
-        />
       </div>
       <FormInput
         name="destination_full_address"
@@ -749,15 +724,6 @@ const Review: FC<ReviewProps> = ({
           name="destination_postal_code"
           label="POSTAL CODE"
           placeholder="Enter Postal Code"
-          control={control}
-          widthFull
-          required
-          disabled
-        />
-        <FormInput
-          name="destination_address_country"
-          label="COUNTRY"
-          placeholder="Enter Country"
           control={control}
           widthFull
           required
@@ -969,49 +935,48 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     api.mutations.international_pet_transport.bookInternationalPetTransport,
   );
 
-  const createInternationalRelocationForm = useForm<InternationalRelocationFormValues>({
-    resolver: zodResolver(InternationalRelocationFormSchema),
-    mode: "onSubmit",
-    reValidateMode: "onChange",
-    shouldFocusError: true,
-    defaultValues: {
-      origin_country: type === "export" ? philippinesCode : "",
-      destination: type === "import" ? philippinesCode : "",
-      companionship: "",
-      travel_date: "",
-      date: "",
-      owner_name: "",
-      contact_form: "",
-      account_name: "",
-      account_link: "",
-      contact_number: "",
-      email_address: "",
-      pets: [
-        {
-          pet_name: "",
-          breed: "",
-          sex: "",
-          pet_birthday: "",
-          pet_age_years: "",
-          pet_age_months: "",
-          pet_weight: "",
-          pet_condition: "",
-          special_instructions: "",
-          pet_image: [],
-        },
-      ],
-      origin_full_address: "",
-      destination_full_address: "",
-      origin_city: "",
-      origin_state_province: "",
-      origin_postal_code: "",
-      origin_address_country: "",
-      destination_city: "",
-      destination_state_province: "",
-      destination_postal_code: "",
-      destination_address_country: "",
-    },
-  });
+  const createInternationalRelocationForm =
+    useForm<InternationalRelocationFormValues>({
+      resolver: zodResolver(InternationalRelocationFormSchema),
+      mode: "onSubmit",
+      reValidateMode: "onChange",
+      shouldFocusError: true,
+      defaultValues: {
+        origin_country: type === "export" ? philippinesCode : "",
+        destination: type === "import" ? philippinesCode : "",
+        companionship: "",
+        travel_date: "",
+        date: "",
+        owner_name: "",
+        contact_form: "",
+        account_name: "",
+        account_link: "",
+        contact_number: "",
+        email_address: "",
+        pets: [
+          {
+            pet_name: "",
+            breed: "",
+            sex: "",
+            pet_birthday: "",
+            pet_age_years: "",
+            pet_age_months: "",
+            pet_weight: "",
+            pet_condition: "",
+            special_instructions: "",
+            pet_image: [],
+          },
+        ],
+        origin_full_address: "",
+        destination_full_address: "",
+        origin_city: "",
+        origin_state_province: "",
+        origin_postal_code: "",
+        destination_city: "",
+        destination_state_province: "",
+        destination_postal_code: "",
+      },
+    });
 
   const control = createInternationalRelocationForm.control;
 
@@ -1038,7 +1003,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
       }
 
       if (step === 5) {
-        const isPetsStepValid = await createInternationalRelocationForm.trigger("pets");
+        const isPetsStepValid =
+          await createInternationalRelocationForm.trigger("pets");
         if (!isPetsStepValid) {
           scrollToFirstError();
           return;
@@ -1049,13 +1015,16 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
 
       const fieldsToValidate = internationalRelocationStepFields[
         step as keyof typeof internationalRelocationStepFields
-      ] as FieldPath<InternationalRelocationFormValues>[] | undefined;
+      ] as unknown as
+        | FieldPath<InternationalRelocationFormValues>[]
+        | undefined;
       if (!fieldsToValidate || fieldsToValidate.length === 0) {
         setCurrentStep(nextStep);
         return;
       }
 
-      const isStepValid = await createInternationalRelocationForm.trigger(fieldsToValidate);
+      const isStepValid =
+        await createInternationalRelocationForm.trigger(fieldsToValidate);
       if (!isStepValid) {
         scrollToFirstError();
         return;
@@ -1137,12 +1106,10 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           origin_city: data.origin_city,
           origin_state_province: data.origin_state_province,
           origin_postal_code: data.origin_postal_code,
-          origin_address_country: data.origin_address_country,
           destination_full_address: data.destination_full_address,
           destination_city: data.destination_city,
           destination_state_province: data.destination_state_province,
           destination_postal_code: data.destination_postal_code,
-          destination_address_country: data.destination_address_country,
           pets: petIds,
         };
 

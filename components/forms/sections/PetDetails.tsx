@@ -38,7 +38,10 @@ type PetIndexDetailsProps = PetDetailsProps & {
   maxSteps: number;
 };
 
-const PetAgeInputs: FC<{ index: number; control: any }> = ({ index, control }) => {
+const PetAgeInputs: FC<{ index: number; control: any }> = ({
+  index,
+  control,
+}) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <BodyText weight="semibold">AGE</BodyText>
@@ -48,6 +51,7 @@ const PetAgeInputs: FC<{ index: number; control: any }> = ({ index, control }) =
           label="YEARS"
           placeholder="Enter years"
           control={control}
+          keyboardType="number"
           required
         />
         <BodyText className="text-neutral-500">&</BodyText>
@@ -56,6 +60,7 @@ const PetAgeInputs: FC<{ index: number; control: any }> = ({ index, control }) =
           label="MONTHS"
           placeholder="Enter months"
           control={control}
+          keyboardType="number"
           required
         />
       </div>

@@ -550,17 +550,6 @@ const Review: FC<ReviewProps> = ({
                 required
               />
               <FormInput
-                name={`pets.${index}.pet_age`}
-                placeholder="Enter pet's age"
-                label="AGE"
-                control={control}
-                widthFull
-                disabled
-                className="w-full"
-              />
-            </div>
-            <div className="flex flex-col gap-12">
-              <FormInput
                 name={`pets.${index}.sex`}
                 label="SEX"
                 placeholder="Enter pet's gender (or sex)"
@@ -570,6 +559,25 @@ const Review: FC<ReviewProps> = ({
                 className="w-full"
                 required
               />
+              <div className="flex gap-2">
+                <FormInput
+                  name={`pets.${index}.pet_age_years`}
+                  placeholder="Enter years"
+                  label="YEARS"
+                  control={control}
+                  required
+                  disabled
+                />
+                <BodyText className="text-neutral-500">&</BodyText>
+                <FormInput
+                  name={`pets.${index}.pet_age_months`}
+                  placeholder="Enter months"
+                  label="MONTHS"
+                  control={control}
+                  required
+                  disabled
+                />
+              </div>
               <DateFormInput
                 name={`pets.${index}.pet_birthday`}
                 label="DATE OF BIRTH"
@@ -674,7 +682,8 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
           breed: "",
           sex: "",
           pet_birthday: "",
-          pet_age: "",
+          pet_age_years: "",
+          pet_age_months: "",
           pet_weight: "",
           pet_condition: "",
           special_instructions: "",
@@ -723,7 +732,7 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
             breed: pet.breed,
             sex: pet.sex,
             pet_birthday: pet.pet_birthday,
-            pet_age: pet.pet_age,
+            pet_age: `${pet.pet_age_years}y ${pet.pet_age_months}m`,
             pet_weight: pet.pet_weight,
             pet_image: petImageId as any,
           };
