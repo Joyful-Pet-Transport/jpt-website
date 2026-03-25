@@ -1,8 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { getData as getCountryListData } from "country-list";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { FieldPath, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectFormInput from "../elements/input/SelectInput/SelectFormInput";
 import { LuMapPin, LuMapPinCheckInside } from "react-icons/lu";
@@ -11,10 +11,6 @@ import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
 import DateFormInput from "../elements/input/DateInput/DateFormInput";
 import FormInput from "../elements/input/TextInput/FormInput";
 import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
-import {
-  BaseInputClass,
-  baseInputValidationClass,
-} from "../elements/input/InputClass";
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -24,7 +20,7 @@ import InternationalRelocationFormSchema from "../schemas/international-pet-relo
 import { useRouter } from "next/navigation";
 import PetDetails from "./sections/PetDetails";
 import FormButtons from "./sections/Buttons";
-import { cn } from "@/lib/utils";
+import z from "zod";
 
 type InternationalPetRelocationFormProps = {
   type: string;
@@ -68,6 +64,31 @@ const Progress: FC<{ step: 0 | 1 | 2 | 3 | 4 | 5 | 6 }> = ({ step }) => {
     </div>
   );
 };
+
+const internationalRelocationStepFields = {
+  1: ["origin_country", "destination"],
+  2: [
+    "origin_full_address",
+    "origin_city",
+    "origin_state_province",
+    "origin_postal_code",
+    "origin_address_country",
+    "destination_full_address",
+    "destination_city",
+    "destination_state_province",
+    "destination_postal_code",
+    "destination_address_country",
+  ],
+  3: ["companionship", "travel_date", "date"],
+  4: [
+    "owner_name",
+    "contact_number",
+    "contact_form",
+    "email_address",
+    "account_name",
+    "account_link",
+  ],
+} as const;
 
 // ─── Disclaimer ─────────────────────────────────────────────────────────────
 
@@ -510,45 +531,31 @@ type ReviewProps = {
   allCountries: { label: string; value: string }[];
 };
 
-const ReviewPetAgeInputs: FC<{ index: number }> = ({ index }) => {
-  const inputClassName = cn(
-    BaseInputClass,
-    baseInputValidationClass.valid,
-    "text-base lg:text-lg bg-white",
-  );
-
+const ReviewPetAgeInputs: FC<{ index: number; control: any }> = ({
+  index,
+  control,
+}) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <BodyText weight="semibold">AGE</BodyText>
       <div className="flex items-center gap-2 w-full">
-        <input
+        <FormInput
           name={`pets.${index}.pet_age_years`}
-          placeholder="Enter pet's age"
-          aria-label="Pet age in years"
-          className={inputClassName}
+          label="YEARS"
+          placeholder="Enter years"
+          control={control}
           disabled
+          required
         />
         <BodyText className="text-neutral-500">&</BodyText>
-        <input
+        <FormInput
           name={`pets.${index}.pet_age_months`}
-          placeholder="Enter pet's age"
-          aria-label="Pet age in months"
-          className={inputClassName}
+          label="MONTHS"
+          placeholder="Enter months"
+          control={control}
           disabled
+          required
         />
-      </div>
-      <div className="flex items-center gap-2 w-full">
-        <BodyText size="xsmall" textColor="text-neutral-500" className="w-full">
-          YEARS
-        </BodyText>
-        <div className="w-3" />
-        <BodyText
-          size="xsmall"
-          textColor="text-neutral-500"
-          className="w-full text-left"
-        >
-          MONTHS
-        </BodyText>
       </div>
     </div>
   );
@@ -896,7 +903,7 @@ const Review: FC<ReviewProps> = ({
                 enableYearSelect
                 required
               />
-              <ReviewPetAgeInputs index={index} />
+              <ReviewPetAgeInputs index={index} control={control} />
             </div>
           </div>
           <FormInput
@@ -944,10 +951,13 @@ const Review: FC<ReviewProps> = ({
 const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const { availableCountries, allCountries, philippinesCode } =
     useCountryData();
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(0);
+  const [step, setCurrentStep] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
   const router = useRouter();
+  type InternationalRelocationFormValues = z.infer<
+    typeof InternationalRelocationFormSchema
+  >;
 
   const createPetDetails = useMutation(
     api.mutations.pet_details.createPetDetails,
@@ -959,8 +969,11 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     api.mutations.international_pet_transport.bookInternationalPetTransport,
   );
 
-  const createInternationalRelocationForm = useForm({
+  const createInternationalRelocationForm = useForm<InternationalRelocationFormValues>({
     resolver: zodResolver(InternationalRelocationFormSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    shouldFocusError: true,
     defaultValues: {
       origin_country: type === "export" ? philippinesCode : "",
       destination: type === "import" ? philippinesCode : "",
@@ -979,7 +992,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           breed: "",
           sex: "",
           pet_birthday: "",
-          pet_age: "",
+          pet_age_years: "",
+          pet_age_months: "",
           pet_weight: "",
           pet_condition: "",
           special_instructions: "",
@@ -1006,7 +1020,59 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const travelDate = useWatch({ control, name: "travel_date" });
   const dateType = travelDate === "yes" ? "specific" : "range";
 
-  const handleSubmit = () => {
+  const scrollToFirstError = useCallback(() => {
+    const firstError = document.querySelector("[data-error='true']");
+    if (firstError) {
+      firstError.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
+
+  const setStep = useCallback(
+    async (nextStep: 0 | 1 | 2 | 3 | 4 | 5 | 6) => {
+      if (nextStep <= step) {
+        setCurrentStep(nextStep);
+        return;
+      }
+
+      if (step === 5) {
+        const isPetsStepValid = await createInternationalRelocationForm.trigger("pets");
+        if (!isPetsStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setCurrentStep(nextStep);
+        return;
+      }
+
+      const fieldsToValidate = internationalRelocationStepFields[
+        step as keyof typeof internationalRelocationStepFields
+      ] as FieldPath<InternationalRelocationFormValues>[] | undefined;
+      if (!fieldsToValidate || fieldsToValidate.length === 0) {
+        setCurrentStep(nextStep);
+        return;
+      }
+
+      const isStepValid = await createInternationalRelocationForm.trigger(fieldsToValidate);
+      if (!isStepValid) {
+        scrollToFirstError();
+        return;
+      }
+
+      setCurrentStep(nextStep);
+    },
+    [createInternationalRelocationForm, scrollToFirstError, step],
+  );
+
+  const handleSubmit = async () => {
+    const isValid = await createInternationalRelocationForm.trigger();
+    if (!isValid) {
+      scrollToFirstError();
+      return;
+    }
+
     createInternationalRelocationForm.handleSubmit(async (data) => {
       try {
         setLoading(true);
@@ -1042,7 +1108,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
             breed: pet.breed,
             sex: pet.sex,
             pet_birthday: pet.pet_birthday,
-            pet_age: pet.pet_age,
+            pet_age: `${pet.pet_age_years}y ${pet.pet_age_months}m`,
             pet_weight: pet.pet_weight,
             pet_image: petImageId,
           };
@@ -1110,7 +1176,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
-      {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
+      {step === 0 && <Disclaimer onAgree={() => setCurrentStep(1)} />}
       {step === 1 && (
         <Destination
           control={control}

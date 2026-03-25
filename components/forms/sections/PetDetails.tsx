@@ -5,11 +5,6 @@ import ImageFormInput from "@/components/elements/input/ImageInput/ImageFormInpu
 import SelectFormInput from "@/components/elements/input/SelectInput/SelectFormInput";
 import FormInput from "@/components/elements/input/TextInput/FormInput";
 import BodyText from "@/components/elements/text/BodyText";
-import {
-  BaseInputClass,
-  baseInputValidationClass,
-} from "@/components/elements/input/InputClass";
-import { cn } from "@/lib/utils";
 import { FC } from "react";
 import { FaTrashCan } from "react-icons/fa6";
 import FormButtons from "./Buttons";
@@ -43,43 +38,26 @@ type PetIndexDetailsProps = PetDetailsProps & {
   maxSteps: number;
 };
 
-const PetAgeInputs: FC<{ index: number }> = ({ index }) => {
-  const inputClassName = cn(
-    BaseInputClass,
-    baseInputValidationClass.valid,
-    "text-base lg:text-lg bg-white",
-  );
-
+const PetAgeInputs: FC<{ index: number; control: any }> = ({ index, control }) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <BodyText weight="semibold">AGE</BodyText>
       <div className="flex items-center gap-2 w-full">
-        <input
+        <FormInput
           name={`pets.${index}.pet_age_years`}
-          placeholder="Enter pet's age"
-          aria-label="Pet age in years"
-          className={inputClassName}
+          label="YEARS"
+          placeholder="Enter years"
+          control={control}
+          required
         />
         <BodyText className="text-neutral-500">&</BodyText>
-        <input
+        <FormInput
           name={`pets.${index}.pet_age_months`}
-          placeholder="Enter pet's age"
-          aria-label="Pet age in months"
-          className={inputClassName}
+          label="MONTHS"
+          placeholder="Enter months"
+          control={control}
+          required
         />
-      </div>
-      <div className="flex items-center gap-2 w-full">
-        <BodyText size="xsmall" textColor="text-neutral-500" className="w-full">
-          YEARS
-        </BodyText>
-        <div className="w-3" />
-        <BodyText
-          size="xsmall"
-          textColor="text-neutral-500"
-          className="w-full text-left"
-        >
-          MONTHS
-        </BodyText>
       </div>
     </div>
   );
@@ -172,7 +150,7 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
                 enableYearSelect
                 required
               />
-              <PetAgeInputs index={index} />
+              <PetAgeInputs index={index} control={control} />
             </div>
           </div>
         ) : (
@@ -224,7 +202,7 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
                 enableYearSelect
                 required
               />
-              <PetAgeInputs index={index} />
+              <PetAgeInputs index={index} control={control} />
             </div>
           </div>
         )}
@@ -322,7 +300,8 @@ const PetDetails: FC<PetDetailsStepProps> = ({
               breed: "",
               sex: "",
               pet_birthday: "",
-              pet_age: "",
+              pet_age_years: "",
+              pet_age_months: "",
               pet_weight: "",
               pet_condition: "",
               special_instructions: "",

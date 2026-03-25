@@ -20,12 +20,14 @@ const ImageFormInput: FC<ImageFormInputProps> = ({
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <ImageInputBase
-            {...inputProps}
-            initialValue={field.value ?? []}
-            onChange={field.onChange}
-            validation={fieldState.error?.message}
-          />
+          <div data-error={!!fieldState.error}>
+            <ImageInputBase
+              {...inputProps}
+              initialValue={field.value ?? []}
+              onChange={field.onChange}
+              validation={fieldState.error?.message}
+            />
+          </div>
         )}
       />
     </div>

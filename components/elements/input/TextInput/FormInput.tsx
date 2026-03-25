@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { Controller } from "react-hook-form";
 import InputBase, { InputBaseProps } from "./InputBase";
 
@@ -14,27 +14,21 @@ const FormInput: FC<FormInputProps> = ({
   className,
   ...inputProps
 }) => {
-  const renderInput = useCallback(
-    ({ field, fieldState }: any) => (
-      <InputBase
-        {...inputProps}
-        value={field.value ?? ""}
-        onChange={field.onChange}
-        validation={fieldState.error?.message}
-      />
-    ),
-    [
-      inputProps.label,
-      inputProps.keyboardType,
-      inputProps.disabled,
-      inputProps.validation,
-    ],
-  );
-
   return (
-    <div className={className}>
-      <Controller name={name} control={control} render={renderInput} />
-    </div>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState }) => (
+        <div className={className} data-error={!!fieldState.error}>
+          <InputBase
+            {...inputProps}
+            value={field.value ?? ""}
+            onChange={field.onChange}
+            validation={fieldState.error?.message}
+          />
+        </div>
+      )}
+    />
   );
 };
 
