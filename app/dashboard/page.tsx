@@ -1,6 +1,7 @@
 "use client";
 
 import BaseTable from "@/components/elements/table/BaseTable";
+import BodyText from "@/components/elements/text/BodyText";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
@@ -64,8 +65,9 @@ const DashboardPage = () => {
 
   return (
     <DashboardHeading title="Dashboard">
-      <PetsTable />
-      <InquiryTable />
+      {/* <PetsTable />
+      <InquiryTable /> */}
+      <BodyText>Widgets comming soon</BodyText>
     </DashboardHeading>
   );
 };

@@ -1,6 +1,6 @@
 import { useResponsive } from "@/utils/hooks/useWindowsDimensions";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -403,7 +403,7 @@ const Review: FC<ReviewProps> = ({
 // ─── RabiesSerologyTestForm ───────────────────────────────────────────────────
 
 const RabiesSerologyTestForm: FC = () => {
-  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
+  const [step, setStepState] = useState<0 | 1 | 2 | 3>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const modal = useModal();
@@ -447,6 +447,60 @@ const RabiesSerologyTestForm: FC = () => {
 
   const control = createRabiesSerologyTestForm.control;
   const { fields, append, remove } = useFieldArray({ control, name: "pets" });
+
+  const scrollToFirstError = useCallback(() => {
+    const firstError = document.querySelector("[data-error=true]");
+    if (firstError) {
+      firstError.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
+
+  const setStep = useCallback(
+    async (nextStep: 0 | 1 | 2 | 3) => {
+      if (nextStep <= step) {
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 1) {
+        // Validate owner details
+        const ownerFields = [
+          "owner_name" as const,
+          "contact_form" as const,
+          "account_name" as const,
+          "contact_number" as const,
+          "email_address" as const,
+          "date" as const,
+        ];
+        const isOwnerStepValid =
+          await createRabiesSerologyTestForm.trigger(ownerFields);
+        if (!isOwnerStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 2) {
+        // Validate pet details
+        const isPetsStepValid =
+          await createRabiesSerologyTestForm.trigger("pets");
+        if (!isPetsStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      setStepState(nextStep);
+    },
+    [createRabiesSerologyTestForm, scrollToFirstError, step],
+  );
 
   const handleSubmit = () => {
     createRabiesSerologyTestForm.handleSubmit(async (data) => {
@@ -531,7 +585,7 @@ const RabiesSerologyTestForm: FC = () => {
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
-      {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
+      {step === 0 && <Disclaimer onAgree={() => setStepState(1)} />}
       {step === 1 && <OwnerDetails control={control} {...sharedButtonProps} />}
       {step === 2 && (
         <PetDetails

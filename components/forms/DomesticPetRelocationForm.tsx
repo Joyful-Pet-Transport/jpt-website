@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -647,7 +647,7 @@ type RelocationFormProps = {
 };
 
 const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
-  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
+  const [step, setStepState] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
   const router = useRouter();
@@ -699,6 +699,70 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
   const { fields, append, remove } = useFieldArray({ control, name: "pets" });
   const travelDate = useWatch({ control, name: "travel_date" });
   const dateType = travelDate === "yes" ? "specific" : "range";
+
+  const scrollToFirstError = useCallback(() => {
+    const firstError = document.querySelector("[data-error=true]");
+    if (firstError) {
+      firstError.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
+
+  const setStep = useCallback(
+    async (nextStep: 0 | 1 | 2 | 3 | 4) => {
+      if (nextStep <= step) {
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 1) {
+        // Validate pickup/destination
+        const routeFields = ["pickup_address" as const, "destination" as const];
+        const isRouteStepValid =
+          await createDomesticRelocationForm.trigger(routeFields);
+        if (!isRouteStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 2) {
+        // Validate travel details
+        const travelFields = [
+          "travel_date" as const,
+          "date" as const,
+          "mode_of_transport" as const,
+        ];
+        const isTravelStepValid =
+          await createDomesticRelocationForm.trigger(travelFields);
+        if (!isTravelStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      if (step === 3) {
+        // Validate pet details
+        const isPetsStepValid =
+          await createDomesticRelocationForm.trigger("pets");
+        if (!isPetsStepValid) {
+          scrollToFirstError();
+          return;
+        }
+        setStepState(nextStep);
+        return;
+      }
+
+      setStepState(nextStep);
+    },
+    [createDomesticRelocationForm, scrollToFirstError, step],
+  );
 
   const handleSubmit = () => {
     createDomesticRelocationForm.handleSubmit(async (data) => {
@@ -789,7 +853,7 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
 
   return (
     <div className="flex flex-col w-full items-center gap-8">
-      {step === 0 && <Disclaimer onAgree={() => setStep(1)} />}
+      {step === 0 && <Disclaimer onAgree={() => setStepState(1)} />}
       {step === 1 && (
         <OwnerDetails
           control={control}
