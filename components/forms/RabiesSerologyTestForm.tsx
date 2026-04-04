@@ -12,11 +12,11 @@ import BodyText from "../elements/text/BodyText";
 import DynamicButton from "../elements/button/DynamicButton";
 import FormContainer from "../containers/FormContainer";
 import FormInput from "../elements/input/TextInput/FormInput";
-import RadioFormInput from "../elements/input/RadioInput/RadioFormInput";
 import DateFormInput from "../elements/input/DateInput/DateFormInput";
 import ImageFormInput from "../elements/input/ImageInput/ImageFormInput";
 import PetDetails from "./sections/PetDetails";
 import FormButtons from "./sections/Buttons";
+import OwnerDetailsFields from "./sections/OwnerDetails";
 
 // ─── Progress ────────────────────────────────────────────────────────────────
 
@@ -111,56 +111,7 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
       <BodyText size="large" weight="semibold" className="text-center">
         OWNER DETAILS
       </BodyText>
-      <FormInput
-        name="owner_name"
-        label="OWNER'S NAME"
-        placeholder="Enter owner's name"
-        control={control}
-        required
-      />
-      <RadioFormInput
-        name="contact_form"
-        label="WHERE CAN WE CONTACT YOU?"
-        control={control}
-        options={[
-          { label: "Facebook Messenger", value: "facebook" },
-          { label: "WhatsApp", value: "whatsapp" },
-          { label: "Viber", value: "viber" },
-          { label: "Telegram", value: "telegram" },
-        ]}
-        required
-      />
-      <div className="flex flex-col md:flex-row w-full gap-4">
-        <FormInput
-          name="account_name"
-          label="ACCOUNT NAME"
-          placeholder="Enter account name"
-          control={control}
-          required
-          className="w-full"
-        />
-        <FormInput
-          name="account_link"
-          label="LINK"
-          placeholder="Enter link"
-          className="w-full"
-          control={control}
-        />
-      </div>
-      <FormInput
-        name="contact_number"
-        label="CONTACT NUMBER"
-        placeholder="Enter contact number"
-        control={control}
-        required
-      />
-      <FormInput
-        name="email_address"
-        label="ACTIVE EMAIL ADDRESS"
-        placeholder="Enter active email address"
-        control={control}
-        required
-      />
+      <OwnerDetailsFields control={control} />
       <DateFormInput
         name="date"
         label="Date of testing"
@@ -209,67 +160,7 @@ const Review: FC<ReviewProps> = ({
         className={`grid ${responsive.isTabletOrMobile ? "grid-cols-1 gap-12" : "grid-cols-2 gap-4"}`}
       >
         <div className="flex flex-col gap-6">
-          <FormInput
-            name="owner_name"
-            label="OWNER'S NAME"
-            placeholder="Enter owner's name"
-            control={control}
-            widthFull
-            disabled
-            required
-          />
-          <RadioFormInput
-            name="contact_form"
-            label="WHERE CAN WE CONTACT YOU?"
-            control={control}
-            disabled
-            options={[
-              { label: "Facebook Messenger", value: "facebook" },
-              { label: "WhatsApp", value: "whatsapp" },
-              { label: "Viber", value: "viber" },
-              { label: "Telegram", value: "telegram" },
-            ]}
-            required
-          />
-          <FormInput
-            name="contact_number"
-            label="CONTACT NUMBER"
-            placeholder="Enter contact number"
-            control={control}
-            widthFull
-            disabled
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-6">
-          <FormInput
-            name="account_name"
-            label="ACCOUNT NAME"
-            placeholder="Enter account name"
-            control={control}
-            widthFull
-            disabled
-            required
-            className="w-full"
-          />
-          <FormInput
-            name="account_link"
-            label="LINK"
-            placeholder="Enter link"
-            className="w-full"
-            control={control}
-            widthFull
-            disabled
-          />
-          <FormInput
-            name="email_address"
-            label="ACTIVE EMAIL ADDRESS"
-            placeholder="Enter active email address"
-            control={control}
-            widthFull
-            disabled
-            required
-          />
+          <OwnerDetailsFields control={control} disabled />
         </div>
       </div>
       <DateFormInput
@@ -417,16 +308,20 @@ const RabiesSerologyTestForm: FC = () => {
   const bookRabiesSerologyTest = useMutation(
     api.mutations.rabies_serology_test.bookRabiesSerologyTest,
   );
+  const upsertOwner = useMutation(api.mutations.users.upsertOwner);
+  const attachPets = useMutation(api.mutations.users.attachPets);
 
   const createRabiesSerologyTestForm = useForm({
     resolver: zodResolver(RabiesSerologyTestSchema),
     defaultValues: {
-      owner_name: "",
-      contact_form: "",
-      account_name: "",
-      account_link: "",
-      contact_number: "",
-      email_address: "",
+      owner: {
+        owner_name: "",
+        contact_form: "",
+        account_name: "",
+        account_link: "",
+        contact_number: "",
+        email_address: "",
+      },
       date: "",
       pets: [
         {
@@ -468,11 +363,11 @@ const RabiesSerologyTestForm: FC = () => {
       if (step === 1) {
         // Validate owner details
         const ownerFields = [
-          "owner_name" as const,
-          "contact_form" as const,
-          "account_name" as const,
-          "contact_number" as const,
-          "email_address" as const,
+          "owner.owner_name" as const,
+          "owner.contact_form" as const,
+          "owner.account_name" as const,
+          "owner.contact_number" as const,
+          "owner.email_address" as const,
           "date" as const,
         ];
         const isOwnerStepValid =
@@ -506,6 +401,8 @@ const RabiesSerologyTestForm: FC = () => {
     createRabiesSerologyTestForm.handleSubmit(async (data) => {
       try {
         setLoading(true);
+        const ownerData = data.owner;
+        const userId = await upsertOwner(ownerData);
         const petIds = [];
 
         for (const pet of data.pets) {
@@ -547,13 +444,10 @@ const RabiesSerologyTestForm: FC = () => {
           petIds.push(petId);
         }
 
+        await attachPets({ userId, petIds });
+
         const bookingData = {
-          owner_name: data.owner_name,
-          contact_form: data.contact_form,
-          account_name: data.account_name,
-          account_link: data.account_link,
-          contact_number: data.contact_number,
-          email_address: data.email_address,
+          userId,
           date: data.date,
           pets: petIds,
         };
