@@ -11,11 +11,13 @@ import { useMemo, useState } from "react";
 const BookingsPage = () => {
   const router = useRouter();
   const [bookingType, setBookingType] = useState<string>("");
+  const [internationalFlow, setInternationalFlow] = useState<string>("");
   const queryArgs = useMemo(
     () => ({
       booking_type: bookingType || undefined,
+      international_flow: internationalFlow || undefined,
     }),
-    [bookingType],
+    [bookingType, internationalFlow],
   );
 
   const filters = [
@@ -35,7 +37,12 @@ const BookingsPage = () => {
             <button
               key={filter.value || "all"}
               type="button"
-              onClick={() => setBookingType(filter.value)}
+              onClick={() => {
+                setBookingType(filter.value);
+                if (filter.value !== "international_pet_transport") {
+                  setInternationalFlow("");
+                }
+              }}
               className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
                 active
                   ? "bg-blue-600 border-blue-600 text-white"
@@ -46,6 +53,43 @@ const BookingsPage = () => {
             </button>
           );
         })}
+        {bookingType === "international_pet_transport" && (
+          <>
+            <button
+              type="button"
+              onClick={() => setInternationalFlow("")}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                internationalFlow === ""
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              All Intl
+            </button>
+            <button
+              type="button"
+              onClick={() => setInternationalFlow("import")}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                internationalFlow === "import"
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              Intl Import
+            </button>
+            <button
+              type="button"
+              onClick={() => setInternationalFlow("export")}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                internationalFlow === "export"
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              Intl Export
+            </button>
+          </>
+        )}
       </div>
       <ConvexTable
         query={api.tables.bookings.getPaginated}

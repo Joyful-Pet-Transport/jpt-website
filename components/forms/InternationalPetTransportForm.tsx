@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { getData as getCountryListData } from "country-list";
 import FormContainer from "../containers/FormContainer";
 import BodyText from "../elements/text/BodyText";
@@ -147,7 +147,6 @@ const Disclaimer: FC<{ onAgree: () => void }> = ({ onAgree }) => {
 type DestinationProps = {
   control: any;
   type: "import" | "export";
-  setType: (value: "import" | "export") => void;
   step: number;
   setStep: (s: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void;
   onSubmit: () => void;
@@ -159,7 +158,6 @@ type DestinationProps = {
 const Destination: FC<DestinationProps> = ({
   control,
   type,
-  setType,
   step,
   setStep,
   onSubmit,
@@ -177,30 +175,6 @@ const Destination: FC<DestinationProps> = ({
       <BodyText size="large" weight="semibold" className="text-center">
         DESTINATION
       </BodyText>
-      <div className="flex items-center justify-center gap-2">
-        <button
-          type="button"
-          onClick={() => setType("import")}
-          className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
-            type === "import"
-              ? "bg-blue-600 border-blue-600 text-white"
-              : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
-          }`}
-        >
-          Import
-        </button>
-        <button
-          type="button"
-          onClick={() => setType("export")}
-          className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
-            type === "export"
-              ? "bg-blue-600 border-blue-600 text-white"
-              : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
-          }`}
-        >
-          Export
-        </button>
-      </div>
       <BodyText size="medium" weight="semibold" className="uppercase">
         Where are the origin and destination countries?
       </BodyText>
@@ -891,12 +865,9 @@ const Review: FC<ReviewProps> = ({
 
 // ─── RelocationForm ──────────────────────────────────────────────────────────
 
-const RelocationForm: FC<{ type: "import" | "export" }> = ({
-  type: initialType,
-}) => {
+const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const { availableCountries, allCountries, philippinesCode } =
     useCountryData();
-  const [type, setType] = useState<"import" | "export">(initialType);
   const [step, setCurrentStep] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const modal = useModal();
@@ -963,29 +934,11 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({
     });
 
   const control = createInternationalRelocationForm.control;
-  const { setValue, getValues } = createInternationalRelocationForm;
 
   const { fields, append, remove } = useFieldArray({ control, name: "pets" });
 
   const travelDate = useWatch({ control, name: "travel_date" });
   const dateType = travelDate === "yes" ? "specific" : "range";
-
-  useEffect(() => {
-    const currentOrigin = getValues("origin_country");
-    const currentDestination = getValues("destination");
-
-    if (type === "import") {
-      setValue("destination", philippinesCode);
-      if (currentOrigin === philippinesCode) {
-        setValue("origin_country", "");
-      }
-    } else {
-      setValue("origin_country", philippinesCode);
-      if (currentDestination === philippinesCode) {
-        setValue("destination", "");
-      }
-    }
-  }, [getValues, philippinesCode, setValue, type]);
 
   const scrollToFirstError = useCallback(() => {
     const firstError = document.querySelector("[data-error='true']");
@@ -1149,7 +1102,6 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({
         <Destination
           control={control}
           type={type}
-          setType={setType}
           availableCountries={availableCountries}
           allCountries={allCountries}
           {...sharedButtonProps}
@@ -1200,7 +1152,11 @@ const InternationalPetRelocationForm: FC<
   if (type === "import") return <RelocationForm type="import" />;
   if (type === "export") return <RelocationForm type="export" />;
 
-  return <RelocationForm type="export" />;
+  return (
+    <FormContainer className="justify-center items-center">
+      <BodyText weight="bold">Invalid Form</BodyText>
+    </FormContainer>
+  );
 };
 
 export default InternationalPetRelocationForm;

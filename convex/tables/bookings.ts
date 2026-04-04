@@ -15,6 +15,7 @@ export const getPaginated = query({
   args: {
     paginationOpts: paginationOptsValidator,
     booking_type: v.optional(v.string()),
+    international_flow: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     let q = ctx.db.query("bookings").order("desc");
@@ -34,6 +35,8 @@ export const getPaginated = query({
               contact_number?: string;
               account_name?: string;
               account_link?: string;
+              origin_country?: string;
+              destination?: string;
             }
           | null = null;
 
@@ -73,13 +76,30 @@ export const getPaginated = query({
           contact_number: owner?.contact_number || details?.contact_number || "",
           account_name: owner?.account_name || details?.account_name || "",
           account_link: owner?.account_link || details?.account_link || "",
+          origin_country: details?.origin_country || "",
+          destination: details?.destination || "",
         };
       }),
     );
 
+    const filteredPage =
+      args.international_flow === "import"
+        ? page.filter(
+            (row) =>
+              row.booking_type === "international_pet_transport" &&
+              row.destination === "PH",
+          )
+        : args.international_flow === "export"
+          ? page.filter(
+              (row) =>
+                row.booking_type === "international_pet_transport" &&
+                row.origin_country === "PH",
+            )
+          : page;
+
     return {
       ...result,
-      page,
+      page: filteredPage,
     };
   },
 });
