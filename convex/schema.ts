@@ -14,6 +14,7 @@ export default defineSchema({
     phoneVerificationTime: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
     roleId: v.optional(v.id("roles")),
+    owner_name: v.optional(v.string()),
     contact_number: v.optional(v.string()),
     contact_form: v.optional(v.string()),
     account_name: v.optional(v.string()),

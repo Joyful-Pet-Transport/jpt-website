@@ -29,6 +29,7 @@ export const upsertOwner = mutation({
     if (existingUser) {
       const patch: {
         name?: string;
+        owner_name?: string;
         contact_number?: string;
         contact_form?: string;
         account_name?: string;
@@ -37,6 +38,9 @@ export const upsertOwner = mutation({
 
       if (!existingUser.name && args.name) {
         patch.name = args.name;
+      }
+      if (!existingUser.owner_name && args.name) {
+        patch.owner_name = args.name;
       }
       if (!existingUser.contact_number && args.contact_number) {
         patch.contact_number = args.contact_number;
@@ -61,6 +65,7 @@ export const upsertOwner = mutation({
     return await ctx.db.insert("users", {
       email: normalizedEmail,
       name: args.name,
+      owner_name: args.name,
       contact_number: args.contact_number,
       contact_form: args.contact_form,
       account_name: args.account_name,
