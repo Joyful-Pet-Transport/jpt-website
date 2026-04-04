@@ -16,6 +16,7 @@ export type ConvexTableProps = {
   query: FunctionReference<"query">;
   pagination?: number;
   searchable?: boolean;
+  queryArgs?: Record<string, string | number | boolean | null | undefined>;
   headers: ConvexTableHeader[];
   actions?: ConvexTableAction[];
 };

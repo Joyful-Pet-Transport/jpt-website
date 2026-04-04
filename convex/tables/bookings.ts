@@ -14,9 +14,13 @@ export const get = query({
 export const getPaginated = query({
   args: {
     paginationOpts: paginationOptsValidator,
+    booking_type: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const q = ctx.db.query("bookings").order("desc");
+    let q = ctx.db.query("bookings").order("desc");
+    if (args.booking_type) {
+      q = q.filter((q) => q.eq(q.field("booking_type"), args.booking_type));
+    }
     const result = await q.paginate(args.paginationOpts);
 
     const page = await Promise.all(
