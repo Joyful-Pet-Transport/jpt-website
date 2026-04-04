@@ -17,8 +17,66 @@ export const getPaginated = query({
   },
   handler: async (ctx, args) => {
     const q = ctx.db.query("bookings").order("desc");
+    const result = await q.paginate(args.paginationOpts);
 
-    return await q.paginate(args.paginationOpts);
+    const page = await Promise.all(
+      result.page.map(async (booking) => {
+        let details:
+          | {
+              userId?: Id<"users">;
+              owner_name?: string;
+              email_address?: string;
+              contact_form?: string;
+              contact_number?: string;
+              account_name?: string;
+              account_link?: string;
+            }
+          | null = null;
+
+        if (
+          booking.booking_type === "international_pet_transport" &&
+          booking.booking_id
+        ) {
+          details = await ctx.db.get(
+            booking.booking_id as Id<"international_pet_transport">,
+          );
+        } else if (
+          booking.booking_type === "domestic_pet_transport" &&
+          booking.booking_id
+        ) {
+          details = await ctx.db.get(
+            booking.booking_id as Id<"domestic_pet_transport">,
+          );
+        } else if (
+          booking.booking_type === "rabies_serology_test" &&
+          booking.booking_id
+        ) {
+          details = await ctx.db.get(
+            booking.booking_id as Id<"rabies_serology_test">,
+          );
+        }
+
+        let owner = null;
+        if (details?.userId) {
+          owner = await ctx.db.get(details.userId as Id<"users">);
+        }
+
+        return {
+          ...booking,
+          owner_name: owner?.name || owner?.owner_name || details?.owner_name || "",
+          email_address: owner?.email || details?.email_address || "",
+          contact_form: owner?.contact_form || details?.contact_form || "",
+          contact_number: owner?.contact_number || details?.contact_number || "",
+          account_name: owner?.account_name || details?.account_name || "",
+          account_link: owner?.account_link || details?.account_link || "",
+        };
+      }),
+    );
+
+    return {
+      ...result,
+      page,
+    };
   },
 });
 
