@@ -409,7 +409,7 @@ const Review: FC<ReviewProps> = ({
       >
         <div className="flex flex-col gap-12">
           <FormInput
-            name="owner.owner_name"
+            name="owner.name"
             label="OWNER'S NAME"
             placeholder="Enter owner's name"
             control={control}
@@ -620,7 +620,7 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
     resolver: zodResolver(DomesticRelocationFormSchema),
     defaultValues: {
       owner: {
-        owner_name: "",
+        name: "",
         contact_form: "",
         account_name: "",
         account_link: "",

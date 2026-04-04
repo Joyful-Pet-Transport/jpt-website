@@ -315,7 +315,7 @@ const RabiesSerologyTestForm: FC = () => {
     resolver: zodResolver(RabiesSerologyTestSchema),
     defaultValues: {
       owner: {
-        owner_name: "",
+        name: "",
         contact_form: "",
         account_name: "",
         account_link: "",
@@ -363,7 +363,7 @@ const RabiesSerologyTestForm: FC = () => {
       if (step === 1) {
         // Validate owner details
         const ownerFields = [
-          "owner.owner_name" as const,
+          "owner.name" as const,
           "owner.contact_form" as const,
           "owner.account_name" as const,
           "owner.contact_number" as const,

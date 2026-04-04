@@ -80,7 +80,7 @@ const internationalRelocationStepFields = {
   ],
   3: ["companionship", "travel_date", "date"],
   4: [
-    "owner.owner_name",
+    "owner.name",
     "owner.contact_number",
     "owner.contact_form",
     "owner.email_address",
@@ -690,7 +690,7 @@ const Review: FC<ReviewProps> = ({
       >
         <div className="flex flex-col gap-6">
           <FormInput
-            name="owner.owner_name"
+            name="owner.name"
             label="OWNER'S NAME"
             placeholder="Enter owner's name"
             control={control}
@@ -901,7 +901,7 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         travel_date: "",
         date: "",
         owner: {
-          owner_name: "",
+          name: "",
           contact_form: "",
           account_name: "",
           account_link: "",

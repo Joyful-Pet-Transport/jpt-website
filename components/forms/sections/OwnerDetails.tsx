@@ -12,7 +12,7 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({ control, disabled = false }) => {
   return (
     <>
       <FormInput
-        name="owner.owner_name"
+        name="owner.name"
         label="OWNER'S NAME"
         placeholder="Enter owner's name"
         control={control}

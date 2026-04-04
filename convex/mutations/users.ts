@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 export const upsertOwner = mutation({
   args: {
-    owner_name: v.string(),
+    name: v.string(),
     contact_number: v.string(),
     contact_form: v.string(),
     email_address: v.string(),
@@ -28,15 +28,15 @@ export const upsertOwner = mutation({
 
     if (existingUser) {
       const patch: {
-        owner_name?: string;
+        name?: string;
         contact_number?: string;
         contact_form?: string;
         account_name?: string;
         account_link?: string;
       } = {};
 
-      if (!existingUser.owner_name && args.owner_name) {
-        patch.owner_name = args.owner_name;
+      if (!existingUser.name && args.name) {
+        patch.name = args.name;
       }
       if (!existingUser.contact_number && args.contact_number) {
         patch.contact_number = args.contact_number;
@@ -60,7 +60,7 @@ export const upsertOwner = mutation({
 
     return await ctx.db.insert("users", {
       email: normalizedEmail,
-      owner_name: args.owner_name,
+      name: args.name,
       contact_number: args.contact_number,
       contact_form: args.contact_form,
       account_name: args.account_name,
