@@ -17,7 +17,6 @@ const BookingsPage = () => {
         headers={[
           { key: "owner_name", label: "Owner Name" },
           { key: "email_address", label: "Owner Email" },
-          { key: "contact_form", label: "Contact Form" },
           { key: "contact_number", label: "Contact #" },
           { key: "account_name", label: "Account Name" },
           { key: "account_link", label: "Account Link" },
