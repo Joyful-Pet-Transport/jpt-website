@@ -105,7 +105,7 @@ const BookingProcessCardContainer: FC<BookingProcessCardContainerProps> = ({
     return (
       <div
         onClick={onToggle}
-        className="relative border-l first:border-0 border-black bg-white/20 cursor-pointer hover:bg-white/30 transition-all h-full min-h-[400px] flex-1"
+        className="relative border-l first:border-0 border-black bg-white/20 cursor-pointer hover:bg-white/30 transition-all h-full min-h-[450px] flex-1"
       >
         <div className="absolute left-0 right-0 top-0 bottom-0 flex items-center justify-center px-4">
           <div className="[writing-mode:vertical-rl] rotate-180">
@@ -129,7 +129,7 @@ const BookingProcessCardContainer: FC<BookingProcessCardContainerProps> = ({
   return (
     <div
       onClick={onToggle}
-      className="relative border-l first:border-0 border-black cursor-pointer hover:bg-white/20 transition-all p-16 h-full min-h-[400px] flex-2"
+      className="relative border-l first:border-0 border-black cursor-pointer hover:bg-white/20 transition-all p-16 h-full min-h-[450px] flex-2"
     >
       <div className="flex flex-col justify-between gap-6 h-full">
         <div className="flex justify-between gap-6">
