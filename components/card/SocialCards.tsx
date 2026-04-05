@@ -3,13 +3,15 @@ import { BsArrowUpRightCircle } from "react-icons/bs";
 import Image from "next/image";
 import Heading from "../elements/text/Heading";
 import BodyText from "../elements/text/BodyText";
+import Skeleton from "../elements/loader/Skeleton";
 import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 
 type SocialCardsProps = PropsWithChildren<{
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   image?: string;
-  link: string;
+  link?: string;
+  loading?: boolean;
 }>;
 
 const SocialCards: FC<SocialCardsProps> = ({
@@ -17,6 +19,7 @@ const SocialCards: FC<SocialCardsProps> = ({
   description,
   image,
   link,
+  loading = false,
 }) => {
   const mobile = useIsMobile();
 
@@ -32,31 +35,48 @@ const SocialCards: FC<SocialCardsProps> = ({
           }}
           className="w-full h-full p-8 bg-[#EAEAEA] flex flex-col gap-2 justify-end"
         >
-          {image && <Image src={image} alt={title} fill />}
-          {image && (
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+          {loading ? (
+            <Skeleton width="100%" height="200px" />
+          ) : (
+            <>
+              {image && <Image src={image} alt={title || ""} fill />}
+              {image && (
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+              )}
+            </>
           )}
           <div className="flex flex-col gap-2 z-10 relative">
-            <Heading size="normal" weight="thin" className="text-white">
-              {title}
-            </Heading>
-            <BodyText
-              weight="normal"
-              size="small"
-              className="text-white line-clamp-2"
-            >
-              {description}
-            </BodyText>
+            {loading ? (
+              <>
+                <Skeleton width="80%" height="1.25rem" />
+                <Skeleton width="100%" height="1rem" />
+              </>
+            ) : (
+              <>
+                <Heading size="normal" weight="thin" className="text-white">
+                  {title}
+                </Heading>
+                <BodyText
+                  weight="normal"
+                  size="small"
+                  className="text-white line-clamp-2"
+                >
+                  {description}
+                </BodyText>
+              </>
+            )}
           </div>
         </div>
-        <a
-          className="absolute top-2 right-2 rounded-full"
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <BsArrowUpRightCircle className="h-12 w-12 text-white" />
-        </a>
+        {!loading && (
+          <a
+            className="absolute top-2 right-2 rounded-full"
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <BsArrowUpRightCircle className="h-12 w-12 text-white" />
+          </a>
+        )}
       </div>
     );
   }
@@ -72,31 +92,48 @@ const SocialCards: FC<SocialCardsProps> = ({
         }}
         className="w-full h-full p-8 bg-[#EAEAEA] flex flex-col gap-2 justify-end"
       >
-        {image && <Image src={image} alt={title} fill />}
-        {image && (
-          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+        {loading ? (
+          <Skeleton width="100%" height="240px" />
+        ) : (
+          <>
+            {image && <Image src={image} alt={title || ""} fill />}
+            {image && (
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+            )}
+          </>
         )}
         <div className="flex flex-col gap-2 z-10 relative">
-          <Heading size="normal" weight="thin" className="text-white">
-            {title}
-          </Heading>
-          <BodyText
-            weight="normal"
-            size="small"
-            className="text-white line-clamp-2"
-          >
-            {description}
-          </BodyText>
+          {loading ? (
+            <>
+              <Skeleton width="85%" height="1.25rem" />
+              <Skeleton width="100%" height="1rem" />
+            </>
+          ) : (
+            <>
+              <Heading size="normal" weight="thin" className="text-white">
+                {title}
+              </Heading>
+              <BodyText
+                weight="normal"
+                size="small"
+                className="text-white line-clamp-2"
+              >
+                {description}
+              </BodyText>
+            </>
+          )}
         </div>
       </div>
-      <a
-        className="absolute top-2 right-2 rounded-full"
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <BsArrowUpRightCircle className="h-12 w-12 text-white" />
-      </a>
+      {!loading && (
+        <a
+          className="absolute top-2 right-2 rounded-full"
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <BsArrowUpRightCircle className="h-12 w-12 text-white" />
+        </a>
+      )}
     </div>
   );
 };

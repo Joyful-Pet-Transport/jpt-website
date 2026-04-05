@@ -5,10 +5,15 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 import TestimonialCarousel from "@/components/ui/carousel/TestimonialCarousel";
+import TestimonialLoading from "../elements/loader/TestimonialLoading";
 
 const TestimonialContents: FC = () => {
   const reviews = useQuery(api.tables.google_reviews.get);
   const mobile = useIsMobile();
+
+  if (reviews === undefined) {
+    return <TestimonialLoading />;
+  }
 
   if (!reviews || reviews.length === 0) {
     return null;

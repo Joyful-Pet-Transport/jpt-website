@@ -40,19 +40,21 @@ const PageWrapperContainer: FC<PageWrapperContainerProps> = ({
 
   return (
     <div
-      className="flex flex-col overflow-hidden w-full"
+      className="flex flex-col w-full"
       style={{
         backgroundImage:
           "linear-gradient(to bottom, #41B2F6, #FBF2B3, #FF985B)",
       }}
     >
       {header && <Header disableLayout={disableLayout} />}
-      <div
-        className={`min-h-screen flex flex-col ${responsive.isTabletOrMobile ? "gap-4" : "gap-12"} ${styleClass} ${className}`}
-      >
-        {children}
+      <div className="flex flex-col overflow-hidden w-full">
+        <div
+          className={`min-h-screen flex flex-col ${responsive.isTabletOrMobile ? "gap-4" : "gap-12"} ${styleClass} ${className}`}
+        >
+          {children}
+        </div>
+        {footer && <Footer />}
       </div>
-      {footer && <Footer />}
     </div>
   );
 };
