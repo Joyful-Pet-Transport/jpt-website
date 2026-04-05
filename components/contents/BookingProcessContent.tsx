@@ -14,7 +14,7 @@ const BookingProcessContent: FC = () => {
 
   if (mobile) {
     return (
-      <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <BookingProcessCardContainer
