@@ -1,35 +1,26 @@
 export const BookingStatus = {
-  // Initial states
+  // Initial
   pending: "pending",
 
-  // Confirmation states
-  confirmed: "confirmed",
+  // Approval
   approved: "approved",
   rejected: "rejected",
 
-  // Preparation states
+  // Preparation
   preparing: "preparing",
-  documents_pending: "documents_pending",
-  health_check_required: "health_check_required",
+  documents: "documents",
+  health_check: "health_check",
 
-  // Transport states
+  // Transport
+  scheduled: "scheduled",
   in_transit: "in_transit",
-  pickup_scheduled: "pickup_scheduled",
-  pickup_completed: "pickup_completed",
-  delivery_scheduled: "delivery_scheduled",
-  delivery_completed: "delivery_completed",
-
-  // Completion states
-  completed: "completed",
   delivered: "delivered",
 
-  // Issue states
+  // Completion
+  completed: "completed",
+
+  // Exceptions
   delayed: "delayed",
   cancelled: "cancelled",
-  rescheduled: "rescheduled",
-
-  // Special states
-  quarantine: "quarantine",
-  customs_clearance: "customs_clearance",
-  requires_attention: "requires_attention",
+  issue: "issue", // covers requires_attention, customs, quarantine, etc.
 };
