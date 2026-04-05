@@ -38,6 +38,7 @@ interface MobileResponsiveness {
   isMobile: boolean;
   isTablet: boolean;
   isTabletOrMobile: boolean;
+  isLaptopOrLarger: boolean;
 }
 
 export function useResponsive(): MobileResponsiveness {
@@ -46,11 +47,13 @@ export function useResponsive(): MobileResponsiveness {
   const isMobile = width < 980;
   const isTablet = width >= 980 && width < 1200;
   const isTabletOrMobile = width < 1024;
+  const isLaptopOrLarger = width <= 1440;
 
   return {
     isMobile,
     isTablet,
     isTabletOrMobile,
+    isLaptopOrLarger,
   };
 }
 
@@ -60,4 +63,8 @@ export function useIsMobile(): boolean {
 
 export function useIsTablet(): boolean {
   return useResponsive().isTablet;
+}
+
+export function useIsLaptopOrLarger(): boolean {
+  return useResponsive().isLaptopOrLarger;                                                            
 }

@@ -14,6 +14,12 @@ export default defineSchema({
     phoneVerificationTime: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
     roleId: v.optional(v.id("roles")),
+    owner_name: v.optional(v.string()),
+    contact_number: v.optional(v.string()),
+    contact_form: v.optional(v.string()),
+    account_name: v.optional(v.string()),
+    account_link: v.optional(v.string()),
+    pets: v.optional(v.array(v.id("pet_details"))),
   })
     .index("email", ["email"])
     .index("by_name", ["name"]),
@@ -47,7 +53,21 @@ export default defineSchema({
     last_name: v.string(),
     email: v.string(),
     message: v.string(),
-  }),
+    status: v.optional(
+      v.union(
+        v.literal("new"),
+        v.literal("assigned"),
+        v.literal("replied"),
+        v.literal("closed"),
+      ),
+    ),
+    created_at: v.optional(v.number()),
+    assigned_to: v.optional(v.union(v.id("users"), v.null())),
+    read_at: v.optional(v.union(v.number(), v.null())),
+  })
+    .index("by_status", ["status"])
+    .index("by_created_at", ["created_at"])
+    .index("by_assigned_to", ["assigned_to"]),
 
   post_services: defineTable({
     name: v.string(),
@@ -90,12 +110,13 @@ export default defineSchema({
     travel_date: v.string(),
     date: v.string(),
 
-    owner_name: v.string(),
-    contact_form: v.string(),
-    account_name: v.string(),
+    userId: v.optional(v.id("users")),
+    owner_name: v.optional(v.string()),
+    contact_form: v.optional(v.string()),
+    account_name: v.optional(v.string()),
     account_link: v.optional(v.string()),
-    contact_number: v.string(),
-    email_address: v.string(),
+    contact_number: v.optional(v.string()),
+    email_address: v.optional(v.string()),
 
     origin_full_address: v.string(),
     origin_city: v.optional(v.string()), // ← optional
@@ -112,16 +133,16 @@ export default defineSchema({
   }).index("by_pets", ["pets"]),
 
   domestic_pet_transport: defineTable({
-    owner_name: v.string(),
+    userId: v.optional(v.id("users")),
+    owner_name: v.optional(v.string()),
+    contact_form: v.optional(v.string()),
+    account_name: v.optional(v.string()),
+    account_link: v.optional(v.string()),
+    contact_number: v.optional(v.string()),
+    email_address: v.optional(v.string()),
 
     pickup_address: v.string(),
     destination: v.string(),
-
-    contact_form: v.string(),
-    account_name: v.string(),
-    account_link: v.optional(v.string()),
-    contact_number: v.string(),
-    email_address: v.string(),
 
     travel_date: v.string(),
     date: v.string(),
@@ -135,13 +156,13 @@ export default defineSchema({
   }).index("by_pets", ["pets"]),
 
   rabies_serology_test: defineTable({
-    owner_name: v.string(),
-
-    contact_form: v.string(),
-    account_name: v.string(),
+    userId: v.optional(v.id("users")),
+    owner_name: v.optional(v.string()),
+    contact_form: v.optional(v.string()),
+    account_name: v.optional(v.string()),
     account_link: v.optional(v.string()),
-    contact_number: v.string(),
-    email_address: v.string(),
+    contact_number: v.optional(v.string()),
+    email_address: v.optional(v.string()),
 
     date: v.string(),
 
@@ -161,6 +182,11 @@ export default defineSchema({
     booking_label: v.optional(v.string()),
     booking_type: v.optional(v.string()),
     status: v.string(),
+    created_at: v.optional(v.number()),
     updated_at: v.optional(v.number()),
-  }),
+    previous_status: v.optional(v.string()),
+    status_reason: v.optional(v.string()),
+  })
+    .index("by_created_at", ["created_at"])
+    .index("by_booking_type", ["booking_type"]),
 });

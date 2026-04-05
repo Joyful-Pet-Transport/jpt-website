@@ -20,6 +20,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PetDetails from "./sections/PetDetails";
 import FormButtons from "./sections/Buttons";
+import OwnerDetailsFields from "./sections/OwnerDetails";
 
 // ─── RenderIcon ──────────────────────────────────────────────────────────────
 
@@ -126,13 +127,7 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
       <BodyText size="large" weight="semibold" className="text-center">
         OWNER DETAILS
       </BodyText>
-      <FormInput
-        name="owner_name"
-        label="OWNER'S NAME"
-        placeholder="Enter owner's name"
-        control={control}
-        required
-      />
+      <OwnerDetailsFields control={control} />
       <div className="flex gap-6 md:px-10">
         <div className="flex flex-col justify-end items-center gap-4 pb-2">
           <LuMapPin className="text-2xl text[#5B5959]" />
@@ -160,49 +155,6 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
           />
         </div>
       </div>
-      <RadioFormInput
-        name="contact_form"
-        label="WHERE CAN WE CONTACT YOU?"
-        control={control}
-        options={[
-          { label: "Facebook Messenger", value: "facebook" },
-          { label: "WhatsApp", value: "whatsapp" },
-          { label: "Viber", value: "viber" },
-          { label: "Telegram", value: "telegram" },
-        ]}
-        required
-      />
-      <div className="flex flex-col md:flex-row w-full gap-4">
-        <FormInput
-          name="account_name"
-          label="ACCOUNT NAME"
-          placeholder="Enter account name"
-          control={control}
-          required
-          className="w-full"
-        />
-        <FormInput
-          name="account_link"
-          label="LINK"
-          placeholder="Enter link"
-          className="w-full"
-          control={control}
-        />
-      </div>
-      <FormInput
-        name="contact_number"
-        label="CONTACT NUMBER"
-        placeholder="Enter contact number"
-        control={control}
-        required
-      />
-      <FormInput
-        name="email_address"
-        label="ACTIVE EMAIL ADDRESS"
-        placeholder="Enter active email address"
-        control={control}
-        required
-      />
       <RadioFormInput
         name="travel_date"
         label="DO YOU HAVE A SPECIFIC TARGET TRAVEL DATE?"
@@ -457,7 +409,7 @@ const Review: FC<ReviewProps> = ({
       >
         <div className="flex flex-col gap-12">
           <FormInput
-            name="owner_name"
+            name="owner.name"
             label="OWNER'S NAME"
             placeholder="Enter owner's name"
             control={control}
@@ -466,7 +418,7 @@ const Review: FC<ReviewProps> = ({
             required
           />
           <RadioFormInput
-            name="contact_form"
+            name="owner.contact_form"
             label="WHERE CAN WE CONTACT YOU?"
             control={control}
             disabled
@@ -479,7 +431,7 @@ const Review: FC<ReviewProps> = ({
             required
           />
           <FormInput
-            name="contact_number"
+            name="owner.contact_number"
             label="CONTACT NUMBER"
             placeholder="Enter contact number"
             control={control}
@@ -490,7 +442,7 @@ const Review: FC<ReviewProps> = ({
         </div>
         <div className="flex flex-col gap-12">
           <FormInput
-            name="account_name"
+            name="owner.account_name"
             label="ACCOUNT NAME"
             placeholder="Enter account name"
             control={control}
@@ -500,7 +452,7 @@ const Review: FC<ReviewProps> = ({
             className="w-full"
           />
           <FormInput
-            name="account_link"
+            name="owner.account_link"
             label="LINK"
             placeholder="Enter link"
             className="w-full"
@@ -509,7 +461,7 @@ const Review: FC<ReviewProps> = ({
             disabled
           />
           <FormInput
-            name="email_address"
+            name="owner.email_address"
             label="ACTIVE EMAIL ADDRESS"
             placeholder="Enter active email address"
             control={control}
@@ -661,18 +613,22 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
   const bookDomesticPetTransport = useMutation(
     api.mutations.domestic_pet_transport.bookDomesticPetTransport,
   );
+  const upsertOwner = useMutation(api.mutations.users.upsertOwner);
+  const attachPets = useMutation(api.mutations.users.attachPets);
 
   const createDomesticRelocationForm = useForm({
     resolver: zodResolver(DomesticRelocationFormSchema),
     defaultValues: {
-      owner_name: "",
+      owner: {
+        name: "",
+        contact_form: "",
+        account_name: "",
+        account_link: "",
+        contact_number: "",
+        email_address: "",
+      },
       pickup_address: "",
       destination: "",
-      contact_form: "",
-      account_name: "",
-      account_link: "",
-      contact_number: "",
-      email_address: "",
       travel_date: "",
       date: "",
       mode_of_transport: type || "",
@@ -768,6 +724,8 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
     createDomesticRelocationForm.handleSubmit(async (data) => {
       try {
         setLoading(true);
+        const ownerData = data.owner;
+        const userId = await upsertOwner(ownerData);
         const petIds = [];
 
         for (const pet of data.pets) {
@@ -809,15 +767,12 @@ const RelocationForm: FC<RelocationFormProps> = ({ type }) => {
           petIds.push(petId);
         }
 
+        await attachPets({ userId, petIds });
+
         const bookingData = {
-          owner_name: data.owner_name,
+          userId,
           pickup_address: data.pickup_address,
           destination: data.destination,
-          contact_form: data.contact_form,
-          account_name: data.account_name,
-          account_link: data.account_link,
-          contact_number: data.contact_number,
-          email_address: data.email_address,
           travel_date: data.travel_date,
           date: data.date,
           mode_of_transport: data.mode_of_transport,

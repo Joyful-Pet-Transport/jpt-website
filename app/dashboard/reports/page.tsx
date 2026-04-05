@@ -1,7 +1,7 @@
-import DashboardHeading from "@/components/elements/text/DashboardHeading";
+import ReportsContent from "@/components/contents/dashboard/ReportsContent";
 
 const ReportsPage = () => {
-  return <DashboardHeading title="reports"></DashboardHeading>;
+  return <ReportsContent />;
 };
 
 export default ReportsPage;

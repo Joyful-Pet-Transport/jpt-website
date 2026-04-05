@@ -1,163 +1,105 @@
 "use client";
 
-import BaseTable from "@/components/elements/table/BaseTable";
 import ConvexTable from "@/components/elements/table/ConvexTable";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import { api } from "@/convex/_generated/api";
-import { Pet } from "@/models/pet";
-import { useQuery } from "convex/react";
 import dayjs from "dayjs";
-import { FC } from "react";
 import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 const BookingsPage = () => {
   const router = useRouter();
-  const InternationalPetTransportTable: FC = () => {
-    const booking = useQuery(api.tables.international_pet_transport.get);
-    return (
-      <div>
-        <BaseTable
-          headers={[
-            {
-              key: "_creationTime",
-              label: "Booked On",
-              parse: (value: number) =>
-                dayjs(value).format("MMM DD, YYYY hh:mm A"),
-              sortable: true,
-            },
+  const [bookingType, setBookingType] = useState<string>("");
+  const [internationalFlow, setInternationalFlow] = useState<string>("");
+  const queryArgs = useMemo(
+    () => ({
+      booking_type: bookingType || undefined,
+      international_flow: internationalFlow || undefined,
+    }),
+    [bookingType, internationalFlow],
+  );
 
-            { key: "owner_name", label: "Owner Name" },
-            { key: "contact_form", label: "Contact Form" },
-            { key: "account_name", label: "Account Name" },
-            { key: "account_link", label: "Account Link" },
-            { key: "contact_number", label: "Contact #" },
-            { key: "email_address", label: "Email Address" },
-
-            { key: "companionship", label: "Companionship" },
-            { key: "travel_date", label: "Has Travel Date" },
-            { key: "date", label: "Selected Date" },
-
-            { key: "origin_country", label: "Origin Country" },
-            { key: "origin_full_address", label: "Origin Address" },
-            { key: "destination", label: "Destination Country" },
-            { key: "destination_full_address", label: "Destination Address" },
-
-            {
-              key: "pet_details",
-              label: "Pets",
-              parse: (value: Pet[]) =>
-                value
-                  ?.filter((pet): pet is Pet => pet != null)
-                  .map((pet) => pet.pet_name)
-                  .join(", ") ?? "",
-            },
-          ]}
-          heading="International Pet Relocation Bookings"
-          hasActions={false}
-          data={booking}
-        />
-      </div>
-    );
-  };
-
-  const DomesticPetTransportTable: FC = () => {
-    const booking = useQuery(api.tables.domestic_pet_transport.get);
-    return (
-      <div>
-        <BaseTable
-          headers={[
-            {
-              key: "_creationTime",
-              label: "Booked On",
-              parse: (value: number) =>
-                dayjs(value).format("MMM DD, YYYY hh:mm A"),
-              sortable: true,
-            },
-
-            { key: "owner_name", label: "Owner Name" },
-
-            { key: "pickup_address", label: "Pickup Address" },
-            { key: "destination", label: "Destination" },
-
-            { key: "contact_form", label: "Contact Form" },
-            { key: "account_name", label: "Account Name" },
-            { key: "account_link", label: "Account Link" },
-            { key: "contact_number", label: "Contact #" },
-            { key: "email_address", label: "Email Address" },
-
-            { key: "travel_date", label: "Has Travel Date" },
-            { key: "date", label: "Selected Date" },
-
-            { key: "mode_of_transport", label: "Mode of Transport" },
-
-            {
-              key: "pet_details",
-              label: "Pets",
-              parse: (value?: Pet[]) =>
-                value?.map((p) => p.pet_name).join(", ") ?? "",
-            },
-
-            { key: "origin_full_address", label: "Origin Address" },
-            { key: "destination_full_address", label: "Destination Address" },
-          ]}
-          heading="Domestic Pet Relocation Bookings"
-          hasActions={false}
-          data={booking}
-        />
-      </div>
-    );
-  };
-
-  const RabiesSerologyTest: FC = () => {
-    const booking = useQuery(api.tables.rabies_serology_test.get);
-    return (
-      <div>
-        <BaseTable
-          headers={[
-            {
-              key: "_creationTime",
-              label: "Booked On",
-              parse: (value: number) =>
-                dayjs(value).format("MMM DD, YYYY hh:mm A"),
-              sortable: true,
-            },
-
-            { key: "owner_name", label: "Owner Name" },
-
-            { key: "contact_form", label: "Contact Form" },
-            { key: "account_name", label: "Account Name" },
-            { key: "account_link", label: "Account Link" },
-            { key: "contact_number", label: "Contact #" },
-            { key: "email_address", label: "Email Address" },
-
-            {
-              key: "date",
-              label: "Test Date",
-              parse: (value: string) => dayjs(value).format("MMM DD, YYYY"),
-            },
-
-            {
-              key: "pet_details",
-              label: "Pets",
-              parse: (value?: Pet[]) =>
-                value?.map((p) => p.pet_name).join(", ") ?? "",
-            },
-          ]}
-          heading="Rabies Serology Test Bookings"
-          hasActions={false}
-          data={booking}
-        />
-      </div>
-    );
-  };
+  const filters = [
+    { label: "All", value: "" },
+    { label: "International", value: "international_pet_transport" },
+    { label: "Domestic", value: "domestic_pet_transport" },
+    { label: "Rabies", value: "rabies_serology_test" },
+  ];
 
   return (
     <DashboardHeading title="bookings">
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
+        {filters.map((filter) => {
+          const active = bookingType === filter.value;
+
+          return (
+            <button
+              key={filter.value || "all"}
+              type="button"
+              onClick={() => {
+                setBookingType(filter.value);
+                if (filter.value !== "international_pet_transport") {
+                  setInternationalFlow("");
+                }
+              }}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                active
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              {filter.label}
+            </button>
+          );
+        })}
+        {bookingType === "international_pet_transport" && (
+          <>
+            <button
+              type="button"
+              onClick={() => setInternationalFlow("")}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                internationalFlow === ""
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              All Intl
+            </button>
+            <button
+              type="button"
+              onClick={() => setInternationalFlow("import")}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                internationalFlow === "import"
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              Intl Import
+            </button>
+            <button
+              type="button"
+              onClick={() => setInternationalFlow("export")}
+              className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                internationalFlow === "export"
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+              }`}
+            >
+              Intl Export
+            </button>
+          </>
+        )}
+      </div>
       <ConvexTable
         query={api.tables.bookings.getPaginated}
+        queryArgs={queryArgs}
         headers={[
-          { key: "booking_label", label: "Type" },
+          { key: "owner_name", label: "Owner Name" },
+          { key: "email_address", label: "Owner Email" },
+          { key: "contact_number", label: "Contact #" },
+          { key: "account_name", label: "Account Name" },
+          { key: "account_link", label: "Account Link" },
           { key: "status", label: "Status" },
           {
             key: "updated_at",
@@ -174,9 +116,6 @@ const BookingsPage = () => {
           },
         ]}
       />
-      {/* <InternationalPetTransportTable />
-      <DomesticPetTransportTable />
-      <RabiesSerologyTest /> */}
     </DashboardHeading>
   );
 };
