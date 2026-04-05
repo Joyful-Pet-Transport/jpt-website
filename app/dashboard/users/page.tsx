@@ -1,15 +1,11 @@
 "use client";
 
-import BaseTable from "@/components/elements/table/BaseTable";
 import ConvexTable from "@/components/elements/table/ConvexTable";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import { api } from "@/convex/_generated/api";
 import { Role } from "@/models/role";
-import { useQuery } from "convex/react";
 
 const UsersPage = () => {
-  const users = useQuery(api.tables.users.get);
-
   return (
     <DashboardHeading title="users">
       <ConvexTable
@@ -22,8 +18,8 @@ const UsersPage = () => {
           {
             label: "Role",
             key: "role",
-            parse: (value: Role) => {
-              return value.name;
+            parse: (value: Role | null | undefined) => {
+              return value?.name;
             },
           },
         ]}
