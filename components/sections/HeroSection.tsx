@@ -4,12 +4,17 @@ import BodyText from "../elements/text/BodyText";
 import BoxedContainer from "../containers/BoxedContainer";
 import DynamicButton from "../elements/button/DynamicButton";
 import Image from "next/image";
-import { useIsMobile, useIsTablet } from "@/utils/hooks/useWindowsDimensions";
+import {
+  useIsLaptopOrLarger,
+  useIsMobile,
+  useIsTablet,
+} from "@/utils/hooks/useWindowsDimensions";
 import { useRouter } from "next/navigation";
 
 const HeroSection: FC = () => {
   const mobile = useIsMobile();
   const tablet = useIsTablet();
+  const laptop = useIsLaptopOrLarger();
   const router = useRouter();
   if (mobile) {
     return (
@@ -66,8 +71,57 @@ const HeroSection: FC = () => {
             <Image
               src={"/images/element/hero3.png"}
               alt="Pet transportation hero image"
-              width={650}
-              height={700}
+              width={500}
+              height={600}
+            />
+          </div>
+          <BoxedContainer>
+            <div className="flex h-full justify-center items-center">
+              <div className="flex flex-col gap-6 w-full">
+                <Heading font="fredoka" className="uppercase">
+                  Transporting Pets Has Never Been This Easy
+                </Heading>
+                <BodyText>
+                  Your pets are family — and their journey deserves the highest
+                  level of care. At Joyful Pet Transport, we specialize in safe,
+                  stress-free domestic and international pet relocation,
+                  carefully managing every step of the travel process with
+                  compassion, expertise, and clear communication. From
+                  documentation and airline coordination to dedicated travel day
+                  support, we provide complete peace of mind from departure to
+                  arrival.
+                </BodyText>
+                <div className="flex flex-row gap-6">
+                  <DynamicButton onPress={() => router.push("/our-services")}>
+                    BOOK NOW
+                  </DynamicButton>
+                  <DynamicButton
+                    type="outline"
+                    onPress={() => router.push("/about-us")}
+                  >
+                    LEARN MORE
+                  </DynamicButton>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 w-full"></div>
+            </div>
+          </BoxedContainer>
+        </div>
+      </div>
+    );
+  }
+
+  if (laptop) {
+    return (
+      <div className="flex flex-col gap-24">
+        {/* section 1 */}
+        <div className="relative h-[70vh] flex w-full">
+          <div className="absolute bottom-5 -right-20 z-10">
+            <Image
+              src={"/images/element/hero3.png"}
+              alt="Pet transportation hero image"
+              width={550}
+              height={650}
             />
           </div>
           <BoxedContainer>
