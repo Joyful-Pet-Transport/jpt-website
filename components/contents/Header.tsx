@@ -169,18 +169,53 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const responsive = useResponsive();
   const modal = useModal();
   const [isFloating, setIsFloating] = useState(false);
+  const [isPastThreshold, setIsPastThreshold] = useState(false);
   const lastScrollY = useRef(0);
+  const pastThresholdRef = useRef(false);
+  const isFloatingRef = useRef(false);
 
   useEffect(() => {
-    const threshold = responsive.isTabletOrMobile ? 120 : 200;
+    const baseThreshold = responsive.isTabletOrMobile ? 120 : 200;
+    const hysteresis = responsive.isTabletOrMobile ? 20 : 28;
+    const minDelta = 2;
     lastScrollY.current = window.scrollY;
+    pastThresholdRef.current = lastScrollY.current > baseThreshold;
+    isFloatingRef.current = false;
+    setIsPastThreshold(pastThresholdRef.current);
+    setIsFloating(false);
 
     const handleScroll = () => {
       const currentY = window.scrollY;
-      const scrollingUp = currentY < lastScrollY.current;
-      const shouldFloat = currentY > threshold && scrollingUp;
+      const delta = currentY - lastScrollY.current;
 
-      setIsFloating(shouldFloat);
+      if (Math.abs(delta) < minDelta) {
+        return;
+      }
+
+      const scrollingUp = delta < 0;
+      let nextPastThreshold = pastThresholdRef.current;
+
+      // Use a dead zone around the threshold to avoid flicker while direction changes.
+      if (!pastThresholdRef.current && currentY > baseThreshold + hysteresis) {
+        nextPastThreshold = true;
+      } else if (
+        pastThresholdRef.current &&
+        currentY < baseThreshold - hysteresis
+      ) {
+        nextPastThreshold = false;
+      }
+
+      if (nextPastThreshold !== pastThresholdRef.current) {
+        pastThresholdRef.current = nextPastThreshold;
+        setIsPastThreshold(nextPastThreshold);
+      }
+
+      const nextIsFloating = nextPastThreshold && scrollingUp;
+      if (nextIsFloating !== isFloatingRef.current) {
+        isFloatingRef.current = nextIsFloating;
+        setIsFloating(nextIsFloating);
+      }
+
       lastScrollY.current = currentY;
     };
 
@@ -196,10 +231,18 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
       return (
         <div
           className={`${
-            isFloating
-              ? "fixed top-4 left-4 right-4 shadow-lg backdrop-blur-md"
+            isPastThreshold
+              ? "fixed top-4 left-4 right-4"
               : "relative mx-4 mt-4"
-          } h-22 rounded-3xl bg-[#EAEAEA] flex items-center z-9999 transition-all duration-200`}
+          } ${
+            isPastThreshold
+              ? isFloating
+                ? "animate-float-in"
+                : "animate-float-out pointer-events-none"
+              : ""
+          } ${
+            isPastThreshold && isFloating ? "bg-[#F2F2F2]" : "bg-[#EAEAEA]"
+          } h-22 rounded-3xl flex items-center z-9999 origin-top will-change-transform`}
         >
           <div className="w-full h-full px-4 flex justify-between items-center">
             {/* Logo */}
@@ -255,10 +298,16 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
     return (
       <div
         className={`${
-          isFloating
-            ? "fixed top-8 left-8 right-8 shadow-lg backdrop-blur-md"
-            : "relative mx-8 mt-8"
-        } h-22 rounded-4xl bg-[#EAEAEA] flex items-center z-9999 transition-all duration-200`}
+          isPastThreshold ? "fixed top-8 left-8 right-8" : "relative mx-8 mt-8"
+        } ${
+          isPastThreshold
+            ? isFloating
+              ? "animate-float-in"
+              : "animate-float-out pointer-events-none"
+            : ""
+        } ${
+          isPastThreshold && isFloating ? "bg-[#F2F2F2]/90" : "bg-[#EAEAEA]"
+        } h-22 rounded-4xl flex items-center z-9999 origin-top will-change-transform`}
       >
         <div className="w-full h-full px-8 gap-4 flex justify-between items-center">
           {/* Logo */}
