@@ -43,6 +43,14 @@ const HeroSection: FC = () => {
                 LEARN MORE
               </DynamicButton>
             </div>
+            <div className="flex justify-center">
+              <Image
+                src={"/images/element/hero3.png"}
+                alt="Pet transportation hero image"
+                width={300}
+                height={200}
+              />
+            </div>
           </div>
         </div>
       </BoxedContainer>
