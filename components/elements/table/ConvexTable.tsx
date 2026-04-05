@@ -9,6 +9,7 @@ const ConvexTable: FC<ConvexTableProps> = ({
   query,
   pagination = 10,
   searchable = false,
+  queryArgs,
   headers,
   actions,
 }) => {
@@ -23,6 +24,7 @@ const ConvexTable: FC<ConvexTableProps> = ({
   const result = useQuery(query, {
     paginationOpts: { numItems: pagination, cursor: currentCursor },
     ...(searchable ? { search: search ?? "" } : {}),
+    ...(queryArgs ?? {}),
   });
 
   const rows: any[] = result?.page ?? lastRows;
@@ -36,7 +38,7 @@ const ConvexTable: FC<ConvexTableProps> = ({
   useEffect(() => {
     setCursorStack([null]);
     setLastRows([]);
-  }, [search]);
+  }, [search, queryArgs]);
 
   const hasPrev = cursorStack.length > 1;
   const hasNext = !isDone && !!nextCursor;

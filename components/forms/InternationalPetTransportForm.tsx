@@ -20,6 +20,7 @@ import InternationalRelocationFormSchema from "../schemas/international-pet-relo
 import { useRouter } from "next/navigation";
 import PetDetails from "./sections/PetDetails";
 import FormButtons from "./sections/Buttons";
+import OwnerDetailsFields from "./sections/OwnerDetails";
 import z from "zod";
 
 type InternationalPetRelocationFormProps = {
@@ -79,12 +80,12 @@ const internationalRelocationStepFields = {
   ],
   3: ["companionship", "travel_date", "date"],
   4: [
-    "owner_name",
-    "contact_number",
-    "contact_form",
-    "email_address",
-    "account_name",
-    "account_link",
+    "owner.name",
+    "owner.contact_number",
+    "owner.contact_form",
+    "owner.email_address",
+    "owner.account_name",
+    "owner.account_link",
   ],
 } as const;
 
@@ -431,57 +432,7 @@ const OwnerDetails: FC<OwnerDetailsProps> = ({
         OWNER DETAILS
       </BodyText>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormInput
-          name="owner_name"
-          label="OWNER'S NAME"
-          placeholder="Enter owner's name"
-          control={control}
-          required
-          className="w-full"
-        />
-        <FormInput
-          name="contact_number"
-          label="CONTACT NUMBER"
-          placeholder="Enter contact number"
-          control={control}
-          required
-          className="w-full"
-        />
-        <RadioFormInput
-          name="contact_form"
-          label="WHERE CAN WE CONTACT YOU?"
-          control={control}
-          options={[
-            { label: "Facebook Messenger", value: "facebook" },
-            { label: "WhatsApp", value: "whatsapp" },
-            { label: "Viber", value: "viber" },
-            { label: "Telegram", value: "telegram" },
-          ]}
-          required
-        />
-        <FormInput
-          name="email_address"
-          label="ACTIVE EMAIL ADDRESS"
-          placeholder="Enter active email address"
-          control={control}
-          required
-          className="w-full"
-        />
-        <FormInput
-          name="account_name"
-          label="ACCOUNT NAME"
-          placeholder="Enter account name"
-          control={control}
-          required
-          className="w-full"
-        />
-        <FormInput
-          name="account_link"
-          label="LINK"
-          placeholder="Enter link"
-          className="w-full"
-          control={control}
-        />
+        <OwnerDetailsFields control={control} />
       </div>
       <FormButtons
         step={step}
@@ -739,7 +690,7 @@ const Review: FC<ReviewProps> = ({
       >
         <div className="flex flex-col gap-6">
           <FormInput
-            name="owner_name"
+            name="owner.name"
             label="OWNER'S NAME"
             placeholder="Enter owner's name"
             control={control}
@@ -748,7 +699,7 @@ const Review: FC<ReviewProps> = ({
             required
           />
           <RadioFormInput
-            name="contact_form"
+            name="owner.contact_form"
             label="WHERE CAN WE CONTACT YOU?"
             control={control}
             disabled
@@ -763,7 +714,7 @@ const Review: FC<ReviewProps> = ({
         </div>
         <div className="flex flex-col gap-6">
           <FormInput
-            name="contact_number"
+            name="owner.contact_number"
             label="CONTACT NUMBER"
             placeholder="Enter contact number"
             control={control}
@@ -772,7 +723,7 @@ const Review: FC<ReviewProps> = ({
             required
           />
           <FormInput
-            name="email_address"
+            name="owner.email_address"
             label="ACTIVE EMAIL ADDRESS"
             placeholder="Enter active email address"
             control={control}
@@ -787,7 +738,7 @@ const Review: FC<ReviewProps> = ({
         className={`grid pb-8 ${responsive.isTabletOrMobile ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
       >
         <FormInput
-          name="account_name"
+          name="owner.account_name"
           label="ACCOUNT NAME"
           placeholder="Enter account name"
           control={control}
@@ -797,7 +748,7 @@ const Review: FC<ReviewProps> = ({
           className="w-full"
         />
         <FormInput
-          name="account_link"
+          name="owner.account_link"
           label="LINK"
           placeholder="Enter link"
           className="w-full"
@@ -934,6 +885,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
   const bookInternationalPetTransport = useMutation(
     api.mutations.international_pet_transport.bookInternationalPetTransport,
   );
+  const upsertOwner = useMutation(api.mutations.users.upsertOwner);
+  const attachPets = useMutation(api.mutations.users.attachPets);
 
   const createInternationalRelocationForm =
     useForm<InternationalRelocationFormValues>({
@@ -947,12 +900,14 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
         companionship: "",
         travel_date: "",
         date: "",
-        owner_name: "",
-        contact_form: "",
-        account_name: "",
-        account_link: "",
-        contact_number: "",
-        email_address: "",
+        owner: {
+          name: "",
+          contact_form: "",
+          account_name: "",
+          account_link: "",
+          contact_number: "",
+          email_address: "",
+        },
         pets: [
           {
             pet_name: "",
@@ -1045,6 +1000,8 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
     createInternationalRelocationForm.handleSubmit(async (data) => {
       try {
         setLoading(true);
+        const ownerData = data.owner;
+        const userId = await upsertOwner(ownerData);
         const petIds = [];
 
         for (const pet of data.pets) {
@@ -1090,18 +1047,15 @@ const RelocationForm: FC<{ type: "import" | "export" }> = ({ type }) => {
           petIds.push(petId);
         }
 
+        await attachPets({ userId, petIds });
+
         const bookingData = {
           origin_country: data.origin_country,
           destination: data.destination,
           companionship: data.companionship,
           travel_date: data.travel_date,
           date: data.date,
-          owner_name: data.owner_name,
-          contact_form: data.contact_form,
-          account_name: data.account_name,
-          account_link: data.account_link,
-          contact_number: data.contact_number,
-          email_address: data.email_address,
+          userId,
           origin_full_address: data.origin_full_address,
           origin_city: data.origin_city,
           origin_state_province: data.origin_state_province,

@@ -14,11 +14,93 @@ export const get = query({
 export const getPaginated = query({
   args: {
     paginationOpts: paginationOptsValidator,
+    booking_type: v.optional(v.string()),
+    international_flow: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const q = ctx.db.query("bookings").order("desc");
+    let q = ctx.db.query("bookings").order("desc");
+    if (args.booking_type) {
+      q = q.filter((q) => q.eq(q.field("booking_type"), args.booking_type));
+    }
+    const result = await q.paginate(args.paginationOpts);
 
-    return await q.paginate(args.paginationOpts);
+    const page = await Promise.all(
+      result.page.map(async (booking) => {
+        let details:
+          | {
+              userId?: Id<"users">;
+              owner_name?: string;
+              email_address?: string;
+              contact_form?: string;
+              contact_number?: string;
+              account_name?: string;
+              account_link?: string;
+              origin_country?: string;
+              destination?: string;
+            }
+          | null = null;
+
+        if (
+          booking.booking_type === "international_pet_transport" &&
+          booking.booking_id
+        ) {
+          details = await ctx.db.get(
+            booking.booking_id as Id<"international_pet_transport">,
+          );
+        } else if (
+          booking.booking_type === "domestic_pet_transport" &&
+          booking.booking_id
+        ) {
+          details = await ctx.db.get(
+            booking.booking_id as Id<"domestic_pet_transport">,
+          );
+        } else if (
+          booking.booking_type === "rabies_serology_test" &&
+          booking.booking_id
+        ) {
+          details = await ctx.db.get(
+            booking.booking_id as Id<"rabies_serology_test">,
+          );
+        }
+
+        let owner = null;
+        if (details?.userId) {
+          owner = await ctx.db.get(details.userId as Id<"users">);
+        }
+
+        return {
+          ...booking,
+          owner_name: owner?.name || owner?.owner_name || details?.owner_name || "",
+          email_address: owner?.email || details?.email_address || "",
+          contact_form: owner?.contact_form || details?.contact_form || "",
+          contact_number: owner?.contact_number || details?.contact_number || "",
+          account_name: owner?.account_name || details?.account_name || "",
+          account_link: owner?.account_link || details?.account_link || "",
+          origin_country: details?.origin_country || "",
+          destination: details?.destination || "",
+        };
+      }),
+    );
+
+    const filteredPage =
+      args.international_flow === "import"
+        ? page.filter(
+            (row) =>
+              row.booking_type === "international_pet_transport" &&
+              row.destination === "PH",
+          )
+        : args.international_flow === "export"
+          ? page.filter(
+              (row) =>
+                row.booking_type === "international_pet_transport" &&
+                row.origin_country === "PH",
+            )
+          : page;
+
+    return {
+      ...result,
+      page: filteredPage,
+    };
   },
 });
 
@@ -58,19 +140,47 @@ export const getById = query({
       );
     };
 
+    const getOwnerDetails = async (
+      details: {
+        userId?: Id<"users">;
+        owner_name?: string;
+        email_address?: string;
+        contact_form?: string;
+        contact_number?: string;
+        account_name?: string;
+        account_link?: string;
+      } | null,
+    ) => {
+      if (!details) {
+        return null;
+      }
+
+      const owner = details.userId ? await ctx.db.get(details.userId) : null;
+
+      return {
+        owner_name: owner?.name || owner?.owner_name || details.owner_name || "",
+        email_address: owner?.email || details.email_address || "",
+        contact_form: owner?.contact_form || details.contact_form || "",
+        contact_number: owner?.contact_number || details.contact_number || "",
+        account_name: owner?.account_name || details.account_name || "",
+        account_link: owner?.account_link || details.account_link || "",
+      };
+    };
+
     if (booking.booking_type === "international_pet_transport") {
       const details = await ctx.db.get(
         booking.booking_id as Id<"international_pet_transport">,
       );
 
       if (!details) {
-        return { booking, details: null, pet_details: [] };
+        return { booking, details: null, pet_details: [], owner_details: null };
       }
 
       return {
         booking,
         details,
         pet_details: await getPetDetails(details.pets),
+        owner_details: await getOwnerDetails(details),
       };
     }
 
@@ -80,13 +190,14 @@ export const getById = query({
       );
 
       if (!details) {
-        return { booking, details: null, pet_details: [] };
+        return { booking, details: null, pet_details: [], owner_details: null };
       }
 
       return {
         booking,
         details,
         pet_details: await getPetDetails(details.pets),
+        owner_details: await getOwnerDetails(details),
       };
     }
 
@@ -96,16 +207,17 @@ export const getById = query({
       );
 
       if (!details) {
-        return { booking, details: null, pet_details: [] };
+        return { booking, details: null, pet_details: [], owner_details: null };
       }
 
       return {
         booking,
         details,
         pet_details: await getPetDetails(details.pets),
+        owner_details: await getOwnerDetails(details),
       };
     }
 
-    return { booking, details: null, pet_details: [] };
+    return { booking, details: null, pet_details: [], owner_details: null };
   },
 });

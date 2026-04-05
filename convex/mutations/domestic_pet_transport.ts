@@ -3,16 +3,10 @@ import { v } from "convex/values";
 
 export const bookDomesticPetTransport = mutation({
   args: {
-    owner_name: v.string(),
+    userId: v.id("users"),
 
     pickup_address: v.string(),
     destination: v.string(),
-
-    contact_form: v.string(),
-    account_name: v.string(),
-    account_link: v.optional(v.string()),
-    contact_number: v.string(),
-    email_address: v.string(),
 
     travel_date: v.string(),
     date: v.string(),
@@ -29,14 +23,9 @@ export const bookDomesticPetTransport = mutation({
     const newBookingDomesticPetTransport = await ctx.db.insert(
       "domestic_pet_transport",
       {
-        owner_name: args.owner_name,
+        userId: args.userId,
         pickup_address: args.pickup_address,
         destination: args.destination,
-        contact_form: args.contact_form,
-        account_name: args.account_name,
-        account_link: args.account_link,
-        contact_number: args.contact_number,
-        email_address: args.email_address,
         travel_date: args.travel_date,
         date: args.date,
         mode_of_transport: args.mode_of_transport,

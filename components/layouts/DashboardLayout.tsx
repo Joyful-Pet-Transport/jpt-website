@@ -39,7 +39,7 @@ const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
         <div className="animate-pulse bg-gray-200 h-16" />
         <div className="flex flex-1 overflow-hidden">
           <div className="animate-pulse bg-gray-200 w-72" />
-          <main className="flex-1 overflow-y-auto py-12">
+          <main className="flex-1 overflow-y-auto">
             <div className="animate-pulse bg-gray-200 h-full" />
           </main>
         </div>
@@ -63,7 +63,7 @@ const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
           isDrawer={isTabletOrMobile}
           onClose={() => setSidebarOpen(false)}
         />
-        <main className="flex-1 overflow-y-auto py-12">{children}</main>
+        <main className="flex-1 overflow-y-auto md:py-12">{children}</main>
       </div>
     </div>
   );
