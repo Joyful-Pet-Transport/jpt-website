@@ -177,21 +177,21 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const pastThresholdRef = useRef(false);
   const isFloatingRef = useRef(false);
   const prevFloatingForAnimationRef = useRef(false);
-  const upTravelRef = useRef(0);
-  const downTravelRef = useRef(0);
+  const hiddenAnchorYRef = useRef(0);
+  const floatingAnchorYRef = useRef(0);
 
   useEffect(() => {
     const baseThreshold = responsive.isTabletOrMobile ? 120 : 200;
     const hysteresis = responsive.isTabletOrMobile ? 20 : 28;
     const resetThreshold = responsive.isTabletOrMobile ? 56 : 72;
-    const minDelta = 2;
-    const showTravel = responsive.isTabletOrMobile ? 36 : 48;
-    const hideTravel = responsive.isTabletOrMobile ? 10 : 14;
+    const minDelta = 1;
+    const showTravel = responsive.isTabletOrMobile ? 26 : 34;
+    const hideTravel = responsive.isTabletOrMobile ? 3 : 4;
     lastScrollY.current = window.scrollY;
     pastThresholdRef.current = lastScrollY.current > baseThreshold;
     isFloatingRef.current = false;
-    upTravelRef.current = 0;
-    downTravelRef.current = 0;
+    hiddenAnchorYRef.current = lastScrollY.current;
+    floatingAnchorYRef.current = lastScrollY.current;
     setIsPastThreshold(pastThresholdRef.current);
     setIsFloating(false);
 
@@ -202,14 +202,6 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
       if (Math.abs(delta) < minDelta) {
         lastScrollY.current = currentY;
         return;
-      }
-
-      if (delta < 0) {
-        upTravelRef.current += Math.abs(delta);
-        downTravelRef.current = 0;
-      } else {
-        downTravelRef.current += delta;
-        upTravelRef.current = 0;
       }
 
       let nextPastThreshold = pastThresholdRef.current;
@@ -224,22 +216,45 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
       if (nextPastThreshold !== pastThresholdRef.current) {
         pastThresholdRef.current = nextPastThreshold;
         setIsPastThreshold(nextPastThreshold);
+
+        if (nextPastThreshold) {
+          hiddenAnchorYRef.current = currentY;
+        } else {
+          hiddenAnchorYRef.current = currentY;
+          floatingAnchorYRef.current = currentY;
+        }
       }
 
       let nextIsFloating = isFloatingRef.current;
       if (!nextPastThreshold) {
         nextIsFloating = false;
-        upTravelRef.current = 0;
-        downTravelRef.current = 0;
       } else if (isFloatingRef.current) {
-        nextIsFloating = downTravelRef.current < hideTravel;
+        if (delta < 0) {
+          // While visible, keep the anchor at the newest upward point.
+          floatingAnchorYRef.current = currentY;
+        }
+
+        // Any meaningful downward travel from the visible anchor hides it quickly.
+        nextIsFloating = currentY - floatingAnchorYRef.current < hideTravel;
       } else {
-        nextIsFloating = upTravelRef.current > showTravel;
+        if (delta > 0) {
+          // While hidden, keep the anchor at the newest downward point.
+          hiddenAnchorYRef.current = currentY;
+        }
+
+        // Require deliberate upward travel before showing again.
+        nextIsFloating = hiddenAnchorYRef.current - currentY > showTravel;
       }
 
       if (nextIsFloating !== isFloatingRef.current) {
         isFloatingRef.current = nextIsFloating;
         setIsFloating(nextIsFloating);
+
+        if (nextIsFloating) {
+          floatingAnchorYRef.current = currentY;
+        } else {
+          hiddenAnchorYRef.current = currentY;
+        }
       }
 
       lastScrollY.current = currentY;
@@ -279,12 +294,91 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const HeaderBar: FC = () => {
     if (responsive.isTabletOrMobile) {
       return (
+        <div className="mx-4 mt-4 h-22">
+          <div
+            onAnimationEnd={handleNavbarAnimationEnd}
+            className={`${
+              isPastThreshold && (isFloating || navbarAnimation === "out")
+                ? "fixed top-4 left-4 right-4"
+                : "relative h-full"
+            } ${
+              isPastThreshold
+                ? isFloating
+                  ? "opacity-100 translate-y-0 scale-100"
+                  : "opacity-0 -translate-y-6 scale-[0.97] pointer-events-none"
+                : ""
+            } ${
+              navbarAnimation === "in" && isPastThreshold && isFloating
+                ? "animate-float-in"
+                : ""
+            } ${
+              navbarAnimation === "out" && isPastThreshold && !isFloating
+                ? "animate-float-out"
+                : ""
+            } ${
+              isPastThreshold && isFloating ? "bg-[#F2F2F2]" : "bg-[#EAEAEA]"
+            } h-22 rounded-3xl flex items-center z-9999 origin-top will-change-transform`}
+          >
+            <div className="w-full h-full px-4 flex justify-between items-center">
+              {/* Logo */}
+              <div className="flex flex-1 gap-4 justify-between">
+                <div
+                  className="flex flex-row gap-2 cursor-pointer"
+                  onClick={() => router.push("/")}
+                >
+                  <Image
+                    src="/images/logo/logo-new.png"
+                    width={150}
+                    height={150}
+                    alt="Logo"
+                    priority
+                    className="w-auto h-16"
+                  />
+                  <div className="flex items-center">
+                    <BodyText
+                      weight="bold"
+                      font="luckiestGuy"
+                      textColor="000F3F"
+                      className="whitespace-nowrap"
+                    >
+                      JOYFUL PET TRANSPORT
+                    </BodyText>
+                  </div>
+                </div>
+                <div
+                  className="flex items-center z-20"
+                  onClick={() => {
+                    modal.setModalComponent(
+                      <div className="flex flex-col gap-2">
+                        {navItems.map((item, index) => (
+                          <ModalHeaderItem key={index} item={item} />
+                        ))}
+                        <DynamicButton size="medium" rounded>
+                          book now
+                        </DynamicButton>
+                      </div>,
+                      "normal",
+                    );
+                    modal.setShown(true);
+                  }}
+                >
+                  <IoMenuOutline className="text-3xl" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mx-8 mt-8 h-22">
         <div
           onAnimationEnd={handleNavbarAnimationEnd}
           className={`${
             isPastThreshold && (isFloating || navbarAnimation === "out")
-              ? "fixed top-4 left-4 right-4"
-              : "relative mx-4 mt-4"
+              ? "fixed top-8 left-8 right-8"
+              : "relative h-full"
           } ${
             isPastThreshold
               ? isFloating
@@ -300,14 +394,14 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
               ? "animate-float-out"
               : ""
           } ${
-            isPastThreshold && isFloating ? "bg-[#F2F2F2]" : "bg-[#EAEAEA]"
-          } h-22 rounded-3xl flex items-center z-9999 origin-top will-change-transform`}
+            isPastThreshold && isFloating ? "bg-[#F2F2F2]/90" : "bg-[#EAEAEA]"
+          } h-22 rounded-4xl flex items-center z-9999 origin-top will-change-transform`}
         >
-          <div className="w-full h-full px-4 flex justify-between items-center">
+          <div className="w-full h-full px-8 gap-4 flex justify-between items-center">
             {/* Logo */}
-            <div className="flex flex-1 gap-4 justify-between">
+            <div className="flex flex-1">
               <div
-                className="flex flex-row gap-2 cursor-pointer"
+                className="flex flex-row gap-2 cursor-pointer items-center"
                 onClick={() => router.push("/")}
               >
                 <Image
@@ -316,147 +410,74 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                   height={150}
                   alt="Logo"
                   priority
-                  className="w-auto h-16"
+                  className="h-14 w-auto shrink-0 sm:h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16"
                 />
-                <div className="flex items-center">
-                  <BodyText
-                    weight="bold"
-                    font="luckiestGuy"
-                    textColor="000F3F"
-                    className="whitespace-nowrap"
-                  >
-                    JOYFUL PET TRANSPORT
-                  </BodyText>
-                </div>
-              </div>
-              <div
-                className="flex items-center z-20"
-                onClick={() => {
-                  modal.setModalComponent(
-                    <div className="flex flex-col gap-2">
-                      {navItems.map((item, index) => (
-                        <ModalHeaderItem key={index} item={item} />
-                      ))}
-                      <DynamicButton size="medium" rounded>
-                        book now
-                      </DynamicButton>
-                    </div>,
-                    "normal",
-                  );
-                  modal.setShown(true);
-                }}
-              >
-                <IoMenuOutline className="text-3xl" />
+                <BodyText
+                  size="medium"
+                  weight="bold"
+                  font="luckiestGuy"
+                  textColor="text-[#000F3F]"
+                  className="whitespace-nowrap"
+                >
+                  JOYFUL PET TRANSPORT
+                </BodyText>
               </div>
             </div>
-          </div>
-        </div>
-      );
-    }
 
-    return (
-      <div
-        onAnimationEnd={handleNavbarAnimationEnd}
-        className={`${
-          isPastThreshold && (isFloating || navbarAnimation === "out")
-            ? "fixed top-8 left-8 right-8"
-            : "relative mx-8 mt-8"
-        } ${
-          isPastThreshold
-            ? isFloating
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 -translate-y-6 scale-[0.97] pointer-events-none"
-            : ""
-        } ${
-          navbarAnimation === "in" && isPastThreshold && isFloating
-            ? "animate-float-in"
-            : ""
-        } ${
-          navbarAnimation === "out" && isPastThreshold && !isFloating
-            ? "animate-float-out"
-            : ""
-        } ${
-          isPastThreshold && isFloating ? "bg-[#F2F2F2]/90" : "bg-[#EAEAEA]"
-        } h-22 rounded-4xl flex items-center z-9999 origin-top will-change-transform`}
-      >
-        <div className="w-full h-full px-8 gap-4 flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex flex-1">
-            <div
-              className="flex flex-row gap-2 cursor-pointer items-center"
-              onClick={() => router.push("/")}
-            >
-              <Image
-                src="/images/logo/logo-new.png"
-                width={150}
-                height={150}
-                alt="Logo"
-                priority
-                className="h-14 w-auto shrink-0 sm:h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16"
-              />
-              <BodyText
+            {/* Navigation */}
+            <div className="flex gap-4 items-center justify-center z-50">
+              {navItems.map((item, index) => (
+                <HeaderItem key={index} item={item} />
+              ))}
+            </div>
+
+            {/* Book now Button */}
+            <div className="flex flex-1 justify-end items-center h-full z-150">
+              <DynamicButton
                 size="medium"
-                weight="bold"
-                font="luckiestGuy"
-                textColor="text-[#000F3F]"
-                className="whitespace-nowrap"
+                rounded
+                onPress={() => router.push("/our-services")}
               >
-                JOYFUL PET TRANSPORT
-              </BodyText>
+                book now
+              </DynamicButton>
             </div>
           </div>
 
-          {/* Navigation */}
-          <div className="flex gap-4 items-center justify-center z-50">
-            {navItems.map((item, index) => (
-              <HeaderItem key={index} item={item} />
-            ))}
-          </div>
-
-          {/* Book now Button */}
-          <div className="flex flex-1 justify-end items-center h-full z-150">
-            <DynamicButton
-              size="medium"
-              rounded
-              onPress={() => router.push("/our-services")}
-            >
-              book now
-            </DynamicButton>
-          </div>
-        </div>
-
-        {/* Centered Modal */}
-        <div
-          className={`fixed inset-0 z-120 flex items-center justify-center px-4 transition-all duration-300 lg:hidden ${
-            modal.shown
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
-          }`}
-        >
+          {/* Centered Modal */}
           <div
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-            onClick={() => modal.setShown(false)}
-          />
-
-          <nav
-            className={`relative w-[92%] max-w-md rounded-3xl bg-[#EAEAEA] shadow-2xl transition-all duration-300 ${
-              modal.shown ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
+            className={`fixed inset-0 z-120 flex items-center justify-center px-4 transition-all duration-300 lg:hidden ${
+              modal.shown
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
             }`}
           >
-            <div className="flex flex-col items-center px-6 py-8 text-center">
-              {navItems.map((item, index) => (
-                <div key={index} className="w-full py-4">
-                  <HeaderItem item={item} />
-                </div>
-              ))}
+            <div
+              className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+              onClick={() => modal.setShown(false)}
+            />
 
-              <div className="mt-6 w-full">
-                <DynamicButton size="medium" rounded>
-                  book now
-                </DynamicButton>
+            <nav
+              className={`relative w-[92%] max-w-md rounded-3xl bg-[#EAEAEA] shadow-2xl transition-all duration-300 ${
+                modal.shown
+                  ? "scale-100 translate-y-0"
+                  : "scale-95 translate-y-4"
+              }`}
+            >
+              <div className="flex flex-col items-center px-6 py-8 text-center">
+                {navItems.map((item, index) => (
+                  <div key={index} className="w-full py-4">
+                    <HeaderItem item={item} />
+                  </div>
+                ))}
+
+                <div className="mt-6 w-full">
+                  <DynamicButton size="medium" rounded>
+                    book now
+                  </DynamicButton>
+                </div>
               </div>
-            </div>
-          </nav>
+            </nav>
+          </div>
         </div>
       </div>
     );
