@@ -170,17 +170,28 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const modal = useModal();
   const [isFloating, setIsFloating] = useState(false);
   const [isPastThreshold, setIsPastThreshold] = useState(false);
+  const [navbarAnimation, setNavbarAnimation] = useState<"idle" | "in" | "out">(
+    "idle",
+  );
   const lastScrollY = useRef(0);
   const pastThresholdRef = useRef(false);
   const isFloatingRef = useRef(false);
+  const prevFloatingForAnimationRef = useRef(false);
+  const upTravelRef = useRef(0);
+  const downTravelRef = useRef(0);
 
   useEffect(() => {
     const baseThreshold = responsive.isTabletOrMobile ? 120 : 200;
     const hysteresis = responsive.isTabletOrMobile ? 20 : 28;
+    const resetThreshold = responsive.isTabletOrMobile ? 56 : 72;
     const minDelta = 2;
+    const showTravel = responsive.isTabletOrMobile ? 36 : 48;
+    const hideTravel = responsive.isTabletOrMobile ? 10 : 14;
     lastScrollY.current = window.scrollY;
     pastThresholdRef.current = lastScrollY.current > baseThreshold;
     isFloatingRef.current = false;
+    upTravelRef.current = 0;
+    downTravelRef.current = 0;
     setIsPastThreshold(pastThresholdRef.current);
     setIsFloating(false);
 
@@ -189,19 +200,24 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
       const delta = currentY - lastScrollY.current;
 
       if (Math.abs(delta) < minDelta) {
+        lastScrollY.current = currentY;
         return;
       }
 
-      const scrollingUp = delta < 0;
+      if (delta < 0) {
+        upTravelRef.current += Math.abs(delta);
+        downTravelRef.current = 0;
+      } else {
+        downTravelRef.current += delta;
+        upTravelRef.current = 0;
+      }
+
       let nextPastThreshold = pastThresholdRef.current;
 
-      // Use a dead zone around the threshold to avoid flicker while direction changes.
+      // Enter floating behavior after crossing threshold, and only reset near the top.
       if (!pastThresholdRef.current && currentY > baseThreshold + hysteresis) {
         nextPastThreshold = true;
-      } else if (
-        pastThresholdRef.current &&
-        currentY < baseThreshold - hysteresis
-      ) {
+      } else if (pastThresholdRef.current && currentY < resetThreshold) {
         nextPastThreshold = false;
       }
 
@@ -210,7 +226,17 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
         setIsPastThreshold(nextPastThreshold);
       }
 
-      const nextIsFloating = nextPastThreshold && scrollingUp;
+      let nextIsFloating = isFloatingRef.current;
+      if (!nextPastThreshold) {
+        nextIsFloating = false;
+        upTravelRef.current = 0;
+        downTravelRef.current = 0;
+      } else if (isFloatingRef.current) {
+        nextIsFloating = downTravelRef.current < hideTravel;
+      } else {
+        nextIsFloating = upTravelRef.current > showTravel;
+      }
+
       if (nextIsFloating !== isFloatingRef.current) {
         isFloatingRef.current = nextIsFloating;
         setIsFloating(nextIsFloating);
@@ -226,10 +252,35 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
     };
   }, [responsive.isTabletOrMobile]);
 
+  useEffect(() => {
+    if (!isPastThreshold) {
+      setNavbarAnimation("idle");
+      prevFloatingForAnimationRef.current = false;
+      return;
+    }
+
+    if (isFloating) {
+      setNavbarAnimation("in");
+    } else if (prevFloatingForAnimationRef.current) {
+      setNavbarAnimation("out");
+    } else {
+      setNavbarAnimation("idle");
+    }
+
+    prevFloatingForAnimationRef.current = isFloating;
+  }, [isFloating, isPastThreshold]);
+
+  const handleNavbarAnimationEnd = () => {
+    if (!isFloating) {
+      setNavbarAnimation("idle");
+    }
+  };
+
   const HeaderBar: FC = () => {
     if (responsive.isTabletOrMobile) {
       return (
         <div
+          onAnimationEnd={handleNavbarAnimationEnd}
           className={`${
             isPastThreshold
               ? "fixed top-4 left-4 right-4"
@@ -237,8 +288,16 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
           } ${
             isPastThreshold
               ? isFloating
-                ? "animate-float-in"
-                : "animate-float-out pointer-events-none"
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 -translate-y-6 scale-[0.97] pointer-events-none"
+              : ""
+          } ${
+            navbarAnimation === "in" && isPastThreshold && isFloating
+              ? "animate-float-in"
+              : ""
+          } ${
+            navbarAnimation === "out" && isPastThreshold && !isFloating
+              ? "animate-float-out"
               : ""
           } ${
             isPastThreshold && isFloating ? "bg-[#F2F2F2]" : "bg-[#EAEAEA]"
@@ -297,13 +356,22 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
 
     return (
       <div
+        onAnimationEnd={handleNavbarAnimationEnd}
         className={`${
           isPastThreshold ? "fixed top-8 left-8 right-8" : "relative mx-8 mt-8"
         } ${
           isPastThreshold
             ? isFloating
-              ? "animate-float-in"
-              : "animate-float-out pointer-events-none"
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 -translate-y-6 scale-[0.97] pointer-events-none"
+            : ""
+        } ${
+          navbarAnimation === "in" && isPastThreshold && isFloating
+            ? "animate-float-in"
+            : ""
+        } ${
+          navbarAnimation === "out" && isPastThreshold && !isFloating
+            ? "animate-float-out"
             : ""
         } ${
           isPastThreshold && isFloating ? "bg-[#F2F2F2]/90" : "bg-[#EAEAEA]"
