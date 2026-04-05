@@ -1,5 +1,6 @@
 import z from "zod";
 import PetDetailsSchema from "./pet-details-schema";
+import { OwnerDetailsSchema } from "./owner-details";
 
 const InternationalRelocationFormSchema = z.object({
   origin_country: z.string().min(2, "Please select an origin country"),
@@ -11,12 +12,7 @@ const InternationalRelocationFormSchema = z.object({
     .min(2, "Please indicate if you have a specific travel date"),
   date: z.string().min(3, "Please select a travel date"),
 
-  owner_name: z.string().min(3, "Please enter the owner's name"),
-  contact_form: z.string().min(3, "Please select where we can contact you"),
-  account_name: z.string().min(3, "Please enter your account name"),
-  account_link: z.string().optional(),
-  contact_number: z.string().min(3, "Please enter a contact number"),
-  email_address: z.string().email("Please enter a valid email address"),
+  owner: OwnerDetailsSchema,
 
   origin_full_address: z
     .string()

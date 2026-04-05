@@ -1,7 +1,7 @@
 import z from "zod";
 
-const OwnerDetails = z.object({
-  owner_name: z.string().min(3, "Please enter the owner's name"),
+export const OwnerDetailsSchema = z.object({
+  name: z.string().min(3, "Please enter the owner's name"),
   contact_form: z.string().min(3, "Please select where we can contact you"),
   account_name: z.string().min(3, "Please enter your account name"),
   account_link: z.string().optional(),
@@ -9,4 +9,4 @@ const OwnerDetails = z.object({
   email_address: z.string().email("Please enter a valid email address"),
 });
 
-export default OwnerDetails;
+export default OwnerDetailsSchema;
