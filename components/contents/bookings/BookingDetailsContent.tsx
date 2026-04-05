@@ -3,6 +3,7 @@
 import WhiteCard from "@/components/card/WhiteCard";
 import BodyText from "@/components/elements/text/BodyText";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
+import BookingStatusChanger from "./BookingStatusChanger";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
@@ -79,7 +80,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
               size="xsmall"
               className="uppercase tracking-wide text-blue-700"
             >
-              Last updated {dayjs(booking.updated_at).format("MMM DD, YYYY")}
+              Last updated{" "}
+              {booking.updated_at
+                ? dayjs(booking.updated_at).format("MMM DD, YYYY")
+                : "-"}
             </BodyText>
           </div>
         </div>
@@ -97,6 +101,14 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           />
         </div>
       </WhiteCard>
+
+      <BookingStatusChanger
+        bookingId={booking._id}
+        currentStatus={booking.status}
+        bookingType={booking.booking_type}
+        previousStatus={booking.previous_status}
+        updatedAt={booking.updated_at}
+      />
 
       {details ? (
         <WhiteCard>
