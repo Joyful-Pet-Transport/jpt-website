@@ -19,12 +19,15 @@ export const createBooking = mutation({
   },
 
   handler: async (convexToJson, args) => {
+    const now = Date.now();
+
     const newCreateBooking = await convexToJson.db.insert("bookings", {
       booking_id: args.booking_id,
       booking_label: args.booking_label,
       booking_type: args.booking_type,
       status: "pending",
-      updated_at: Date.now(),
+      created_at: now,
+      updated_at: now,
     });
 
     return newCreateBooking;

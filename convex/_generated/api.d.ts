@@ -33,6 +33,7 @@ import type * as tables_international_pet_transport from "../tables/internationa
 import type * as tables_pet_details from "../tables/pet_details.js";
 import type * as tables_post_services from "../tables/post_services.js";
 import type * as tables_rabies_serology_test from "../tables/rabies_serology_test.js";
+import type * as tables_reports from "../tables/reports.js";
 import type * as tables_roles from "../tables/roles.js";
 import type * as tables_services from "../tables/services.js";
 import type * as tables_users from "../tables/users.js";
@@ -69,6 +70,7 @@ declare const fullApi: ApiFromModules<{
   "tables/pet_details": typeof tables_pet_details;
   "tables/post_services": typeof tables_post_services;
   "tables/rabies_serology_test": typeof tables_rabies_serology_test;
+  "tables/reports": typeof tables_reports;
   "tables/roles": typeof tables_roles;
   "tables/services": typeof tables_services;
   "tables/users": typeof tables_users;

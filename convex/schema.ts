@@ -182,8 +182,11 @@ export default defineSchema({
     booking_label: v.optional(v.string()),
     booking_type: v.optional(v.string()),
     status: v.string(),
+    created_at: v.optional(v.number()),
     updated_at: v.optional(v.number()),
     previous_status: v.optional(v.string()),
     status_reason: v.optional(v.string()),
-  }),
+  })
+    .index("by_created_at", ["created_at"])
+    .index("by_booking_type", ["booking_type"]),
 });
