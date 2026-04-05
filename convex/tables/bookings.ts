@@ -140,19 +140,47 @@ export const getById = query({
       );
     };
 
+    const getOwnerDetails = async (
+      details: {
+        userId?: Id<"users">;
+        owner_name?: string;
+        email_address?: string;
+        contact_form?: string;
+        contact_number?: string;
+        account_name?: string;
+        account_link?: string;
+      } | null,
+    ) => {
+      if (!details) {
+        return null;
+      }
+
+      const owner = details.userId ? await ctx.db.get(details.userId) : null;
+
+      return {
+        owner_name: owner?.name || owner?.owner_name || details.owner_name || "",
+        email_address: owner?.email || details.email_address || "",
+        contact_form: owner?.contact_form || details.contact_form || "",
+        contact_number: owner?.contact_number || details.contact_number || "",
+        account_name: owner?.account_name || details.account_name || "",
+        account_link: owner?.account_link || details.account_link || "",
+      };
+    };
+
     if (booking.booking_type === "international_pet_transport") {
       const details = await ctx.db.get(
         booking.booking_id as Id<"international_pet_transport">,
       );
 
       if (!details) {
-        return { booking, details: null, pet_details: [] };
+        return { booking, details: null, pet_details: [], owner_details: null };
       }
 
       return {
         booking,
         details,
         pet_details: await getPetDetails(details.pets),
+        owner_details: await getOwnerDetails(details),
       };
     }
 
@@ -162,13 +190,14 @@ export const getById = query({
       );
 
       if (!details) {
-        return { booking, details: null, pet_details: [] };
+        return { booking, details: null, pet_details: [], owner_details: null };
       }
 
       return {
         booking,
         details,
         pet_details: await getPetDetails(details.pets),
+        owner_details: await getOwnerDetails(details),
       };
     }
 
@@ -178,16 +207,17 @@ export const getById = query({
       );
 
       if (!details) {
-        return { booking, details: null, pet_details: [] };
+        return { booking, details: null, pet_details: [], owner_details: null };
       }
 
       return {
         booking,
         details,
         pet_details: await getPetDetails(details.pets),
+        owner_details: await getOwnerDetails(details),
       };
     }
 
-    return { booking, details: null, pet_details: [] };
+    return { booking, details: null, pet_details: [], owner_details: null };
   },
 });
