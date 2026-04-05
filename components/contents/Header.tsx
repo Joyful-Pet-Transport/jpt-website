@@ -282,7 +282,7 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
         <div
           onAnimationEnd={handleNavbarAnimationEnd}
           className={`${
-            isPastThreshold
+            isPastThreshold && (isFloating || navbarAnimation === "out")
               ? "fixed top-4 left-4 right-4"
               : "relative mx-4 mt-4"
           } ${
@@ -358,7 +358,9 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
       <div
         onAnimationEnd={handleNavbarAnimationEnd}
         className={`${
-          isPastThreshold ? "fixed top-8 left-8 right-8" : "relative mx-8 mt-8"
+          isPastThreshold && (isFloating || navbarAnimation === "out")
+            ? "fixed top-8 left-8 right-8"
+            : "relative mx-8 mt-8"
         } ${
           isPastThreshold
             ? isFloating
