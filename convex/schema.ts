@@ -53,7 +53,21 @@ export default defineSchema({
     last_name: v.string(),
     email: v.string(),
     message: v.string(),
-  }),
+    status: v.optional(
+      v.union(
+        v.literal("new"),
+        v.literal("assigned"),
+        v.literal("replied"),
+        v.literal("closed"),
+      ),
+    ),
+    created_at: v.optional(v.number()),
+    assigned_to: v.optional(v.union(v.id("users"), v.null())),
+    read_at: v.optional(v.union(v.number(), v.null())),
+  })
+    .index("by_status", ["status"])
+    .index("by_created_at", ["created_at"])
+    .index("by_assigned_to", ["assigned_to"]),
 
   post_services: defineTable({
     name: v.string(),

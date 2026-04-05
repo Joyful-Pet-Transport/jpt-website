@@ -1,23 +1,9 @@
 "use client";
 
-import ConvexTable from "@/components/elements/table/ConvexTable";
-import DashboardHeading from "@/components/elements/text/DashboardHeading";
-import { api } from "@/convex/_generated/api";
+import InquiriesContent from "@/components/contents/inquiries/InquiriesContent";
 
 const InquiriesPage = () => {
-  return (
-    <DashboardHeading title="Inquiries">
-      <ConvexTable
-        query={api.tables.contact_us.getPaginated}
-        headers={[
-          { key: "first_name", label: "First Name" },
-          { key: "last_name", label: "Last Name" },
-          { key: "email", label: "Email" },
-          { key: "message", label: "Message" },
-        ]}
-      />
-    </DashboardHeading>
-  );
+  return <InquiriesContent />;
 };
 
 export default InquiriesPage;
