@@ -168,11 +168,39 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
   const isNotHomePage = pathname !== "/";
   const responsive = useResponsive();
   const modal = useModal();
+  const [isFloating, setIsFloating] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const threshold = responsive.isTabletOrMobile ? 120 : 200;
+    lastScrollY.current = window.scrollY;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const scrollingUp = currentY < lastScrollY.current;
+      const shouldFloat = currentY > threshold && scrollingUp;
+
+      setIsFloating(shouldFloat);
+      lastScrollY.current = currentY;
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [responsive.isTabletOrMobile]);
 
   const HeaderBar: FC = () => {
     if (responsive.isTabletOrMobile) {
       return (
-        <div className="h-22 relative mx-4 rounded-3xl mt-4 bg-[#EAEAEA] flex items-center z-150">
+        <div
+          className={`${
+            isFloating
+              ? "fixed top-4 left-4 right-4 shadow-lg backdrop-blur-md"
+              : "relative mx-4 mt-4"
+          } h-22 rounded-3xl bg-[#EAEAEA] flex items-center z-9999 transition-all duration-200`}
+        >
           <div className="w-full h-full px-4 flex justify-between items-center">
             {/* Logo */}
             <div className="flex flex-1 gap-4 justify-between">
@@ -226,7 +254,11 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
 
     return (
       <div
-        className={`h-22 relative mx-8 rounded-4xl mt-8 bg-[#EAEAEA] flex items-center ${isNotHomePage && "z-1"}`}
+        className={`${
+          isFloating
+            ? "fixed top-8 left-8 right-8 shadow-lg backdrop-blur-md"
+            : "relative mx-8 mt-8"
+        } h-22 rounded-4xl bg-[#EAEAEA] flex items-center z-9999 transition-all duration-200`}
       >
         <div className="w-full h-full px-8 gap-4 flex justify-between items-center">
           {/* Logo */}
