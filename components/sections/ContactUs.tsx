@@ -46,7 +46,7 @@ const ContactUsSection: FC = () => {
             <InfoItemContainer
               icon={<IconContainer icon="phone" />}
               name="Phone"
-              value="+63 993 370 3770"
+              value="+63 956 810 1871"
             />
             <InfoItemContainer
               icon={<IconContainer icon="clock" />}

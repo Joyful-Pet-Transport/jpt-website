@@ -246,21 +246,21 @@ const Footer: FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 text-sm font-light">
-            <button
+            {/* <button
               onClick={() => shareNumber("GOMO", "+63 976 630 8124")}
               className="text-left hover:text-blue-600 flex gap-2"
             >
               <span className="w-16">GOMO:</span>
               <span>+63 976 630 8124</span>
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               onClick={() => shareNumber("DITO", "+63 993 370 3770")}
               className="text-left hover:text-blue-600 flex gap-2"
             >
               <span className="w-16">DITO:</span>
               <span>+63 993 370 3770</span>
-            </button>
+            </button> */}
 
             <div className="text-left hover:text-blue-600 flex gap-2">
               <span className="min-w-16">GLOBE:</span>
@@ -271,15 +271,15 @@ const Footer: FC = () => {
                 >
                   +63 956 810 1871
                 </span>
-                {" / "}
-                <span
+                {/* {" / "} */}
+                {/* <span
                   onClick={() => shareNumber("GLOBE", "+63 966 940 6263")}
                   className="whitespace-nowrap"
                 >
                   +63 966 940 6263
-                </span>
+                </span> */}
               </span>
-            </div>
+            </div>  
           </div>
         </div>
       </div>
