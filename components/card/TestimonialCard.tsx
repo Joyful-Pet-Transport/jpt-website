@@ -150,7 +150,11 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
   if (mobile) {
     return (
       <>
-        <div className="w-full min-h-96 bg-[#F0F8FF] gap-4 rounded-3xl flex flex-col p-6">
+        <div
+          className={`w-full break-inside-avoid bg-[#F0F8FF] gap-4 rounded-3xl flex flex-col p-6 ${
+            hasImages ? "min-h-96" : "h-fit"
+          }`}
+        >
           {/* Header */}
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-3">
@@ -192,7 +196,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
           </div>
 
           {/* Testimonial text */}
-          <div className="flex-1">
+          <div className={hasImages ? "flex-1" : ""}>
             <BodyText className="text-gray-700 text-sm leading-relaxed">
               {displayText}
               {isLong && (
@@ -265,7 +269,11 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
 
   return (
     <>
-      <div className="w-full min-h-[450px] bg-[#F0F8FF] gap-4 rounded-2xl flex flex-col p-8">
+      <div
+        className={`w-full break-inside-avoid bg-[#F0F8FF] gap-4 rounded-2xl flex flex-col p-8 ${
+          hasImages ? "min-h-[450px]" : "h-fit"
+        }`}
+      >
         {/* Header */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -307,7 +315,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
         </div>
 
         {/* Testimonial text */}
-        <div className="flex-1">
+        <div className={hasImages ? "flex-1" : ""}>
           <BodyText className="text-gray-700 leading-relaxed">
             {displayText}
             {isLong && (

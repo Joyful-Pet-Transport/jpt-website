@@ -22,7 +22,7 @@ export const get = query({
       .filter((q) => q.neq(q.field("text"), undefined))
       .collect();
 
-    return reviews.sort((a, b) => b.stars - a.stars).slice(0, 30);
+    return reviews.sort((a, b) => b.stars - a.stars);
   },
 });
 
