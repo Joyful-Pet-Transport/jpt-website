@@ -41,7 +41,7 @@ const ContactUsSection: FC = () => {
             <InfoItemContainer
               icon={<IconContainer icon="email" />}
               name="Email"
-              value="joyfultransportreservations@gmail.com"
+              value="reservations@joyfulpettransport.com"
             />
             <InfoItemContainer
               icon={<IconContainer icon="phone" />}

@@ -31,7 +31,7 @@ const Footer: FC = () => {
   const pathname = usePathname();
   const responsive = useResponsive();
 
-  const email = "joyfulpettransportreservations@gmail.com";
+  const email = "reservations@joyfulpettransport.com";
 
   // const Brand = () => {
   const Brand: FC<{ hideButton?: boolean }> = ({ hideButton }) => {

@@ -32,8 +32,8 @@ const ContactUsScreen = () => {
             rel="noopener noreferrer"
             className="text-sm font-light hover:text-blue-600 transition break-all"
           >
-            <BodyText size="small" className="text-center">
-              joyfulpettransportreservations@gmail.com
+            <BodyText size="medium" className="text-center">
+            reservations@joyfulpettransport.com
             </BodyText>
           </a>
         </div>
