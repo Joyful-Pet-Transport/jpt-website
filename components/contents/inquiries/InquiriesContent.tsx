@@ -15,6 +15,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import useModal from "@/utils/hooks/useModal";
 import { useMutation, useQuery } from "convex/react";
 import dayjs from "dayjs";
+import { copyInquiryDetailsToClipboard } from "@/utils/format/copyFormDetails";
 import { Check, Copy, Eye, Mail, RefreshCw, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -438,7 +439,7 @@ const InquiriesContent = () => {
       />
 
       {toast && (
-        <div className="fixed right-4 top-4 z-[120]">
+        <div className="fixed right-4 top-4 z-120">
           <div
             className={`rounded-lg border px-4 py-3 shadow-md ${
               toast.type === "success"
@@ -486,6 +487,7 @@ const InquiryPreviewModal = ({
   );
   const [readAt, setReadAt] = useState<number | null>(inquiry.read_at ?? null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
 
   useEffect(() => {
     if (readAt != null) {
@@ -537,6 +539,21 @@ const InquiryPreviewModal = ({
         error instanceof Error ? error.message : "Failed to copy email address.",
         "error",
       );
+    }
+  };
+
+  const handleCopyAllDetails = async () => {
+    try {
+      setIsCopying(true);
+      await copyInquiryDetailsToClipboard(inquiry);
+      onNotify("Copied to clipboard");
+    } catch (error) {
+      onNotify(
+        error instanceof Error ? error.message : "Failed to copy inquiry details.",
+        "error",
+      );
+    } finally {
+      setIsCopying(false);
     }
   };
 
@@ -640,6 +657,15 @@ const InquiryPreviewModal = ({
           >
             <Mail className="h-4 w-4" />
             Reply
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleCopyAllDetails()}
+            disabled={isCopying}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <Copy className="h-4 w-4" />
+            {isCopying ? "Copying..." : "Copy All Details"}
           </button>
           <button
             type="button"

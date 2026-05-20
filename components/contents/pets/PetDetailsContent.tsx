@@ -86,7 +86,7 @@ const Info = ({ label, value }: { label: string; value: string }) => {
       <BodyText size="xsmall" className="uppercase tracking-wide text-slate-500">
         {label}
       </BodyText>
-      <BodyText size="small" className="text-slate-900 break-words">
+      <BodyText size="small" className="text-slate-900 break-normal">
         {value}
       </BodyText>
     </div>

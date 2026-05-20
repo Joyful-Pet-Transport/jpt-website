@@ -10,7 +10,8 @@ import { useQuery } from "convex/react";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { copyBookingDetailsToClipboard } from "@/utils/format/copyFormDetails";
 
 type BookingDetailsContentProps = {
   id: Id<"bookings">;
@@ -19,6 +20,20 @@ type BookingDetailsContentProps = {
 const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
   const router = useRouter();
   const [isExporting, setIsExporting] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  useEffect(() => {
+    if (!toast) {
+      return;
+    }
+
+    const timeout = setTimeout(() => setToast(null), 2800);
+    return () => clearTimeout(timeout);
+  }, [toast]);
   const bookingDetails = useQuery(api.tables.bookings.getById, { id });
   const countries = useQuery(api.tables.available_countries.getAll);
 
@@ -68,6 +83,29 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
     }
 
     return String(value);
+  };
+
+  const handleCopyAllDetails = async () => {
+    try {
+      setIsCopying(true);
+      await copyBookingDetailsToClipboard({
+        bookingType: booking.booking_type,
+        bookingLabel: booking.booking_label,
+        details: (details || null) as Record<string, unknown> | null,
+        ownerDetails: owner_details,
+        petDetails: pet_details || [],
+        countryNameByCode,
+      });
+      setToast({ message: "Copied to clipboard", type: "success" });
+    } catch (error) {
+      setToast({
+        message:
+          error instanceof Error ? error.message : "Failed to copy booking details.",
+        type: "error",
+      });
+    } finally {
+      setIsCopying(false);
+    }
   };
 
   const handleExportToPdf = async () => {
@@ -419,11 +457,19 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex flex-wrap justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => void handleCopyAllDetails()}
+            disabled={isCopying || isExporting}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isCopying ? "Copying..." : "Copy All Details"}
+          </button>
           <button
             type="button"
             onClick={() => void handleExportToPdf()}
-            disabled={isExporting}
+            disabled={isExporting || isCopying}
             className="rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 transition-all hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isExporting ? "Exporting..." : "Export PDF"}
@@ -563,6 +609,20 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           })}
         </div>
       </WhiteCard>
+
+      {toast && (
+        <div className="fixed right-4 top-4 z-120">
+          <div
+            className={`rounded-lg border px-4 py-3 shadow-md ${
+              toast.type === "success"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                : "border-rose-200 bg-rose-50 text-rose-700"
+            }`}
+          >
+            <BodyText size="small">{toast.message}</BodyText>
+          </div>
+        </div>
+      )}
     </DashboardHeading>
   );
 };
@@ -576,7 +636,7 @@ const Info = ({ label, value }: { label: string; value: string }) => {
       >
         {label}
       </BodyText>
-      <BodyText size="small" className="break-words text-slate-900">
+      <BodyText size="small" className="break-normal text-slate-900">
         {value}
       </BodyText>
     </div>

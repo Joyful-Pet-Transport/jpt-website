@@ -139,7 +139,7 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
               <FormInput
                 name={`pets.${index}.pet_weight`}
                 label="PET'S WEIGHT"
-                placeholder="Enter pet's estimated weight"
+                placeholder="Enter pet's estimated weight in kg"
                 control={control}
                 className="w-full"
                 required
@@ -192,7 +192,7 @@ const PetIndexDetails: FC<PetIndexDetailsProps> = ({
                 name={`pets.${index}.pet_weight`}
                 label="PET'S WEIGHT (ESTIMATED IS OKAY)"
                 control={control}
-                placeholder="Enter pet's estimated weight"
+                placeholder="Enter pet's estimated weight in kg"
                 className="w-full"
                 required
               />

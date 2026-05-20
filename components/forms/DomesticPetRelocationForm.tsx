@@ -547,7 +547,7 @@ const Review: FC<ReviewProps> = ({
                 control={control}
                 widthFull
                 disabled
-                placeholder="Enter pet's estimated weight"
+                placeholder="Enter pet's estimated weight in kg"
                 required
               />
             </div>

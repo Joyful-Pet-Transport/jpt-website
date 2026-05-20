@@ -13,7 +13,7 @@ const PetDetailsSchema = z.object({
     .string()
     .regex(/^([0-9]|1[0-2])$/, "Age in months must be between 0 and 12")
     .min(1, "Please enter your pet's age in months"),
-  pet_weight: z.string().min(1, "Please enter your pet's weight"),
+  pet_weight: z.string().min(1, "Please enter your pet's weight in kg"),
   pet_condition: z.string().optional(),
   special_instructions: z.string().optional(),
   pet_image: z
