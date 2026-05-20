@@ -424,8 +424,8 @@ const buildPetSections = (petDetails: (PetDetailsInput | null)[]) => {
       formatLabelValue("Weight", formatCopyWeight(pet.pet_weight)),
       formatLabelValue("Medical Condition", pet.pet_condition),
       formatLabelValue("Special Instructions", pet.special_instructions),
-      pet.image ? formatLabelValue("Image", pet.image) : formatLabelValue("Image", EMPTY_COPY_VALUE),
-      "",
+      // pet.image ? formatLabelValue("Image", pet.image) : formatLabelValue("Image", EMPTY_COPY_VALUE),
+      // "",
     ];
   });
 };
