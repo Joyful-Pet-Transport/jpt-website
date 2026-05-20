@@ -1,6 +1,7 @@
 "use client";
 
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { isDashboardAuthBypassEnabled } from "@/utils/config/devAuth";
 import { useGetCurrentUser } from "@/utils/hooks/useGetCurrentUser";
 import { useAuthToken } from "@convex-dev/auth/react";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,10 @@ const DashboardLayoutScreen: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
+    if (isDashboardAuthBypassEnabled) {
+      return;
+    }
+
     if (isLoading) return;
     if (!user || !token) {
       router.replace("/");
@@ -21,7 +26,7 @@ const DashboardLayoutScreen: FC<PropsWithChildren> = ({ children }) => {
     if (user?.role?.slug !== "staff" && user?.role?.slug !== "admin") {
       router.replace("/");
     }
-  }, [user, isLoading, token ?? null]);
+  }, [user, isLoading, token ?? null, router]);
 
   return <DashboardLayout>{children}</DashboardLayout>;
 };
