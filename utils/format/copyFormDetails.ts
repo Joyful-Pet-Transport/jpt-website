@@ -425,7 +425,7 @@ const buildPetSections = (petDetails: (PetDetailsInput | null)[]) => {
       formatLabelValue("Medical Condition", pet.pet_condition),
       formatLabelValue("Special Instructions", pet.special_instructions),
       // pet.image ? formatLabelValue("Image", pet.image) : formatLabelValue("Image", EMPTY_COPY_VALUE),
-      // "",
+      "",
     ];
   });
 };
@@ -529,13 +529,18 @@ export const copyTextToClipboard = async (plainText: string, imageUrls: string[]
   await navigator.clipboard.write([new ClipboardItem(clipboardItems)]);
 };
 
+// export const copyBookingDetailsToClipboard = async (input: BookingCopyInput) => {
+//   const plainText = formatBookingDetailsText(input);
+//   const imageUrls = input.petDetails
+//     .filter((pet): pet is PetDetailsInput => Boolean(pet?.image))
+//     .map((pet) => pet.image as string);
+
+//   await copyTextToClipboard(plainText, imageUrls);
+// };
+
 export const copyBookingDetailsToClipboard = async (input: BookingCopyInput) => {
   const plainText = formatBookingDetailsText(input);
-  const imageUrls = input.petDetails
-    .filter((pet): pet is PetDetailsInput => Boolean(pet?.image))
-    .map((pet) => pet.image as string);
-
-  await copyTextToClipboard(plainText, imageUrls);
+  await copyTextToClipboard(plainText);
 };
 
 export const copyInquiryDetailsToClipboard = async (inquiry: InquiryCopyInput) => {
