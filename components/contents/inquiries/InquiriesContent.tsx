@@ -667,14 +667,14 @@ const InquiryPreviewModal = ({
             <Copy className="h-4 w-4" />
             {isCopying ? "Copying..." : "Copy All Details"}
           </button>
-          {/* <button
+          <button
             type="button"
             onClick={() => void handleCopyEmail()}
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-all hover:bg-slate-50"
           >
             <Copy className="h-4 w-4" />
             Copy Email
-          </button> */}
+          </button>
           <button
             onClick={() =>
               window.open(
