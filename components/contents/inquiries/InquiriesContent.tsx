@@ -667,14 +667,27 @@ const InquiryPreviewModal = ({
             <Copy className="h-4 w-4" />
             {isCopying ? "Copying..." : "Copy All Details"}
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={() => void handleCopyEmail()}
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-all hover:bg-slate-50"
           >
             <Copy className="h-4 w-4" />
             Copy Email
+          </button> */}
+          <button
+            onClick={() =>
+              window.open(
+                `https://mail.google.com/mail/?view=cm&fs=1&to=${inquiry.email}&su=${encodeURIComponent("Re: Your Joyful Pet Transport Inquiry")}`,
+                "_blank",
+                "noopener,noreferrer"
+              )
+            }
+            className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-sm text-blue-700 transition-all hover:bg-blue-50"
+          >
+            Reply via Gmail
           </button>
+          
         </div>
 
         <div className="flex flex-wrap gap-2">
