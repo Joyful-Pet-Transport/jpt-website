@@ -675,7 +675,7 @@ const InquiryPreviewModal = ({
             <Copy className="h-4 w-4" />
             Copy Email
           </button> */}
-          <button
+                    <button
             onClick={() =>
               window.open(
                 `https://mail.google.com/mail/?view=cm&fs=1&to=${inquiry.email}&su=${encodeURIComponent("Re: Your Joyful Pet Transport Inquiry")}`,
@@ -687,6 +687,41 @@ const InquiryPreviewModal = ({
           >
             Reply via Gmail
           </button>
+          {/* <button
+  onClick={() => {
+    const body = `Good day,
+
+Thank you for reaching out to Joyful Pet Transport. We truly appreciate your interest in our services.
+
+To assist you better, may we kindly ask for the following pet details:
+
+- Pet's name:
+- Breed:
+- Age:
+- Weight:
+- Destination and origin:
+- Preferred travel date:
+- Preferred platform for communication (Facebook Messenger, WhatsApp, Viber, Email, etc.) and the corresponding contact details
+
+Once we receive these details, we will gladly provide you with the necessary information and assistance for your pet's travel.
+
+If you have any questions in the meantime, please feel free to reply directly to this email.
+
+We look forward to assisting you and your pet. 😊
+
+Best regards,
+Joyful Pet Transport Team`;
+
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${inquiry.email}&su=${encodeURIComponent("Re: Your Joyful Pet Transport Inquiry")}&body=${encodeURIComponent(body)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+  className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-sm text-blue-700 transition-all hover:bg-blue-50"
+>
+  Reply via Gmail
+</button> */}
           
         </div>
 

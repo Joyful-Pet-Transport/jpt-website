@@ -34,7 +34,7 @@ const leagueSpartanFont = League_Spartan({
 
 export const metadata: Metadata = {
   title: "Joyful Pet Transport",
-  description: "GProject by Joyful Dev",
+  description: "Joyful Pet Transport provides professional pet relocation services in the Philippines — domestic & international. We handle vet coordination, permits, flight arrangements, and door-to-door transport. Book your pet's safe journey today!",
 };
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
