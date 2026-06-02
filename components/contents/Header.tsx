@@ -291,6 +291,36 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
     }
   };
 
+  const navigateToContactSection = () => {
+    modal.setShown(false);
+
+    if (pathname === "/") {
+      document
+        .getElementById("contact-us")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.replaceState(null, "", "/#contact-us");
+      return;
+    }
+
+    router.push("/#contact-us");
+  };
+
+  useEffect(() => {
+    if (pathname !== "/" || window.location.hash !== "#contact-us") {
+      return;
+    }
+
+    const scrollToContact = () => {
+      document
+        .getElementById("contact-us")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scrollToContact);
+    });
+  }, [pathname]);
+
   const HeaderBar: FC = () => {
     if (responsive.isTabletOrMobile) {
       return (
@@ -353,8 +383,12 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
                         {navItems.map((item, index) => (
                           <ModalHeaderItem key={index} item={item} />
                         ))}
-                        <DynamicButton size="medium" rounded>
-                          book now
+                        <DynamicButton
+                          size="medium"
+                          rounded
+                          onPress={navigateToContactSection}
+                        >
+                          Quick Inquiry
                         </DynamicButton>
                       </div>,
                       "normal",
@@ -436,9 +470,9 @@ const Header: FC<{ disableLayout?: boolean }> = ({ disableLayout }) => {
               <DynamicButton
                 size="medium"
                 rounded
-                onPress={() => router.push("/our-services")}
+                onPress={navigateToContactSection}
               >
-                book now
+                Quick Inquiry
               </DynamicButton>
             </div>
           </div>

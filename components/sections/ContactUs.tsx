@@ -79,10 +79,12 @@ const ContactUsSection: FC = () => {
   };
 
   return (
-    <BoxedContainer>
-      <ContactUs />
-      <Location />
-    </BoxedContainer>
+    <section id="contact-us">
+      <BoxedContainer>
+        <ContactUs />
+        <Location />
+      </BoxedContainer>
+    </section>
   );
 };
 
