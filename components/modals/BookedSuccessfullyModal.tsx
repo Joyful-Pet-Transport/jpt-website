@@ -26,7 +26,7 @@ const BookedSuccessfullyModal: FC = () => {
           🐾 Your Pet’s Journey Starts Here 🐾
         </BodyText>
         <BodyText className="text-center">
-          Your booking request has been successfully submitted.
+          Your pet relocation inquiry has been successfully submitted.
         </BodyText>
       </div>
       <div className="flex flex-col gap-2">
