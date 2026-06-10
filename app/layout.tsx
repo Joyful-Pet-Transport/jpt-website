@@ -34,8 +34,8 @@ const leagueSpartanFont = League_Spartan({
 });
 
 export const metadata: Metadata = {
-  title: "Joyful Pet Transport",
-  description: "Joyful Pet Transport provides professional pet relocation services in the Philippines — domestic & international. We handle vet coordination, permits, flight arrangements, and door-to-door transport. Book your pet's safe journey today!",
+  title: "Joyful Pet Transport | Trusted Pet Relocation in the Philippines",
+  description: "Safe and stress-free pet relocation in the Philippines. Vet coordination, permits, and flight arrangements to the US, Canada, EU, and more. Get a quote today!",
 };
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
