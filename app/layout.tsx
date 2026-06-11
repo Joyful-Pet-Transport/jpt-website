@@ -10,6 +10,8 @@ import { FC, PropsWithChildren } from "react";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ClientLayout from "@/components/layouts/ClientLayout";
 import GoogleAnalytics from "@/components/layouts/GoogleAnalytics";
+import JsonLd from "@/components/layouts/JsonLd";
+import { localBusinessJsonLd } from "@/utils/config/structuredData";
 
 const poppinsFont = Poppins({
   variable: "--font-poppins",
@@ -63,7 +65,9 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
             } as React.CSSProperties
           }
         >
+          
           <GoogleAnalytics />
+          <JsonLd data={localBusinessJsonLd} />
           <ClientLayout>{children}</ClientLayout>
         </body>
       </html>
