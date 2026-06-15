@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from "react";
-import Image from "next/image";
 import BodyText from "../elements/text/BodyText";
 import { FaStar } from "react-icons/fa";
 import { GoogleReview } from "@/models/google-reviews";
@@ -104,11 +103,10 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             className="relative w-full h-[75vh] md:h-[85vh]"
             onClick={(event) => event.stopPropagation()}
           >
-            <Image
+            <img
               src={images[currentImageIndex]}
               alt="testimonial fullscreen"
-              fill
-              className="object-contain"
+              className="absolute inset-0 w-full h-full object-contain"
             />
 
             {images.length > 1 && (
@@ -160,13 +158,10 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             <div className="flex items-center gap-3">
               <div className="rounded-full overflow-hidden border-2 border-white min-w-10 min-h-10">
                 {review.reviewerPhotoUrl ? (
-                  <Image
-                    priority
+                    <img
                     src={review.reviewerPhotoUrl}
                     alt={review.name ?? ""}
-                    height={40}
-                    width={40}
-                    className="object-cover"
+                    className="w-full h-full object-contain"
                   />
                 ) : (
                   <div className="w-full h-full bg-[#9CB887] flex items-center justify-center text-white font-semibold text-sm">
@@ -217,11 +212,10 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
               className="relative overflow-hidden bg-gray-200 h-48 cursor-zoom-in"
               onClick={() => openImageModal(currentImageIndex)}
             >
-              <Image
+              <img
                 src={images[currentImageIndex]}
                 alt="testimonial"
-                fill
-                className="object-contain"
+                className="absolute inset-0 w-full h-full object-contain"
               />
               {images.length > 1 && (
                 <>
@@ -279,13 +273,10 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
           <div className="flex items-center gap-3">
             <div className="rounded-full overflow-hidden border-2 border-white w-12 h-12">
               {review.reviewerPhotoUrl ? (
-                <Image
-                  priority
+                  <img
                   src={review.reviewerPhotoUrl}
                   alt={review.name ?? ""}
-                  height={48}
-                  width={48}
-                  className="object-cover"
+                  className="w-full h-full object-contain"
                 />
               ) : (
                 <div className="w-full h-full bg-[#9CB887] flex items-center justify-center text-white font-semibold">
@@ -336,12 +327,11 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             className="relative overflow-hidden rounded-2xl bg-gray-200 h-96 cursor-zoom-in"
             onClick={() => openImageModal(currentImageIndex)}
           >
-            <Image
-              src={images[currentImageIndex]}
-              alt="testimonial"
-              fill
-              className="object-contain"
-            />
+         <img
+  src={images[currentImageIndex]}
+  alt="testimonial"
+  className="absolute inset-0 w-full h-full object-contain"
+/>
             {images.length > 1 && (
               <>
                 <button
