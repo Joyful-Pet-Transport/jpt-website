@@ -44,15 +44,13 @@ const TestimonyCard: FC<TestimonyCardProps> = ({ review }) => {
         </div>
         {/* user details */}
         <div className="flex flex-row items-center justify-center gap-4">
-          <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E]">
-            <Image
-              priority
-              src={review.reviewerPhotoUrl ?? ""}
-              alt={review.reviewerPhotoUrl ?? ""}
-              height={35}
-              width={35}
-            />
-          </div>
+        <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E] w-[35px] h-[35px]">
+          <img
+            src={review.reviewerPhotoUrl ?? ""}
+            alt={review.name ?? "Reviewer"}
+            className="w-full h-full object-cover"
+          />
+        </div>
           <div className="flex flex-col">
             <BodyText
               className="capitalize"
@@ -95,15 +93,13 @@ const TestimonyCard: FC<TestimonyCardProps> = ({ review }) => {
       </div>
       {/* user details */}
       <div className="flex flex-row items-center gap-4">
-        <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E]">
-          <Image
-            priority
-            src={review.reviewerPhotoUrl ?? ""}
-            alt={review.reviewerPhotoUrl ?? ""}
-            height={50}
-            width={50}
-          />
-        </div>
+      <div className="rounded-full overflow-hidden border-2 border-[#9CB8879E] w-[50px] h-[50px]">
+        <img
+          src={review.reviewerPhotoUrl ?? ""}
+          alt={review.name ?? "Reviewer"}
+          className="w-full h-full object-cover"
+        />
+      </div>
         <div className="flex flex-col">
           <BodyText
             className="capitalize"

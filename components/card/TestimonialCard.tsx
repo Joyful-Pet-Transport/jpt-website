@@ -221,7 +221,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
                 src={images[currentImageIndex]}
                 alt="testimonial"
                 fill
-                className="object-cover"
+                className="object-contain"
               />
               {images.length > 1 && (
                 <>
@@ -340,7 +340,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
               src={images[currentImageIndex]}
               alt="testimonial"
               fill
-              className="object-cover"
+              className="object-contain"
             />
             {images.length > 1 && (
               <>
