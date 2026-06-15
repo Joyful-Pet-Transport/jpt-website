@@ -189,4 +189,13 @@ export default defineSchema({
   })
     .index("by_created_at", ["created_at"])
     .index("by_booking_type", ["booking_type"]),
+
+
+  heroSlides: defineTable({
+    imageUrl: v.string(),
+    petName: v.string(),
+    route: v.string(),
+    order: v.number(),
+  })
 });
+

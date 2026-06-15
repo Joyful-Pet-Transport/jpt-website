@@ -12,6 +12,7 @@ import type * as actions_contact_us from "../actions/contact_us.js";
 import type * as auth from "../auth.js";
 import type * as cron from "../cron.js";
 import type * as files from "../files.js";
+import type * as heroSlides from "../heroSlides.js";
 import type * as http from "../http.js";
 import type * as mutations_available_countries from "../mutations/available_countries.js";
 import type * as mutations_bookings from "../mutations/bookings.js";
@@ -49,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   cron: typeof cron;
   files: typeof files;
+  heroSlides: typeof heroSlides;
   http: typeof http;
   "mutations/available_countries": typeof mutations_available_countries;
   "mutations/bookings": typeof mutations_bookings;
