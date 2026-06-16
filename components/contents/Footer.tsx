@@ -61,7 +61,7 @@ const Footer: FC = () => {
             Get in touch with us today to begin your pet’s journey.
           </BodyText>
           <BodyText size="small" className="text-zinc-500 italic">
-          Joyful Pet Transport is the trade name for Joyful Transpaw & Pet Care Services
+          Joyful Pet Transport is the trade name for Joyful International Pet Transport Corp.
           </BodyText>
         </div>
 
