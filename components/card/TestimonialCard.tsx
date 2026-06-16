@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import BodyText from "../elements/text/BodyText";
 import { FaStar } from "react-icons/fa";
-import { GoogleReview } from "@/models/google-reviews";
+import { GoogleReview, GoogleReviewListItem } from "@/models/google-reviews";
 import { useIsMobile } from "@/utils/hooks/useWindowsDimensions";
 import { IoChevronBack, IoChevronForward, IoClose } from "react-icons/io5";
 
 type TestimonialCardProps = {
-  review: GoogleReview;
+  review: GoogleReview | GoogleReviewListItem;
 };
 
 const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
@@ -16,8 +16,12 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
   const [expanded, setExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const images = review.reviewImageUrls || [];
-  const hasImages = images.length > 0;
+  const images =
+    "reviewImageUrls" in review ? review.reviewImageUrls || [] : [];
+  const hasImages =
+    "reviewImageUrls" in review
+      ? (review.reviewImageUrls?.length ?? 0 > 0)
+      : false;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -158,7 +162,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             <div className="flex items-center gap-3">
               <div className="rounded-full overflow-hidden border-2 border-white min-w-10 min-h-10">
                 {review.reviewerPhotoUrl ? (
-                    <img
+                  <img
                     src={review.reviewerPhotoUrl}
                     alt={review.name ?? ""}
                     className="w-full h-full object-contain"
@@ -273,7 +277,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
           <div className="flex items-center gap-3">
             <div className="rounded-full overflow-hidden border-2 border-white w-12 h-12">
               {review.reviewerPhotoUrl ? (
-                  <img
+                <img
                   src={review.reviewerPhotoUrl}
                   alt={review.name ?? ""}
                   className="w-full h-full object-contain"
@@ -327,11 +331,11 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             className="relative overflow-hidden rounded-2xl bg-gray-200 h-96 cursor-zoom-in"
             onClick={() => openImageModal(currentImageIndex)}
           >
-         <img
-  src={images[currentImageIndex]}
-  alt="testimonial"
-  className="absolute inset-0 w-full h-full object-contain"
-/>
+            <img
+              src={images[currentImageIndex]}
+              alt="testimonial"
+              className="absolute inset-0 w-full h-full object-contain"
+            />
             {images.length > 1 && (
               <>
                 <button
