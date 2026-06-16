@@ -44,7 +44,10 @@ export const metadata: Metadata = {
   },
   description:
     "Safe and stress-free pet relocation in the Philippines. Vet coordination, permits, and flight arrangements to the US, Canada, EU, and more. Get a quote today!",
-  openGraph: {
+  alternates: {
+    canonical: "https://www.joyfulpettransport.com",
+  },
+    openGraph: {
     siteName: "Joyful Pet Transport",
     locale: "en_PH",
     type: "website",
