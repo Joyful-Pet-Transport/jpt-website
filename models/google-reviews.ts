@@ -31,5 +31,6 @@ export interface GoogleReviewListItem {
   text?: string;
   publishedAtDate: string;
   reviewerPhotoUrl?: string;
-  hasImages: boolean;
+  previewImageUrl?: string | null;
+  imageCount: number;
 }

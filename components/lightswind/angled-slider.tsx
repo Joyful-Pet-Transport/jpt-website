@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useAnimation, useMotionValue, animate, Variants } from "framer-motion";
 import { cn } from "../../lib/utils";
+import Image from "next/image";
 
 interface AngledSliderProps {
     /**
@@ -52,8 +53,6 @@ interface AngledSliderProps {
     className?: string;
 }
 
-// ─── Angled Slider ──────────────────────────────────────────────────────────
-
 const cardVariants: Variants = {
     offHover: (angle: number) => ({
         rotateY: angle,
@@ -98,7 +97,7 @@ const AngledCard = ({
 
     return (
         <motion.div
-            className="relative shrink-0 group overflow-visible cursor-pointer bg-transparent"
+            className="relative shrink-0 group overflow-visible cursor-pointer"
             style={{
                 width: cardWidth,
                 height: "100%",
@@ -112,15 +111,17 @@ const AngledCard = ({
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* The Image Card */}
-            <div className="relative h-full w-full overflow-hidden min-h-[400px] bg-transparent">
-            <img
-    src={item.url}
-    alt={item.alt || "Slider Image"}
-    className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
-/>
+            <div className="relative h-full w-full overflow-hidden border border-white/10 bg-muted 
+            min-h-[300px] shadow-2xl">
+                <Image
+                    src={item.url}
+                    alt={item.alt || "Slider Image"}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
                 {/* Optional Overlay/Title */}
                 {item.title && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent) p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         <h3 className="text-lg font-bold">{item.title}</h3>
                     </div>
                 )}
@@ -131,12 +132,12 @@ const AngledCard = ({
 
 export const AngledSlider = ({
     items,
-    speed = 18,
+    speed = 40,
     direction = "left",
     containerHeight = "400px",
-    cardWidth = "350px",
+    cardWidth = "300px",
     gap = "40px",
-    angle = 0,
+    angle = 20,
     hoverScale = 1.05,
     className,
 }: AngledSliderProps) => {
@@ -205,16 +206,14 @@ export const AngledSlider = ({
 
     return (
         <div
-        className={cn(
-            "relative w-full overflow-hidden bg-transparent",
-            typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches ? "py-10" : "",
-            className
-        )}
-        style={{
-            height: containerHeight,
-            perspective: "1000px",
-        }}
-   
+            className={cn(
+                "relative w-full overflow-hidden bg-background py-10 perspective-1000",
+                className
+            )}
+            style={{
+                height: containerHeight,
+                perspective: "1000px", // Essential for 3D effect
+            }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

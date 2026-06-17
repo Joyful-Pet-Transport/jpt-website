@@ -15,34 +15,25 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
-  const images =
-    "reviewImageUrls" in review ? review.reviewImageUrls || [] : [];
-  const hasImages =
-    "reviewImageUrls" in review
-      ? (review.reviewImageUrls?.length ?? 0 > 0)
-      : false;
+  // Full review (with carousel) vs list item (single preview)
+  const isFullReview = "reviewImageUrls" in review;
+  const images = isFullReview ? review.reviewImageUrls || [] : [];
+  const previewImageUrl = "previewImageUrl" in review ? review.previewImageUrl : null;
+  const imageCount = "imageCount" in review ? review.imageCount : 0;
+
+  const hasCarouselImages = images.length > 0;
+  const hasPreviewImage = !!previewImageUrl;
+  const hasImages = hasCarouselImages || hasPreviewImage;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
     ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
+    return `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   };
 
   const text = review?.text ?? "";
@@ -86,7 +77,7 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
   }, [isModalOpen, images.length]);
 
   const renderImageModal = () => {
-    if (!isModalOpen || !hasImages) return null;
+    if (!isModalOpen || !hasCarouselImages) return null;
 
     return (
       <div
@@ -149,23 +140,93 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
     );
   };
 
+  // Renders either the static preview (list) or interactive carousel (full review)
+  const renderImageSection = () => {
+    if (hasCarouselImages) {
+      return (
+        <div className="relative flex justify-center cursor-zoom-in">
+          <img
+            src={images[currentImageIndex]}
+            alt="testimonial"
+            className="max-w-full rounded-2xl"
+            onClick={() => openImageModal(currentImageIndex)}
+          />
+          {images.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  prevImage();
+                }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/20 rounded-full p-2 hover:bg-black/40"
+                aria-label="Previous image"
+              >
+                <IoChevronBack className="text-white" size={20} />
+              </button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  nextImage();
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/20 rounded-full p-2 hover:bg-black/40"
+                aria-label="Next image"
+              >
+                <IoChevronForward className="text-white" size={20} />
+              </button>
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {images.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      idx === currentImageIndex ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      );
+    }
+  
+    if (hasPreviewImage) {
+      return (
+        <div className="relative flex justify-center">
+          <img
+            src={previewImageUrl!}
+            alt="testimonial preview"
+            className="max-w-full rounded-2xl"
+          />
+          {imageCount > 1 && (
+            <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-medium px-2 py-1 rounded-full">
+              +{imageCount - 1} more
+            </div>
+          )}
+        </div>
+      );
+    }
+  
+    return null;
+  };
+
   if (mobile) {
     return (
       <>
         <div
           className={`w-full break-inside-avoid bg-[#F0F8FF] gap-4 rounded-3xl flex flex-col p-6 ${
-            hasImages ? "min-h-96" : "h-fit"
+            hasImages ? "" : "h-fit"
           }`}
         >
-          {/* Header */}
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-3">
-              <div className="rounded-full overflow-hidden border-2 border-white min-w-10 min-h-10">
+              <div className="rounded-full overflow-hidden border-2 border-white w-10 h-10 shrink-0">
                 {review.reviewerPhotoUrl ? (
                   <img
                     src={review.reviewerPhotoUrl}
                     alt={review.name ?? ""}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full bg-[#9CB887] flex items-center justify-center text-white font-semibold text-sm">
@@ -194,71 +255,23 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
             </div>
           </div>
 
-          {/* Testimonial text */}
-          <div className={hasImages ? "flex-1" : ""}>
-            <BodyText className="text-gray-700 text-sm leading-relaxed">
-              {displayText}
-              {isLong && (
-                <button
-                  type="button"
-                  onClick={() => setExpanded((prev) => !prev)}
-                  className="ml-1 text-blue-500 hover:text-blue-700 font-medium text-sm"
-                >
-                  {expanded ? "See less" : "See more"}
-                </button>
-              )}
-            </BodyText>
-          </div>
+          <BodyText className="text-gray-700 text-sm leading-relaxed">
+            {displayText}
+            {isLong && (
+  <button
+    type="button"
+    onClick={(event) => {
+      event.stopPropagation();
+      setExpanded((prev) => !prev);
+    }}
+    className="ml-1 text-blue-500 hover:text-blue-700 font-medium"
+  >
+    {expanded ? "See less" : "See more"}
+  </button>
+)}
+          </BodyText>
 
-          {/* Image carousel */}
-          {images.length > 0 && (
-            <div
-              className="relative overflow-hidden bg-gray-200 h-48 cursor-zoom-in"
-              onClick={() => openImageModal(currentImageIndex)}
-            >
-              <img
-                src={images[currentImageIndex]}
-                alt="testimonial"
-                className="absolute inset-0 w-full h-full object-contain"
-              />
-              {images.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      prevImage();
-                    }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 rounded-full p-1.5 hover:bg-white"
-                    aria-label="Previous image"
-                  >
-                    <IoChevronBack className="text-white w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      nextImage();
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 rounded-full p-1.5 hover:bg-white"
-                    aria-label="Next image"
-                  >
-                    <IoChevronForward className="text-white w-4 h-4" />
-                  </button>
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                    {images.map((_, idx) => (
-                      <div
-                        key={idx}
-                        className={`w-2 h-2 rounded-full ${
-                          idx === currentImageIndex ? "bg-white" : "bg-white/50"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+          {renderImageSection()}
         </div>
         {renderImageModal()}
       </>
@@ -269,18 +282,17 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
     <>
       <div
         className={`w-full break-inside-avoid bg-[#F0F8FF] gap-4 rounded-2xl flex flex-col p-8 ${
-          hasImages ? "min-h-[450px]" : "h-fit"
+          hasImages ? "" : "h-fit"
         }`}
       >
-        {/* Header */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="rounded-full overflow-hidden border-2 border-white w-12 h-12">
+            <div className="rounded-full overflow-hidden border-2 border-white w-12 h-12 shrink-0">
               {review.reviewerPhotoUrl ? (
                 <img
                   src={review.reviewerPhotoUrl}
                   alt={review.name ?? ""}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full bg-[#9CB887] flex items-center justify-center text-white font-semibold">
@@ -309,74 +321,23 @@ const TestimonialCard: FC<TestimonialCardProps> = ({ review }) => {
           </div>
         </div>
 
-        {/* Testimonial text */}
-        <div className={hasImages ? "flex-1" : ""}>
-          <BodyText className="text-gray-700 leading-relaxed">
-            {displayText}
-            {isLong && (
-              <button
-                type="button"
-                onClick={() => setExpanded((prev) => !prev)}
-                className="ml-1 text-blue-500 hover:text-blue-700 font-medium"
-              >
-                {expanded ? "See less" : "See more"}
-              </button>
-            )}
-          </BodyText>
-        </div>
+        <BodyText className="text-gray-700 leading-relaxed">
+          {displayText}
+          {isLong && (
+  <button
+    type="button"
+    onClick={(event) => {
+      event.stopPropagation();
+      setExpanded((prev) => !prev);
+    }}
+    className="ml-1 text-blue-500 hover:text-blue-700 font-medium"
+  >
+    {expanded ? "See less" : "See more"}
+  </button>
+)}
+        </BodyText>
 
-        {/* Image carousel */}
-        {images.length > 0 && (
-          <div
-            className="relative overflow-hidden rounded-2xl bg-gray-200 h-96 cursor-zoom-in"
-            onClick={() => openImageModal(currentImageIndex)}
-          >
-            <img
-              src={images[currentImageIndex]}
-              alt="testimonial"
-              className="absolute inset-0 w-full h-full object-contain"
-            />
-            {images.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    prevImage();
-                  }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/20 rounded-full p-2 hover:bg-black/40"
-                  aria-label="Previous image"
-                >
-                  <IoChevronBack className="text-white text-center" size={24} />
-                </button>
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    nextImage();
-                  }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/20 rounded-full p-2 hover:bg-black/40"
-                  aria-label="Next image"
-                >
-                  <IoChevronForward
-                    className="text-white text-center"
-                    size={24}
-                  />
-                </button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                  {images.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={`w-2 h-2 rounded-full ${
-                        idx === currentImageIndex ? "bg-white" : "bg-white/50"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        {renderImageSection()}
       </div>
       {renderImageModal()}
     </>

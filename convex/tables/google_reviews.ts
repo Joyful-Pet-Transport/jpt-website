@@ -2,6 +2,7 @@ import { query, action, QueryCtx } from "../_generated/server";
 import { api } from "../_generated/api";
 import { Id } from "../_generated/dataModel";
 import { v } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 
 declare const process: {
   env: {
@@ -22,27 +23,55 @@ interface ApifyReviewItem {
 }
 
 // ----------------------------
-// Query: get reviews — lightweight, no image URLs
+// Query: get reviews with infinite scroll pagination
 // ----------------------------
 export const get = query({
-  args: {},
-  handler: async (ctx) => {
-    const reviews = await ctx.db
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    const result = await ctx.db
       .query("google_reviews")
+      .withIndex("by_publishedAtDate")
       .filter((q) => q.neq(q.field("text"), undefined))
-      .take(30); // ✅ take instead of collect
+      .order("desc")
+      .paginate(args.paginationOpts);
 
-    return reviews
-      .sort((a, b) => b.stars - a.stars)
-      .map((r) => ({
+    return {
+      ...result,
+      page: result.page.map((r) => ({
         _id: r._id,
         name: r.name,
         stars: r.stars,
         text: r.text,
         publishedAtDate: r.publishedAtDate,
         reviewerPhotoUrl: r.reviewerPhotoUrl,
-        // ❌ reviewImageUrls NOT included — fetched separately only when needed
-      }));
+        previewImageUrl: r.reviewImageUrls?.[0] ?? null,
+        imageCount: r.reviewImageUrls?.length ?? 0,
+      })),
+    };
+  },
+});
+
+// ----------------------------
+// Query: get reviews for homepage carousel — small fixed set
+// ----------------------------
+export const getForCarousel = query({
+  args: {},
+  handler: async (ctx) => {
+    const reviews = await ctx.db
+      .query("google_reviews")
+      .withIndex("by_publishedAtDate")
+      .filter((q) => q.neq(q.field("text"), undefined))
+      .order("desc")
+      .take(15);
+
+    return reviews.map((r) => ({
+      _id: r._id,
+      name: r.name,
+      stars: r.stars,
+      text: r.text,
+      publishedAtDate: r.publishedAtDate,
+      reviewerPhotoUrl: r.reviewerPhotoUrl,
+    }));
   },
 });
 
@@ -88,7 +117,14 @@ export const syncFromApify = action({
     }
 
     const reviews = (data as ApifyReviewItem[])
-      .filter((item) => item.reviewId && item.stars && item.publishedAtDate)
+      .filter(
+        (item) =>
+          item.reviewId &&
+          item.stars === 5 &&
+          item.publishedAtDate &&
+          item.text &&
+          item.text.trim().length > 0
+      )
       .map((item) => {
         const review: {
           reviewId: string;
