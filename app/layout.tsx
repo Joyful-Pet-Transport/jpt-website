@@ -12,6 +12,7 @@ import ClientLayout from "@/components/layouts/ClientLayout";
 import GoogleAnalytics from "@/components/layouts/GoogleAnalytics";
 import JsonLd from "@/components/layouts/JsonLd";
 import { localBusinessJsonLd } from "@/utils/config/structuredData";
+import GoogleAdsTag from "@/components/layouts/GoogleAdsTag";
 
 const poppinsFont = Poppins({
   variable: "--font-poppins",
@@ -70,6 +71,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
         >
           
           <GoogleAnalytics />
+          <GoogleAdsTag />
           <JsonLd data={localBusinessJsonLd} />
           <ClientLayout>{children}</ClientLayout>
         </body>
