@@ -120,7 +120,8 @@ export const syncFromApify = action({
       .filter(
         (item) =>
           item.reviewId &&
-          item.stars === 5 &&
+          item.stars !== undefined &&
+          item.stars >= 4 &&
           item.publishedAtDate &&
           item.text &&
           item.text.trim().length > 0
