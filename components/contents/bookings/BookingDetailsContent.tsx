@@ -4,21 +4,153 @@ import WhiteCard from "@/components/card/WhiteCard";
 import BodyText from "@/components/elements/text/BodyText";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import BookingStatusChanger from "./BookingStatusChanger";
+import PetDetailsCard from "@/components/contents/pets/PetDetailsCard";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import dayjs from "dayjs";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { copyBookingDetailsToClipboard } from "@/utils/format/copyFormDetails";
+import { div } from "framer-motion/client";
 
 type BookingDetailsContentProps = {
   id: Id<"bookings">;
 };
 
+type DetailRow = {
+  label: string;
+  key: string;
+  value: unknown;
+};
+
+const formatLocationAddress = (
+  details: Record<string, unknown>,
+  prefix: "origin" | "destination",
+  countryNameByCode: Map<string, string>,
+) => {
+  const fullAddress = details[`${prefix}_full_address`];
+  const city = details[`${prefix}_city`];
+  const stateProvince = details[`${prefix}_state_province`];
+  const postalCode = details[`${prefix}_postal_code`];
+  const countryCode = details[`${prefix}_address_country`];
+
+  const segments = [
+    fullAddress,
+    city,
+    stateProvince,
+    postalCode,
+    countryCode && typeof countryCode === "string"
+      ? countryNameByCode.get(countryCode) || countryCode
+      : null,
+  ]
+    .map((segment) =>
+      segment === null || segment === undefined || segment === ""
+        ? null
+        : String(segment).trim(),
+    )
+    .filter(Boolean);
+
+  return segments.length ? segments.join(", ") : "-";
+};
+
+const getTravelDetailRows = (
+  bookingType: string | undefined,
+  details: Record<string, unknown>,
+): DetailRow[] => {
+  if (bookingType === "international_pet_transport") {
+    return [
+      { label: "Companionship", key: "companionship", value: details.companionship },
+      { label: "Has Travel Date", key: "travel_date", value: details.travel_date },
+      { label: "Travel Date", key: "date", value: details.date },
+    ];
+  }
+
+  if (bookingType === "domestic_pet_transport") {
+    return [
+      { label: "Has Travel Date", key: "travel_date", value: details.travel_date },
+      { label: "Travel Date", key: "date", value: details.date },
+      {
+        label: "Mode of Transport",
+        key: "mode_of_transport",
+        value: details.mode_of_transport,
+      },
+    ];
+  }
+
+  if (bookingType === "rabies_serology_test") {
+    return [{ label: "Appointment Date", key: "date", value: details.date }];
+  }
+
+  return [];
+};
+
+const getOriginDetailRows = (
+  bookingType: string | undefined,
+  details: Record<string, unknown>,
+  countryNameByCode: Map<string, string>,
+): DetailRow[] => {
+  if (bookingType === "international_pet_transport") {
+    return [
+      {
+        label: "Country",
+        key: "origin_country",
+        value: details.origin_country,
+      },
+      {
+        label: "Full Address",
+        key: "origin_full_address",
+        value: formatLocationAddress(details, "origin", countryNameByCode),
+      },
+    ];
+  }
+
+  if (bookingType === "domestic_pet_transport") {
+    return [
+      {
+        label: "Full Address",
+        key: "origin_full_address",
+        value: details.origin_full_address || details.pickup_address,
+      },
+    ];
+  }
+
+  return [];
+};
+
+const getDestinationDetailRows = (
+  bookingType: string | undefined,
+  details: Record<string, unknown>,
+  countryNameByCode: Map<string, string>,
+): DetailRow[] => {
+  if (bookingType === "international_pet_transport") {
+    return [
+      {
+        label: "Country",
+        key: "destination",
+        value: details.destination,
+      },
+      {
+        label: "Full Address",
+        key: "destination_full_address",
+        value: formatLocationAddress(details, "destination", countryNameByCode),
+      },
+    ];
+  }
+
+  if (bookingType === "domestic_pet_transport") {
+    return [
+      {
+        label: "Full Address",
+        key: "destination_full_address",
+        value: details.destination_full_address || details.destination,
+      },
+    ];
+  }
+
+  return [];
+};
+
 const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
-  const router = useRouter();
   const [isExporting, setIsExporting] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const [toast, setToast] = useState<{
@@ -60,6 +192,20 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
   const countryNameByCode = new Map(
     (countries || []).map((country) => [country.code, country.name]),
   );
+  const detailsRecord = (details || {}) as Record<string, unknown>;
+  const travelDetailRows = getTravelDetailRows(booking.booking_type, detailsRecord);
+  const originDetailRows = getOriginDetailRows(
+    booking.booking_type,
+    detailsRecord,
+    countryNameByCode,
+  );
+  const destinationDetailRows = getDestinationDetailRows(
+    booking.booking_type,
+    detailsRecord,
+    countryNameByCode,
+  );
+  const showLocationDetails =
+    originDetailRows.length > 0 || destinationDetailRows.length > 0;
 
   const formatDetailsValue = (key: string, value: unknown) => {
     if (value === null || value === undefined || value === "") {
@@ -72,6 +218,30 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       typeof value === "string"
     ) {
       return countryNameByCode.get(value) || value;
+    }
+
+    if (key === "travel_date" && typeof value === "string") {
+      const normalized = value.trim().toLowerCase();
+      if (normalized === "yes") {
+        return "Yes";
+      }
+      if (normalized === "no") {
+        return "No";
+      }
+    }
+
+    if (key === "date" && typeof value === "string") {
+      const parsed = dayjs(value.trim());
+      if (parsed.isValid()) {
+        return parsed.format("MMM DD, YYYY");
+      }
+    }
+
+    if (
+      (key === "companionship" || key === "mode_of_transport") &&
+      typeof value === "string"
+    ) {
+      return value.replaceAll("_", " ");
     }
 
     if (typeof value === "boolean") {
@@ -438,65 +608,68 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
   };
 
   return (
+    
     <DashboardHeading back="/dashboard/bookings" title="Booking Details">
-      <WhiteCard className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <BodyText weight="bold" className="text-2xl text-[#17528A]">
-            {booking.booking_label}
-          </BodyText>
-          <div className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1">
-            <BodyText
-              size="xsmall"
-              className="uppercase tracking-wide text-blue-700"
-            >
-              Last updated{" "}
-              {booking.updated_at
-                ? dayjs(booking.updated_at).format("MMM DD, YYYY")
-                : "-"}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <WhiteCard className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <BodyText weight="bold" className="text-2xl text-[#17528A]">
+              {booking.booking_label}
             </BodyText>
+            <div className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1">
+              <BodyText
+                size="xsmall"
+                className="uppercase tracking-wide text-blue-700"
+              >
+                Last updated{" "}
+                {booking.updated_at
+                  ? dayjs(booking.updated_at).format("MMM DD, YYYY")
+                  : "-"}
+              </BodyText>
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-wrap justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => void handleCopyAllDetails()}
-            disabled={isCopying || isExporting}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isCopying ? "Copying..." : "Copy All Details"}
-          </button>
-          <button
-            type="button"
-            onClick={() => void handleExportToPdf()}
-            disabled={isExporting || isCopying}
-            className="rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 transition-all hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isExporting ? "Exporting..." : "Export PDF"}
-          </button>
-        </div>
+          <div className="flex flex-wrap justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => void handleCopyAllDetails()}
+              disabled={isCopying || isExporting}
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isCopying ? "Copying..." : "Copy All Details"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleExportToPdf()}
+              disabled={isExporting || isCopying}
+              className="rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 transition-all hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isExporting ? "Exporting..." : "Export PDF"}
+            </button>
+          </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Info label="Status" value={booking.status} />
-          <Info
-            label="Type"
-            value={booking.booking_type?.replaceAll("_", " ") ?? "-"}
-          />
-          <Info label="Booking ID" value={String(booking.booking_id)} />
-          <Info
-            label="Created"
-            value={dayjs(booking._creationTime).format("MMM DD, YYYY hh:mm A")}
-          />
-        </div>
-      </WhiteCard>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Info label="Status" value={booking.status} />
+            <Info
+              label="Type"
+              value={booking.booking_type?.replaceAll("_", " ") ?? "-"}
+            />
+            <Info label="Booking ID" value={String(booking.booking_id)} />
+            <Info
+              label="Created"
+              value={dayjs(booking._creationTime).format("MMM DD, YYYY hh:mm A")}
+            />
+          </div>
+        </WhiteCard>
 
-      <BookingStatusChanger
-        bookingId={booking._id}
-        currentStatus={booking.status}
-        bookingType={booking.booking_type}
-        previousStatus={booking.previous_status}
-        updatedAt={booking.updated_at}
-      />
+        <BookingStatusChanger
+          bookingId={booking._id}
+          currentStatus={booking.status}
+          bookingType={booking.booking_type}
+          previousStatus={booking.previous_status}
+          updatedAt={booking.updated_at}
+        />
+      </div>
 
       <WhiteCard>
         <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
@@ -531,42 +704,73 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       </WhiteCard>
 
       {details ? (
-        <WhiteCard>
-          <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
-            Booking Information
-          </BodyText>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {Object.entries(details)
-              .filter(
-                ([key]) =>
-                  ![
-                    "_id",
-                    "_creationTime",
-                    "pets",
-                    "userId",
-                    "owner_name",
-                    "email_address",
-                    "contact_form",
-                    "contact_number",
-                    "account_name",
-                    "account_link",
-                  ].includes(key),
-              )
-              .map(([key, value]) => (
-                <Info
-                  key={key}
-                  label={key.replaceAll("_", " ")}
-                  value={formatDetailsValue(key, value)}
-                />
-              ))}
-          </div>
-        </WhiteCard>
+        <>
+          {travelDetailRows.length > 0 && (
+            <WhiteCard>
+              <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
+                Travel Details
+              </BodyText>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                {travelDetailRows.map((row) => (
+                  <Info
+                    key={row.key}
+                    label={row.label}
+                    value={formatDetailsValue(row.key, row.value)}
+                  />
+                ))}
+              </div>
+            </WhiteCard>
+          )}
+
+          {showLocationDetails && (
+            <WhiteCard>
+              <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
+                Locations
+              </BodyText>
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {originDetailRows.length > 0 && (
+                  <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+                    <BodyText weight="semibold" className="text-base text-[#17528A]">
+                      Origin
+                    </BodyText>
+                    <div className="grid grid-cols-1 gap-4">
+                      {originDetailRows.map((row) => (
+                        <Info
+                          key={row.key}
+                          label={row.label}
+                          value={formatDetailsValue(row.key, row.value)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {destinationDetailRows.length > 0 && (
+                  <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+                    <BodyText weight="semibold" className="text-base text-[#17528A]">
+                      Destination
+                    </BodyText>
+                    <div className="grid grid-cols-1 gap-4">
+                      {destinationDetailRows.map((row) => (
+                        <Info
+                          key={row.key}
+                          label={row.label}
+                          value={formatDetailsValue(row.key, row.value)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </WhiteCard>
+          )}
+        </>
       ) : (
         <BodyText size="small">No booking details available.</BodyText>
       )}
 
-      <WhiteCard>
-        <BodyText weight="semibold" className="mb-3 text-blue-700">
+      <WhiteCard className="space-y-4">
+        <BodyText weight="semibold" className="text-lg text-[#17528A]">
           Pet Details
         </BodyText>
 
@@ -574,37 +778,23 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           <BodyText size="small">No pets listed for this booking.</BodyText>
         )}
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {pet_details?.map((pet) => {
-            if (!pet) return null;
+        <div className="space-y-6">
+          {pet_details?.map((pet, index) => {
+            if (!pet) {
+              return null;
+            }
 
             return (
-              <WhiteCard
-                key={pet._id}
-                onPress={() => router.push(`/dashboard/pets/${pet._id}`)}
-                className="cursor-pointer border transition hover:border-blue-200 hover:shadow-md"
-              >
-                <div className="relative mb-3 h-48 w-full overflow-hidden rounded-md bg-neutral-100">
-                  <Image
-                    src={pet.image}
-                    alt={pet.pet_name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <BodyText weight="semibold" className="text-[#17528A]">
-                    {pet.pet_name}
+              <div key={pet._id} className="space-y-3">
+                {pet_details.length > 1 && (
+                  <BodyText weight="semibold" className="text-base text-[#17528A]">
+                    Pet {index + 1}
                   </BodyText>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    <Info label="Breed" value={pet.breed} />
-                    <Info label="Sex" value={pet.sex} />
-                    <Info label="Birthday" value={pet.pet_birthday} />
-                    <Info label="Age" value={pet.pet_age} />
-                  </div>
+                )}
+                <div className="overflow-hidden rounded-xl border border-slate-200">
+                  <PetDetailsCard pet={pet} />
                 </div>
-              </WhiteCard>
+              </div>
             );
           })}
         </div>
