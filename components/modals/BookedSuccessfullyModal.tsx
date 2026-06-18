@@ -1,15 +1,31 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa6";
 import BodyText from "../elements/text/BodyText";
 import DynamicButton from "../elements/button/DynamicButton";
 import useModal from "@/utils/hooks/useModal";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 const BookedSuccessfullyModal: FC = () => {
   const router = useRouter();
   const modal = useModal();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-18175944072/ojSDCODs778cEIjL-9pD",
+        value: 1.0,
+        currency: "PHP",
+      });
+    }
+  }, []);
 
   return (
     <div className="h-full flex flex-col justify-center items-center gap-6 max-w-lg mx-auto">
