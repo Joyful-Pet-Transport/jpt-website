@@ -40,6 +40,7 @@ type KpiCard = {
   label: string;
   subtitle: string;
   value: number | string;
+  featured?: boolean;
 };
 
 type DistributionItem = {
@@ -160,6 +161,13 @@ const DashboardOverviewContent = () => {
         label: "Total Bookings",
         value: isKpiLoading ? "..." : allBookings.length,
         subtitle: "All booking records",
+        featured: true,
+      },
+      {
+        label: "Inquiry Queue",
+        value: isKpiLoading ? "..." : allInquiries.length,
+        subtitle: "Uses all inquiries (no unread flag)",
+        featured: true,
       },
       {
         label: "Pending Bookings",
@@ -177,16 +185,14 @@ const DashboardOverviewContent = () => {
         subtitle: "Linked pet profiles",
       },
       {
-        label: "Inquiry Queue",
-        value: isKpiLoading ? "..." : allInquiries.length,
-        subtitle: "Uses all inquiries (no unread flag)",
+        label: "Rabies Titer Test",
+        value: "-",
+        subtitle: "Coming soon",
       },
     ],
     [
       allBookings.length,
       allInquiries.length,
-
-
       isKpiLoading,
       pendingBookings,
       petsRaw?.length,
@@ -247,7 +253,8 @@ const DashboardOverviewContent = () => {
     const items: AlertItem[] = [];
 
     const cancelledBookings = allBookings.filter(
-      (booking) => booking.status === "cancelled" || booking.status === "rejected",
+      (booking) =>
+        booking.status === "cancelled" || booking.status === "rejected",
     ).length;
     const cancellationRate = allBookings.length
       ? cancelledBookings / allBookings.length
@@ -301,25 +308,66 @@ const DashboardOverviewContent = () => {
     return items;
   }, [allBookings, allInquiries.length, pendingBookings]);
 
+  const featuredCards = kpiCards.filter((card) => card.featured);
+  const regularCards = kpiCards.filter((card) => !card.featured);
   return (
     <DashboardHeading title="Dashboard">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {kpiCards.map((card) => (
-          <WhiteCard key={card.label} className="gap-1 border-blue-100">
-            <BodyText
-              size="xsmall"
-              className="uppercase tracking-wide text-slate-500"
-            >
-              {card.label}
-            </BodyText>
-            <BodyText weight="bold" className="text-3xl text-[#17528A]">
-              {card.value}
-            </BodyText>
-            <BodyText size="xsmall" className="text-slate-500">
-              {card.subtitle}
-            </BodyText>
-          </WhiteCard>
-        ))}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Left — 2 featured boxes side by side */}
+        <div className="grid grid-cols-2 gap-4">
+          {kpiCards
+            .filter((card) => card.featured)
+            .map((card) => (
+              <WhiteCard
+                key={card.label}
+                className="gap-2 border-blue-100 p-6 aspect-square flex flex-col justify-center"
+              >
+                <BodyText
+                  size="xsmall"
+                  className="uppercase tracking-wide text-slate-500"
+                >
+                  {card.label}
+                </BodyText>
+                <BodyText
+                  weight="bold"
+                  className="text-5xl md:text-6xl text-[#17528A] leading-tight"
+                >
+                  {card.value}
+                </BodyText>
+                <BodyText size="xsmall" className="text-slate-500">
+                  {card.subtitle}
+                </BodyText>
+              </WhiteCard>
+            ))}
+        </div>
+
+        {/* Right — 2x2 grid of regular boxes */}
+        <div className="grid grid-cols-2 grid-rows-2 gap-4">
+          {kpiCards
+            .filter((card) => !card.featured)
+            .map((card) => (
+              <WhiteCard
+                key={card.label}
+                className="gap-1 border-blue-100 justify-center p-3"
+              >
+                <BodyText
+                  size="xsmall"
+                  className="uppercase tracking-wide text-slate-500"
+                >
+                  {card.label}
+                </BodyText>
+                <BodyText
+                  weight="bold"
+                  className="text-2xl text-[#17528A] leading-tight"
+                >
+                  {card.value}
+                </BodyText>
+                <BodyText size="xsmall" className="text-slate-500">
+                  {card.subtitle}
+                </BodyText>
+              </WhiteCard>
+            ))}
+        </div>
       </div>
 
       <WhiteCard className="border-blue-100">
@@ -359,7 +407,11 @@ const DashboardOverviewContent = () => {
                   className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50/80 p-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="space-y-1">
-                    <BodyText size="small" weight="semibold" className="text-slate-900">
+                    <BodyText
+                      size="small"
+                      weight="semibold"
+                      className="text-slate-900"
+                    >
                       {booking.booking_label || booking._id}
                     </BodyText>
                     <BodyText size="xsmall" className="text-slate-600">
@@ -368,9 +420,9 @@ const DashboardOverviewContent = () => {
                     </BodyText>
                     <BodyText size="xsmall" className="text-slate-500">
                       Updated{" "}
-                      {dayjs(booking.updated_at || booking._creationTime).format(
-                        "MMM DD, YYYY hh:mm A",
-                      )}
+                      {dayjs(
+                        booking.updated_at || booking._creationTime,
+                      ).format("MMM DD, YYYY hh:mm A")}
                     </BodyText>
                   </div>
                   <div className="flex items-center gap-2">
@@ -383,7 +435,9 @@ const DashboardOverviewContent = () => {
                     </span>
                     <button
                       type="button"
-                      onClick={() => router.push(`/dashboard/bookings/${booking._id}`)}
+                      onClick={() =>
+                        router.push(`/dashboard/bookings/${booking._id}`)
+                      }
                       className="rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-blue-700 transition-all hover:bg-blue-50"
                     >
                       View
@@ -447,7 +501,11 @@ const DashboardOverviewContent = () => {
               className="rounded-xl border border-slate-200 bg-slate-50/80 p-3"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <BodyText size="small" weight="semibold" className="text-slate-900">
+                <BodyText
+                  size="small"
+                  weight="semibold"
+                  className="text-slate-900"
+                >
                   {inquiry.first_name} {inquiry.last_name}
                 </BodyText>
                 <BodyText size="xsmall" className="text-slate-500">
@@ -523,16 +581,9 @@ const DashboardOverviewContent = () => {
             </div>
           ))}
         </WhiteCard>
-
       </div>
     </DashboardHeading>
   );
 };
 
 export default DashboardOverviewContent;
-
-
-
-
-
-

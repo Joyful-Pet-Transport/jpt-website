@@ -8,7 +8,7 @@ import PetDetailsCard from "@/components/contents/pets/PetDetailsCard";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { copyBookingDetailsToClipboard } from "@/utils/format/copyFormDetails";
 import { div } from "framer-motion/client";
@@ -22,6 +22,30 @@ type DetailRow = {
   key: string;
   value: unknown;
 };
+
+const formatDisplayDate = (dateStr: string): string => {
+  const parsed = dayjs(dateStr.trim());
+  return parsed.isValid() ? parsed.format("MMMM D, YYYY") : dateStr;
+};
+
+const formatDateValue = (value: unknown): unknown => {
+  if (typeof value !== "string" || !value.trim()) return value;
+
+  if (value.includes(" - ")) {
+    const [start, end] = value.split(" - ").map((d) => d.trim());
+    return `${formatDisplayDate(start)} - ${formatDisplayDate(end)}`;
+  }
+
+  return formatDisplayDate(value);
+};
+
+const formatTitleWords = (value: string): string =>
+  value
+    .replaceAll("_", " ")
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 
 const formatLocationAddress = (
   details: Record<string, unknown>,
@@ -59,16 +83,37 @@ const getTravelDetailRows = (
 ): DetailRow[] => {
   if (bookingType === "international_pet_transport") {
     return [
-      { label: "Companionship", key: "companionship", value: details.companionship },
-      { label: "Has Travel Date", key: "travel_date", value: details.travel_date },
+      {
+        label: "Companionship",
+        key: "companionship",
+        value:
+          typeof details.companionship === "string" &&
+          details.companionship.length > 0
+            ? details.companionship.charAt(0).toUpperCase() +
+              details.companionship.slice(1)
+            : details.companionship,
+      },
+      {
+        label: "Has Travel Date",
+        key: "travel_date",
+        value: details.travel_date,
+      },
       { label: "Travel Date", key: "date", value: details.date },
     ];
   }
 
   if (bookingType === "domestic_pet_transport") {
     return [
-      { label: "Has Travel Date", key: "travel_date", value: details.travel_date },
-      { label: "Travel Date", key: "date", value: details.date },
+      {
+        label: "Has Travel Date",
+        key: "travel_date",
+        value: details.travel_date,
+      },
+      {
+        label: "Travel Date",
+        key: "date",
+        value: details.date,
+      },
       {
         label: "Mode of Transport",
         key: "mode_of_transport",
@@ -193,7 +238,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
     (countries || []).map((country) => [country.code, country.name]),
   );
   const detailsRecord = (details || {}) as Record<string, unknown>;
-  const travelDetailRows = getTravelDetailRows(booking.booking_type, detailsRecord);
+  const travelDetailRows = getTravelDetailRows(
+    booking.booking_type,
+    detailsRecord,
+  );
   const originDetailRows = getOriginDetailRows(
     booking.booking_type,
     detailsRecord,
@@ -230,18 +278,23 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       }
     }
 
-    if (key === "date" && typeof value === "string") {
-      const parsed = dayjs(value.trim());
-      if (parsed.isValid()) {
-        return parsed.format("MMM DD, YYYY");
+    if (key === "date") {
+      const formatted = formatDateValue(value);
+      if (typeof formatted === "string" && formatted.trim()) {
+        return formatted;
       }
     }
 
     if (
-      (key === "companionship" || key === "mode_of_transport") &&
+      (key === "companionship" ||
+        key === "mode_of_transport" ||
+        key === "contact_form") &&
       typeof value === "string"
     ) {
-      return value.replaceAll("_", " ");
+      const normalized = value.replaceAll("_", " ");
+      return normalized.length > 0
+        ? normalized.charAt(0).toUpperCase() + normalized.slice(1)
+        : normalized;
     }
 
     if (typeof value === "boolean") {
@@ -270,7 +323,9 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
     } catch (error) {
       setToast({
         message:
-          error instanceof Error ? error.message : "Failed to copy booking details.",
+          error instanceof Error
+            ? error.message
+            : "Failed to copy booking details.",
         type: "error",
       });
     } finally {
@@ -292,7 +347,9 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 
       const getCardTitle = () => {
         if (booking.booking_type === "international_pet_transport") {
-          const destination = String(detailsRecord.destination || "").toUpperCase();
+          const destination = String(
+            detailsRecord.destination || "",
+          ).toUpperCase();
           return destination === "PH" ? "Import" : "Export";
         }
 
@@ -308,7 +365,9 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       };
 
       const safeValue = (key: string, value: unknown) =>
-        formatDetailsValue(key, value) === "-" ? "-" : formatDetailsValue(key, value);
+        formatDetailsValue(key, value) === "-"
+          ? "-"
+          : formatDetailsValue(key, value);
 
       const page = {
         width: 210,
@@ -362,15 +421,22 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
         doc.setFontSize(chipTextSize);
         const measureChip = (raw: string) => {
           let text = raw.trim();
-          while (text.length > 1 && doc.getTextWidth(text) + chipPaddingX * 2 > maxChipWidth) {
+          while (
+            text.length > 1 &&
+            doc.getTextWidth(text) + chipPaddingX * 2 > maxChipWidth
+          ) {
             text = `${text.slice(0, -2)}…`;
           }
-          const width = Math.min(maxChipWidth, doc.getTextWidth(text) + chipPaddingX * 2);
+          const width = Math.min(
+            maxChipWidth,
+            doc.getTextWidth(text) + chipPaddingX * 2,
+          );
           return { text, width };
         };
 
         const chips = chipLabels.map(measureChip);
-        const chipsTotalWidth = chips.reduce((acc, chip) => acc + chip.width, 0) + chipGap;
+        const chipsTotalWidth =
+          chips.reduce((acc, chip) => acc + chip.width, 0) + chipGap;
         const stackChips = chipsTotalWidth > 82;
         const headerHeight = stackChips ? 30 : 24;
 
@@ -379,23 +445,34 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
         doc.setFillColor(24, 82, 138);
         doc.rect(card.x, card.y + (headerHeight - 8), card.width, 8, "F");
 
-        const titleMaxWidth = stackChips ? card.width - 18 : card.width - chipsTotalWidth - 26;
+        const titleMaxWidth = stackChips
+          ? card.width - 18
+          : card.width - chipsTotalWidth - 26;
         doc.setFont("helvetica", "bold");
         doc.setFontSize(18);
         doc.setTextColor(255, 255, 255);
-        const headerTitle = doc.splitTextToSize(getCardTitle(), titleMaxWidth)[0] || getCardTitle();
+        const headerTitle =
+          doc.splitTextToSize(getCardTitle(), titleMaxWidth)[0] ||
+          getCardTitle();
         doc.text(headerTitle, leftPadding, card.y + 10);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8.5);
         doc.setTextColor(225, 236, 248);
         doc.text(
-          dayjs(booking.updated_at || booking._creationTime).format("MMM D, YYYY h:mm A"),
+          dayjs(booking.updated_at || booking._creationTime).format(
+            "MMM D, YYYY h:mm A",
+          ),
           leftPadding,
           card.y + 17,
         );
 
-        const drawChip = (text: string, x: number, yPos: number, width: number) => {
+        const drawChip = (
+          text: string,
+          x: number,
+          yPos: number,
+          width: number,
+        ) => {
           doc.setFillColor(232, 242, 252);
           doc.roundedRect(x, yPos, width, chipHeight, 2, 2, "F");
           doc.setFont("helvetica", "bold");
@@ -405,7 +482,12 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
         };
 
         if (stackChips) {
-          drawChip(chips[0].text, rightLimit - chips[0].width, chipTop, chips[0].width);
+          drawChip(
+            chips[0].text,
+            rightLimit - chips[0].width,
+            chipTop,
+            chips[0].width,
+          );
           drawChip(
             chips[1].text,
             rightLimit - chips[1].width,
@@ -428,7 +510,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       ) => {
         const rowMetrics = rows.map((row) => {
           const value = String(safeValue(row.key, row.value));
-          const lines = doc.splitTextToSize(value, rightLimit - leftPadding - labelWidth - 6) as string[];
+          const lines = doc.splitTextToSize(
+            value,
+            rightLimit - leftPadding - labelWidth - 6,
+          ) as string[];
           return { row, lines };
         });
 
@@ -442,7 +527,15 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 
         doc.setFillColor(247, 249, 252);
         doc.setDrawColor(223, 229, 238);
-        doc.roundedRect(leftPadding - 3, y - 4, rightLimit - leftPadding + 6, sectionHeight, 2.5, 2.5, "FD");
+        doc.roundedRect(
+          leftPadding - 3,
+          y - 4,
+          rightLimit - leftPadding + 6,
+          sectionHeight,
+          2.5,
+          2.5,
+          "FD",
+        );
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
@@ -483,7 +576,11 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       drawHeader();
 
       drawSectionCard("Travel Details", [
-        { label: "Companionship", value: detailsRecord.companionship, key: "companionship" },
+        {
+          label: "Companionship",
+          value: detailsRecord.companionship,
+          key: "companionship",
+        },
         {
           label: "Has Travel Date",
           value:
@@ -536,15 +633,28 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
       ]);
 
       drawSectionCard("Origin Details", [
-        { label: "Origin Country", value: detailsRecord.origin_country, key: "origin_country" },
-        { label: "Origin Address", value: detailsRecord.origin_full_address, key: "origin_full_address" },
+        {
+          label: "Origin Country",
+          value: detailsRecord.origin_country,
+          key: "origin_country",
+        },
+        {
+          label: "Origin Address",
+          value: detailsRecord.origin_full_address,
+          key: "origin_full_address",
+        },
       ]);
 
       drawSectionCard("Destination Details", [
-        { label: "Destination Country", value: detailsRecord.destination, key: "destination" },
+        {
+          label: "Destination Country",
+          value: detailsRecord.destination,
+          key: "destination",
+        },
         {
           label: "Destination Address",
-          value: detailsRecord.destination_full_address || detailsRecord.destination,
+          value:
+            detailsRecord.destination_full_address || detailsRecord.destination,
           key: "destination_full_address",
         },
       ]);
@@ -573,7 +683,11 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
             { label: "Birthday", value: pet.pet_birthday, key: "pet_birthday" },
             { label: "Age", value: pet.pet_age, key: "pet_age" },
             { label: "Weight (kg)", value: pet.pet_weight, key: "pet_weight" },
-            { label: "Medical Condition", value: pet.pet_condition || "-", key: "pet_condition" },
+            {
+              label: "Medical Condition",
+              value: pet.pet_condition || "-",
+              key: "pet_condition",
+            },
             {
               label: "Special Instructions",
               value: pet.special_instructions || "-",
@@ -588,8 +702,23 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
               const imageX = rightLimit - imageWidth - 2;
               const imageY = sectionTopY + 8;
               doc.setDrawColor(222, 228, 236);
-              doc.roundedRect(imageX - 1, imageY - 1, imageWidth + 2, imageHeight + 2, 1.5, 1.5, "S");
-              doc.addImage(imageData, format, imageX, imageY, imageWidth, imageHeight);
+              doc.roundedRect(
+                imageX - 1,
+                imageY - 1,
+                imageWidth + 2,
+                imageHeight + 2,
+                1.5,
+                1.5,
+                "S",
+              );
+              doc.addImage(
+                imageData,
+                format,
+                imageX,
+                imageY,
+                imageWidth,
+                imageHeight,
+              );
             } catch (imageError) {
               console.warn("Unable to render pet image in PDF:", imageError);
             }
@@ -608,7 +737,6 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
   };
 
   return (
-    
     <DashboardHeading back="/dashboard/bookings" title="Booking Details">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <WhiteCard className="space-y-4">
@@ -623,10 +751,34 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
               >
                 Last updated{" "}
                 {booking.updated_at
-                  ? dayjs(booking.updated_at).format("MMM DD, YYYY")
+                  ? dayjs(booking.updated_at).format("MMMM DD, YYYY")
                   : "-"}
               </BodyText>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Info
+              label="Status"
+              value={booking.status ? formatTitleWords(booking.status) : "-"}
+            />
+            <Info
+              label="Type"
+              value={
+                booking.booking_type
+                  ? formatTitleWords(booking.booking_type)
+                  : "-"
+              }
+            />
+            <Info label="Booking ID" value={String(booking.booking_id)} />
+            <Info
+              label="Created"
+              value={
+                booking._creationTime
+                  ? dayjs(booking._creationTime).format("MMMM DD, YYYY")
+                  : "-"
+              }
+            />
           </div>
 
           <div className="flex flex-wrap justify-end gap-2">
@@ -647,24 +799,13 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
               {isExporting ? "Exporting..." : "Export PDF"}
             </button>
           </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Info label="Status" value={booking.status} />
-            <Info
-              label="Type"
-              value={booking.booking_type?.replaceAll("_", " ") ?? "-"}
-            />
-            <Info label="Booking ID" value={String(booking.booking_id)} />
-            <Info
-              label="Created"
-              value={dayjs(booking._creationTime).format("MMM DD, YYYY hh:mm A")}
-            />
-          </div>
         </WhiteCard>
 
         <BookingStatusChanger
           bookingId={booking._id}
-          currentStatus={booking.status}
+          currentStatus={
+            booking.status ? formatTitleWords(booking.status) : "-"
+          }
           bookingType={booking.booking_type}
           previousStatus={booking.previous_status}
           updatedAt={booking.updated_at}
@@ -682,23 +823,38 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           />
           <Info
             label="Email Address"
-            value={formatDetailsValue("email_address", owner_details?.email_address)}
+            value={formatDetailsValue(
+              "email_address",
+              owner_details?.email_address,
+            )}
           />
           <Info
             label="Contact Number"
-            value={formatDetailsValue("contact_number", owner_details?.contact_number)}
+            value={formatDetailsValue(
+              "contact_number",
+              owner_details?.contact_number,
+            )}
           />
           <Info
             label="Contact Form"
-            value={formatDetailsValue("contact_form", owner_details?.contact_form)}
+            value={formatDetailsValue(
+              "contact_form",
+              owner_details?.contact_form,
+            )}
           />
           <Info
             label="Account Name"
-            value={formatDetailsValue("account_name", owner_details?.account_name)}
+            value={formatDetailsValue(
+              "account_name",
+              owner_details?.account_name,
+            )}
           />
           <Info
             label="Account Link"
-            value={formatDetailsValue("account_link", owner_details?.account_link)}
+            value={formatDetailsValue(
+              "account_link",
+              owner_details?.account_link,
+            )}
           />
         </div>
       </WhiteCard>
@@ -707,7 +863,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
         <>
           {travelDetailRows.length > 0 && (
             <WhiteCard>
-              <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
+              <BodyText
+                weight="semibold"
+                className="mb-4 text-lg text-[#17528A]"
+              >
                 Travel Details
               </BodyText>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
@@ -724,13 +883,19 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 
           {showLocationDetails && (
             <WhiteCard>
-              <BodyText weight="semibold" className="mb-4 text-lg text-[#17528A]">
+              <BodyText
+                weight="semibold"
+                className="mb-4 text-lg text-[#17528A]"
+              >
                 Locations
               </BodyText>
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {originDetailRows.length > 0 && (
                   <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                    <BodyText weight="semibold" className="text-base text-[#17528A]">
+                    <BodyText
+                      weight="semibold"
+                      className="text-base text-[#17528A]"
+                    >
                       Origin
                     </BodyText>
                     <div className="grid grid-cols-1 gap-4">
@@ -747,7 +912,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
 
                 {destinationDetailRows.length > 0 && (
                   <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                    <BodyText weight="semibold" className="text-base text-[#17528A]">
+                    <BodyText
+                      weight="semibold"
+                      className="text-base text-[#17528A]"
+                    >
                       Destination
                     </BodyText>
                     <div className="grid grid-cols-1 gap-4">
@@ -787,7 +955,10 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
             return (
               <div key={pet._id} className="space-y-3">
                 {pet_details.length > 1 && (
-                  <BodyText weight="semibold" className="text-base text-[#17528A]">
+                  <BodyText
+                    weight="semibold"
+                    className="text-base text-[#17528A]"
+                  >
                     Pet {index + 1}
                   </BodyText>
                 )}
@@ -826,7 +997,7 @@ const Info = ({ label, value }: { label: string; value: string }) => {
       >
         {label}
       </BodyText>
-      <BodyText size="small" className="break-normal text-slate-900">
+      <BodyText size="small" className="break-all text-slate-900">
         {value}
       </BodyText>
     </div>

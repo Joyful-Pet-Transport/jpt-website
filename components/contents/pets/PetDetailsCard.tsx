@@ -43,7 +43,7 @@ const PetDetailsCard = ({ pet }: PetDetailsCardProps) => {
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
-        <div className="flex justify-center bg-blue-50 p-4 lg:p-6">
+        <div className="flex justify-center p-4 lg:p-6">
           <button
             type="button"
             onClick={() => setIsImageOpen(true)}
@@ -53,7 +53,7 @@ const PetDetailsCard = ({ pet }: PetDetailsCardProps) => {
             <img
               src={pet.image}
               alt={pet.pet_name}
-              className="block h-auto max-h-128 w-auto max-w-full object-contain"
+              className="block h-auto max-h-128 max-w-xl object-contain"
             />
             <span className="pointer-events-none absolute inset-x-0 bottom-0 rounded-b-lg bg-black/45 px-3 py-2 text-center text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
               Click to view full photo
@@ -78,10 +78,72 @@ const PetDetailsCard = ({ pet }: PetDetailsCardProps) => {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Info label="Breed" value={pet.breed} />
-            <Info label="Sex" value={pet.sex} />
-            <Info label="Birthday" value={pet.pet_birthday} />
-            <Info label="Age" value={pet.pet_age} />
-            <Info label="Weight" value={pet.pet_weight} />
+            <Info
+              label="Sex"
+              value={
+                pet.sex
+                  ? pet.sex
+                      .split("_")
+                      .map(
+                        (part) =>
+                          part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(),
+                      )
+                      .join(" ")
+                  : "-"
+              }
+            />
+      
+            <Info
+              label="Birthday"
+              value={
+                pet.pet_birthday
+                  ? dayjs(pet.pet_birthday).format("MMMM D, YYYY")
+                  : "-"
+              }
+            />
+      
+            <Info
+              label="Age"
+              value={
+                pet.pet_age
+                  ? (() => {
+                      const parts = pet.pet_age.split(" ");
+                      let years = "";
+                      let months = "";
+
+                      parts.forEach((part) => {
+                        if (part.endsWith("y")) {
+                          const num = part.replace("y", "");
+                          if (num !== "0") {
+                            years = `${num} year${num === "1" ? "" : "s"}`;
+                          }
+                        } else if (part.endsWith("m")) {
+                          const num = part.replace("m", "");
+                          if (num !== "0") {
+                            months = `${num} month${num === "1" ? "" : "s"}`;
+                          }
+                        }
+                      });
+
+                      const segments = [];
+                      if (years) segments.push(years);
+                      if (months) segments.push(months);
+
+                      return segments.length > 0 ? segments.join(" & ") : "-";
+                    })()
+                  : "-"
+              }
+            />
+      
+            <Info
+              label="Weight"
+              value={
+                pet.pet_weight
+                  ? `${pet.pet_weight} kg`
+                  : "-"
+              }
+            />
+      
           </div>
 
           <div className="grid grid-cols-1 gap-4">

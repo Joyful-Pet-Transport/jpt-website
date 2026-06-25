@@ -37,8 +37,9 @@ const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
                 <Image
                   src={props.image}
                   alt={props.title || ""}
-                  height={106}
-                  width={106}
+                  height={128}
+                  width={128}
+                  className="w-full h-full object-cover"
                 />
               )
             )}
@@ -86,8 +87,9 @@ const ServiceCardContainer: FC<ServiceCardContainerProps> = (props) => {
               <Image
                 src={props.image}
                 alt={props.title || ""}
-                height={170}
-                width={170}
+                height={160}
+                width={160}
+                className="w-full h-full object-cover"
               />
             )
           )}
