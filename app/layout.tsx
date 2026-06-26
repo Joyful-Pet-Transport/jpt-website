@@ -39,8 +39,7 @@ const leagueSpartanFont = League_Spartan({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.joyfulpettransport.com"),
   title: {
-    default:
-      "Joyful Pet Transport | Trusted Pet Relocation in the Philippines",
+    default: "Joyful Pet Transport | Trusted Pet Relocation in the Philippines",
     template: "%s | Joyful Pet Transport",
   },
   description:
@@ -48,10 +47,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.joyfulpettransport.com",
   },
-    openGraph: {
+
+  openGraph: {
     siteName: "Joyful Pet Transport",
     locale: "en_PH",
     type: "website",
+    title: "Joyful Pet Transport | Trusted Pet Relocation in the Philippines",
+    description:
+      "Safe and stress-free pet relocation in the Philippines. Vet coordination, permits, and flight arrangements to the US, Canada, EU, and more. Get a quote today!",
+    images: [
+      {
+        url: "https://www.joyfulpettransport.com/favicon.ico",
+        width: 1200,
+        height: 630,
+        alt: "Joyful Pet Transport",
+      },
+    ],
   },
 };
 
@@ -69,7 +80,6 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
             } as React.CSSProperties
           }
         >
-          
           <GoogleAnalytics />
           <GoogleAdsTag />
           <JsonLd data={localBusinessJsonLd} />
