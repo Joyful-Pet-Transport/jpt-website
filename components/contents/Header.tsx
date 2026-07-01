@@ -46,7 +46,7 @@ const ModalHeaderItem: FC<HeaderItemProps> = ({ item }) => {
         </BodyText>
         {item.children && (
           <button onClick={toggleDropdown} className="cursor-pointer">
-            {isOpen ? " " + <HiChevronDown /> : " " + <HiChevronRight />}
+            {isOpen ? <HiChevronDown /> : <HiChevronRight />}
           </button>
         )}
       </div>
