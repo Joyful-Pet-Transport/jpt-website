@@ -3,6 +3,7 @@ import { query } from "./../_generated/server";
 import { v } from "convex/values";
 import { Id } from "../_generated/dataModel";
 import type { InquiryStatusValue } from "../../components/schemas/inquiry-admin-schema";
+import { searchInquiries } from "../../utils/format/inquirySearch";
 
 const inquiryStatuses: InquiryStatusValue[] = [
   "new",
@@ -50,7 +51,6 @@ export const getPaginated = query({
   },
   handler: async (ctx, args) => {
     const search = args.search?.trim() ?? "";
-    const normalizedSearch = search.toLowerCase();
     const status = args.status?.trim().toLowerCase();
     const order = args.sort_order === "oldest" ? "asc" : "desc";
 
@@ -60,22 +60,10 @@ export const getPaginated = query({
       q = q.filter((q) => q.eq(q.field("status"), status));
     }
 
-    if (search !== "") {
-      const normalizedName =
-        search.charAt(0).toUpperCase() + search.slice(1).toLowerCase();
-
-      q = q.filter((q) =>
-        q.or(
-          q.gte(q.field("email"), normalizedSearch),
-          q.eq(q.field("status"), normalizedSearch),
-          q.gte(q.field("first_name"), normalizedName),
-          q.gte(q.field("last_name"), normalizedName),
-          q.gte(q.field("message"), search),
-        ),
-      );
-    }
-
-    const result = await q.paginate(args.paginationOpts);
+    const result =
+      search === ""
+        ? await q.paginate(args.paginationOpts)
+        : searchInquiries(await q.collect(), search, args.paginationOpts);
 
     const page = await Promise.all(
       result.page.map(async (inquiry) => {
