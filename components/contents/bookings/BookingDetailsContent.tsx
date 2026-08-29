@@ -4,6 +4,7 @@ import WhiteCard from "@/components/card/WhiteCard";
 import BodyText from "@/components/elements/text/BodyText";
 import DashboardHeading from "@/components/elements/text/DashboardHeading";
 import BookingStatusChanger from "./BookingStatusChanger";
+import BookingDealChanger from "./BookingDealChanger";
 import PetDetailsCard from "@/components/contents/pets/PetDetailsCard";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -809,6 +810,12 @@ const BookingDetailsContent = ({ id }: BookingDetailsContentProps) => {
           bookingType={booking.booking_type}
           previousStatus={booking.previous_status}
           updatedAt={booking.updated_at}
+        />
+
+        <BookingDealChanger
+          bookingId={booking._id}
+          dealStatus={booking.deal_status}
+          assignedTo={booking.assigned_to}
         />
       </div>
 

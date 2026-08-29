@@ -8,6 +8,7 @@ import {
   exceptionBookingStatuses,
   getValidTransitions,
   isExceptionBookingStatus,
+  updateBookingDealSchema,
   updateBookingStatusSchema,
 } from "../../utils/config/bookingStatus";
 
@@ -157,3 +158,64 @@ const getServiceBookingByType = async (
 
   return null;
 };
+
+export const updateBookingDeal = mutation({
+  args: {
+    bookingId: v.id("bookings"),
+    deal_status: v.string(),
+    assigned_to: v.optional(v.union(v.id("users"), v.null())),
+  },
+  handler: async (ctx, args) => {
+    const parsed = updateBookingDealSchema.safeParse({
+      bookingId: String(args.bookingId),
+      deal_status: args.deal_status,
+      assigned_to:
+        args.assigned_to === undefined
+          ? undefined
+          : args.assigned_to === null
+            ? null
+            : String(args.assigned_to),
+    });
+
+    if (!parsed.success) {
+      throw new Error(
+        parsed.error.issues[0]?.message || "Invalid booking deal payload.",
+      );
+    }
+
+    const booking = await ctx.db.get(args.bookingId);
+    if (!booking) {
+      throw new Error("Booking not found.");
+    }
+
+    if (args.assigned_to && !(await ctx.db.get(args.assigned_to))) {
+      throw new Error("Assigned user was not found.");
+    }
+
+    const now = Date.now();
+    const patch: {
+      deal_status: string;
+      updated_at: number;
+      assigned_to?: typeof args.assigned_to;
+    } = {
+      deal_status: parsed.data.deal_status,
+      updated_at: now,
+    };
+
+    if (args.assigned_to !== undefined) {
+      patch.assigned_to = args.assigned_to;
+    }
+
+    await ctx.db.patch(args.bookingId, patch);
+
+    return {
+      bookingId: args.bookingId,
+      deal_status: parsed.data.deal_status,
+      assigned_to:
+        args.assigned_to !== undefined
+          ? args.assigned_to
+          : booking.assigned_to ?? null,
+      updatedAt: now,
+    };
+  },
+});
