@@ -186,6 +186,8 @@ export default defineSchema({
     updated_at: v.optional(v.number()),
     previous_status: v.optional(v.string()),
     status_reason: v.optional(v.string()),
+    deal_status: v.optional(v.string()),
+    assigned_to: v.optional(v.union(v.id("users"), v.null())),
   })
     .index("by_created_at", ["created_at"])
     .index("by_booking_type", ["booking_type"]),

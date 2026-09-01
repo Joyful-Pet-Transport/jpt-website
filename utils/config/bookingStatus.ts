@@ -167,3 +167,32 @@ export const getValidTransitions = (
 
   return getResolvedTransitions(currentStatus, bookingType);
 };
+
+export const BookingDealStatus = {
+  new_inquiry: "new_inquiry",
+  in_consultation: "in_consultation",
+  declined: "declined",
+  deal_closed: "deal_closed",
+} as const;
+
+export type BookingDealStatusValue =
+  (typeof BookingDealStatus)[keyof typeof BookingDealStatus];
+
+export const bookingDealStatusValues = Object.values(
+  BookingDealStatus,
+) as BookingDealStatusValue[];
+
+export const bookingDealStatusSchema = z.enum(
+  bookingDealStatusValues as [BookingDealStatusValue, ...BookingDealStatusValue[]],
+);
+
+export const updateBookingDealSchema = z.object({
+  bookingId: z.string().min(1, "Booking ID is required"),
+  deal_status: bookingDealStatusSchema,
+  assigned_to: z.string().nullable().optional(),
+});
+
+export const normalizeDealStatus = (status?: string): BookingDealStatusValue =>
+  bookingDealStatusValues.includes(status as BookingDealStatusValue)
+    ? (status as BookingDealStatusValue)
+    : BookingDealStatus.new_inquiry;
