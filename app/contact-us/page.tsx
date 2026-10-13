@@ -109,7 +109,7 @@ const ContactUsScreen = () => {
                         icon="whatsapp"
                         colored
                         onPress={() =>
-                          window.open("https://wa.me/639289981020", "_blank")
+                          window.open("https://wa.me/639617239951", "_blank")
                         }
                       />
                     </div>
