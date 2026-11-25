@@ -10,6 +10,7 @@ import { FC, PropsWithChildren } from "react";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ClientLayout from "@/components/layouts/ClientLayout";
 import GoogleAnalytics from "@/components/layouts/GoogleAnalytics";
+import GoogleTagManager from "@/components/layouts/GoogleTagManager";
 import JsonLd from "@/components/layouts/JsonLd";
 import { localBusinessJsonLd } from "@/utils/config/structuredData";
 import GoogleAdsTag from "@/components/layouts/GoogleAdsTag";
@@ -80,6 +81,15 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
             } as React.CSSProperties
           }
         >
+          <noscript>
+            <iframe
+              src="https://www.googletagmanager.com/ns.html?id=GTM-5G53JDTJ"
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+          <GoogleTagManager />
           <GoogleAnalytics />
           <GoogleAdsTag />
           <JsonLd data={localBusinessJsonLd} />
