@@ -10,10 +10,10 @@ import { FC, PropsWithChildren } from "react";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ClientLayout from "@/components/layouts/ClientLayout";
 import GoogleAnalytics from "@/components/layouts/GoogleAnalytics";
-import GoogleTagManager from "@/components/layouts/GoogleTagManager";
 import JsonLd from "@/components/layouts/JsonLd";
 import { localBusinessJsonLd } from "@/utils/config/structuredData";
 import GoogleAdsTag from "@/components/layouts/GoogleAdsTag";
+import GoogleTagManager from "@/components/layouts/GoogleTagManager";
 
 const poppinsFont = Poppins({
   variable: "--font-poppins",
